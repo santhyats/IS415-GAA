@@ -1,11 +1,5 @@
 ---
-title: "IS415-GAA"
+title: "IS415: Geospatial Analytics and Applications"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+Welcome to **IS415 Geospatial Analytics** Homepage! I am Santhya Selvan, and in this website, you will find my coursework prepared in this course :)
