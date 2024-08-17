@@ -1,9 +1,5 @@
 ---
-title: "About"
+title: "About This Site"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+Hello! I am Santhya Selvan, a Year 3 Information Systems Undergraduate in SMU. This website records down all my work that I have done in this course. Do take a look!
