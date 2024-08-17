@@ -23,3 +23,6 @@ format:
 
 editor: visual
 
+[submodule "foo"]
+  active = false
+  url = https://example.org/foo
