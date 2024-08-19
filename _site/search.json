@@ -18,14 +18,14 @@
     "href": "IS415-GAA/index.html",
     "title": "IS415: Geospatial Analytics and Applications",
     "section": "",
-    "text": "Welcome to IS415 Geospatial Analytics Homepage! I am Santhya Selvan, and in this website, you will find all the coursework prepared by me in this course :)"
+    "text": "Welcome to IS415 Geospatial Analytics Homepage! In this website, you will find all the coursework prepared by me in this course :)"
   },
   {
     "objectID": "IS415-GAA/about.html",
     "href": "IS415-GAA/about.html",
-    "title": "About",
+    "title": "About This Site",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "Hello! I am Santhya Selvan, a Year 3 Information Systems Undergraduate in SMU. This website records down all my work that I have done in this course. Do take a look!"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
@@ -180,5 +180,12 @@
     "title": "About",
     "section": "",
     "text": "Hello! I am Santhya Selvan, a Year 3 Information Systems Undergraduate in SMU. This website records down all my work that I have done in this course. Do take a look!"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex01/data/MPSZ-2019.html",
+    "href": "In-class_Ex/In-class_Ex01/data/MPSZ-2019.html",
+    "title": "IS415-GAA",
+    "section": "",
+    "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     dataset\n\n\n        0 0     false"
   }
 ]
