@@ -1,6 +1,12 @@
 ---
-title: "Hands-on Exercise 1"
+title: "Geospatial Data Wrangling using R"
 author: "Santhya Thirumarai Selvan" 
+date: "August 22, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
 ---
 
 <br>
