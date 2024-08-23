@@ -27,6 +27,3 @@ format:
 
 editor: visual
 
-[submodule "IS415-GAA"]
-path = IS415-GAA
-url = https://github.com/santhyats/IS415-GAA.git

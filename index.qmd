@@ -2,4 +2,4 @@
 title: "IS415: Geospatial Analytics and Applications"
 ---
 
-Welcome to **IS415 Geospatial Analytics** Homepage! In this website, you will find all the coursework prepared by me in this course :)
+Welcome to **IS415 Geospatial Analytics** Homepage! In this website, you will find all the coursework prepared by me in this course :) :)
