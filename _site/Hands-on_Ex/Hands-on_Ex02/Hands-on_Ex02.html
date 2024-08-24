@@ -191,10 +191,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotting-a-base-map" id="toc-plotting-a-base-map" class="nav-link" data-scroll-target="#plotting-a-base-map">2.4.3 Plotting a base map</a></li>
   <li><a href="#breaking-down-tm_polygons" id="toc-breaking-down-tm_polygons" class="nav-link" data-scroll-target="#breaking-down-tm_polygons"><strong>2.4.4 Breaking down tm_polygons()</strong></a></li>
   <li><a href="#data-classification-methods-in-tmap" id="toc-data-classification-methods-in-tmap" class="nav-link" data-scroll-target="#data-classification-methods-in-tmap">2.4.5 Data classification methods in tmap</a></li>
-  <li><a href="#colours" id="toc-colours" class="nav-link" data-scroll-target="#colours">2.4.4 Colours!</a></li>
-  <li><a href="#map-layout" id="toc-map-layout" class="nav-link" data-scroll-target="#map-layout">2.4.5 Map Layout</a></li>
-  <li><a href="#drawing-small-multiple-choropleth-maps" id="toc-drawing-small-multiple-choropleth-maps" class="nav-link" data-scroll-target="#drawing-small-multiple-choropleth-maps"><strong>2.4.6 Drawing Small Multiple Choropleth Maps</strong></a></li>
-  <li><a href="#mapping-spatial-object-meeting-a-selection-criterion" id="toc-mapping-spatial-object-meeting-a-selection-criterion" class="nav-link" data-scroll-target="#mapping-spatial-object-meeting-a-selection-criterion"><strong>2.4.7 Mapping Spatial Object Meeting a Selection Criterion</strong></a></li>
+  <li><a href="#colours" id="toc-colours" class="nav-link" data-scroll-target="#colours">2.4.6 Colours!</a></li>
+  <li><a href="#map-layout" id="toc-map-layout" class="nav-link" data-scroll-target="#map-layout">2.4.7 Map Layout</a></li>
+  <li><a href="#drawing-small-multiple-choropleth-maps" id="toc-drawing-small-multiple-choropleth-maps" class="nav-link" data-scroll-target="#drawing-small-multiple-choropleth-maps"><strong>2.4.8 Drawing Small Multiple Choropleth Maps</strong></a></li>
+  <li><a href="#mapping-spatial-object-meeting-a-selection-criterion" id="toc-mapping-spatial-object-meeting-a-selection-criterion" class="nav-link" data-scroll-target="#mapping-spatial-object-meeting-a-selection-criterion">2.4.9 Mapping Spatial Object Meeting a Selection Criterion</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -619,7 +619,7 @@ dbl (2): Pop, Time
 </div>
 </section>
 <section id="plotting-choropleth-map-with-custom-break" class="level4">
-<h4 class="anchored" data-anchor-id="plotting-choropleth-map-with-custom-break">2.4.3.2 Plotting choropleth map with custom break</h4>
+<h4 class="anchored" data-anchor-id="plotting-choropleth-map-with-custom-break">2.4.5.2 Plotting choropleth map with custom break</h4>
 <p>For all the built-in styles, the category breaks are computed internally. However, we can set the breakpoints using <em>breaks</em> argument in <em>tm_fill()</em>. It is important to note that in <strong>tmap</strong>, the breaks include a minimum and maximum. As a result, in order to end up with n categories, n+1 elements must be specified in the <em>breaks</em> option (the values must be in increasing order).</p>
 <p>I will first get some descriptive statistics on the variable before setting the break points. Code chunk below will be used to compute and display the descriptive statistics of <strong>DEPENDENCY</strong> field.</p>
 <div class="cell">
@@ -650,7 +650,7 @@ dbl (2): Pop, Time
 </section>
 </section>
 <section id="colours" class="level3">
-<h3 class="anchored" data-anchor-id="colours">2.4.4 Colours!</h3>
+<h3 class="anchored" data-anchor-id="colours">2.4.6 Colours!</h3>
 <p>We can choose to set our own colourways for the maps, but tmap also has a set of predefined colourways under the <strong>RColorBrewer</strong> package.</p>
 <p>We just need to define our preferred colour palette in the “palette” argument in <em>tm_fill()</em>.</p>
 <div class="cell">
@@ -686,10 +686,10 @@ dbl (2): Pop, Time
 </div>
 </section>
 <section id="map-layout" class="level3">
-<h3 class="anchored" data-anchor-id="map-layout">2.4.5 Map Layout</h3>
+<h3 class="anchored" data-anchor-id="map-layout">2.4.7 Map Layout</h3>
 <p>Map elements contain elements like the map title, legend, the scale bar and other such aspects that are important in the map that we are plotting.</p>
 <section id="map-legend" class="level4">
-<h4 class="anchored" data-anchor-id="map-legend">2.4.5.1 Map Legend</h4>
+<h4 class="anchored" data-anchor-id="map-legend">2.4.7.1 Map Legend</h4>
 <p>In&nbsp;<strong>tmap</strong>, several&nbsp;<em>legend</em>&nbsp;options are provided to change the placement, format and appearance of the legend.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
@@ -723,7 +723,7 @@ Please use legend.outside.size to control the width of the outside legend</code>
 </div>
 </section>
 <section id="map-style" class="level4">
-<h4 class="anchored" data-anchor-id="map-style">2.4.5.2 Map Style</h4>
+<h4 class="anchored" data-anchor-id="map-style">2.4.7.2 Map Style</h4>
 <p>We can change the style of the map layout with the <em>tmap_style()</em> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
@@ -778,7 +778,7 @@ Please use legend.outside.size to control the width of the outside legend</code>
 </section>
 </section>
 <section id="drawing-small-multiple-choropleth-maps" class="level3">
-<h3 class="anchored" data-anchor-id="drawing-small-multiple-choropleth-maps"><strong>2.4.6 Drawing Small Multiple Choropleth Maps</strong></h3>
+<h3 class="anchored" data-anchor-id="drawing-small-multiple-choropleth-maps"><strong>2.4.8 Drawing Small Multiple Choropleth Maps</strong></h3>
 <p><strong>Facet maps</strong> are composed of many maps arrange side-by-side, and sometimes stacked vertically. Small multiple maps enable the visualisation of how spatial relationships change with respect to another variable, such as time.</p>
 <p>In <strong>tmap</strong>, small multiple maps can be plotted in three ways:</p>
 <ul>
@@ -787,7 +787,7 @@ Please use legend.outside.size to control the width of the outside legend</code>
 <li><p>by creating multiple stand-alone maps with <em>tmap_arrange()</em>.</p></li>
 </ul>
 <section id="assigning-multiple-values-to-atleast-one-of-the-aesthetic-arguments" class="level4">
-<h4 class="anchored" data-anchor-id="assigning-multiple-values-to-atleast-one-of-the-aesthetic-arguments">2.4.6.1 Assigning multiple values to atleast one of the aesthetic arguments</h4>
+<h4 class="anchored" data-anchor-id="assigning-multiple-values-to-atleast-one-of-the-aesthetic-arguments">2.4.8.1 Assigning multiple values to atleast one of the aesthetic arguments</h4>
 <p>Here, I will plot facet maps by defining&nbsp;<strong><em>ncols</em></strong>&nbsp;in&nbsp;<strong>tm_fill().</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
@@ -828,7 +828,7 @@ Please use legend.outside.size to control the width of the outside legend</code>
 </div>
 </section>
 <section id="by-defining-a-group-by-variable-in-tm_facets" class="level4">
-<h4 class="anchored" data-anchor-id="by-defining-a-group-by-variable-in-tm_facets">2.4.6.2 By defining a group-by variable in <em>tm_facets()</em></h4>
+<h4 class="anchored" data-anchor-id="by-defining-a-group-by-variable-in-tm_facets">2.4.8.2 By defining a group-by variable in <em>tm_facets()</em></h4>
 <p>Here, I used tm_facets():</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span></span>
@@ -857,7 +857,7 @@ therefore deprecated</code></pre>
 </div>
 </section>
 <section id="by-using-tmap_arrange" class="level4">
-<h4 class="anchored" data-anchor-id="by-using-tmap_arrange">2.4.6.3 By using tmap_arrange()</h4>
+<h4 class="anchored" data-anchor-id="by-using-tmap_arrange">2.4.8.3 By using tmap_arrange()</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>youngmap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span> </span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"YOUNG"</span>, </span>
@@ -881,7 +881,7 @@ therefore deprecated</code></pre>
 </section>
 </section>
 <section id="mapping-spatial-object-meeting-a-selection-criterion" class="level3">
-<h3 class="anchored" data-anchor-id="mapping-spatial-object-meeting-a-selection-criterion"><strong>2.4.7 Mapping Spatial Object Meeting a Selection Criterion</strong></h3>
+<h3 class="anchored" data-anchor-id="mapping-spatial-object-meeting-a-selection-criterion">2.4.9 Mapping Spatial Object Meeting a Selection Criterion</h3>
 <p>Instead of creating small multiple choropleth map, you can also use selection function to map spatial objects meeting the selection criterion.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020[mpsz_pop2020<span class="sc">$</span>REGION_N<span class="sc">==</span><span class="st">"CENTRAL REGION"</span>, ])<span class="sc">+</span></span>

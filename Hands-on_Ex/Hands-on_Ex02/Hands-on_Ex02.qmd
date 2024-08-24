@@ -290,7 +290,7 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-#### 2.4.3.2 Plotting choropleth map with custom break
+#### 2.4.5.2 Plotting choropleth map with custom break
 
 For all the built-in styles, the category breaks are computed internally. However, we can set the breakpoints using *breaks* argument in *tm_fill()*. It is important to note that in **tmap**, the breaks include a minimum and maximum. As a result, in order to end up with n categories, n+1 elements must be specified in the *breaks* option (the values must be in increasing order).
 
@@ -311,7 +311,7 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-### 2.4.4 Colours!
+### 2.4.6 Colours!
 
 We can choose to set our own colourways for the maps, but tmap also has a set of predefined colourways under the **RColorBrewer** package.
 
@@ -337,11 +337,11 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-### 2.4.5 Map Layout
+### 2.4.7 Map Layout
 
 Map elements contain elements like the map title, legend, the scale bar and other such aspects that are important in the map that we are plotting.
 
-#### 2.4.5.1 Map Legend
+#### 2.4.7.1 Map Legend
 
 In **tmap**, several *legend* options are provided to change the placement, format and appearance of the legend.
 
@@ -364,7 +364,7 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-#### 2.4.5.2 Map Style
+#### 2.4.7.2 Map Style
 
 We can change the style of the map layout with the *tmap_style()* function.
 
@@ -403,7 +403,7 @@ tm_shape(mpsz_pop2020)+
              position = c("left", "bottom"))
 ```
 
-### **2.4.6 Drawing Small Multiple Choropleth Maps**
+### **2.4.8 Drawing Small Multiple Choropleth Maps**
 
 **Facet maps** are composed of many maps arrange side-by-side, and sometimes stacked vertically. Small multiple maps enable the visualisation of how spatial relationships change with respect to another variable, such as time.
 
@@ -415,7 +415,7 @@ In **tmap**, small multiple maps can be plotted in three ways:
 
 -   by creating multiple stand-alone maps with *tmap_arrange()*.
 
-#### 2.4.6.1 Assigning multiple values to atleast one of the aesthetic arguments
+#### 2.4.8.1 Assigning multiple values to atleast one of the aesthetic arguments
 
 Here, I will plot facet maps by defining ***ncols*** in **tm_fill().**
 
@@ -439,7 +439,7 @@ tm_shape(mpsz_pop2020)+
   tm_layout(legend.position = c("right", "bottom"))
 ```
 
-#### 2.4.6.2 By defining a group-by variable in *tm_facets()*
+#### 2.4.8.2 By defining a group-by variable in *tm_facets()*
 
 Here, I used tm_facets():
 
@@ -458,7 +458,7 @@ tm_shape(mpsz_pop2020) +
   tm_borders(alpha = 0.5)
 ```
 
-#### 2.4.6.3 By using tmap_arrange()
+#### 2.4.8.3 By using tmap_arrange()
 
 ```{r}
 youngmap <- tm_shape(mpsz_pop2020)+ 
@@ -474,7 +474,7 @@ agedmap <- tm_shape(mpsz_pop2020)+
 tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
 ```
 
-### 2.4.7 Mapping Spatial Object Meeting a Selection Criterion
+### 2.4.9 Mapping Spatial Object Meeting a Selection Criterion
 
 Instead of creating small multiple choropleth map, you can also use selection function to map spatial objects meeting the selection criterion.
 
