@@ -188,6 +188,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#using-qtm" id="toc-using-qtm" class="nav-link" data-scroll-target="#using-qtm">2.4.1 Using qtm()</a></li>
   <li><a href="#creating-a-choropleth-map-by-using-tmaps-elements" id="toc-creating-a-choropleth-map-by-using-tmaps-elements" class="nav-link" data-scroll-target="#creating-a-choropleth-map-by-using-tmaps-elements"><strong>2.4.2 Creating a choropleth map by using <em>tmap</em>’s elements</strong></a></li>
+  <li><a href="#plotting-a-base-map" id="toc-plotting-a-base-map" class="nav-link" data-scroll-target="#plotting-a-base-map">2.4.3 Plotting a base map</a></li>
+  <li><a href="#breaking-down-tm_polygons" id="toc-breaking-down-tm_polygons" class="nav-link" data-scroll-target="#breaking-down-tm_polygons"><strong>2.4.4 Breaking down tm_polygons()</strong></a></li>
+  <li><a href="#data-classification-methods-in-tmap" id="toc-data-classification-methods-in-tmap" class="nav-link" data-scroll-target="#data-classification-methods-in-tmap">2.4.5 Data classification methods in tmap</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -457,8 +460,125 @@ dbl (2): Pop, Time
 </div>
 </div>
 <p><br></p>
+</section>
+<section id="plotting-a-base-map" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-a-base-map">2.4.3 Plotting a base map</h3>
+<p><em>tm_shape()</em> is used to build the base map and this is followed up by one or more layering elements, which can be included with the use of functions like <em>tm_fill()</em> and <em>tm_polygons().</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span> <span class="fu">tm_polygons</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this code line above, I used <em>tm_shape()</em> to firstly define the input data from <code>mpz_pop2020</code> and drew the planning subzone polygons with the use of <em>tm_polygons()</em>.</p>
+<p>We can also take this one step further and plot a choropleth map that shows the geographical distribution of a variable of our choice by planning subzone. To do this, we set the variable in the <em>tm_polygons()</em> function to our desired variable. Here, I have set it to <em>Dependency</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span> <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="breaking-down-tm_polygons" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-down-tm_polygons"><strong>2.4.4 Breaking down tm_polygons()</strong></h3>
+<p><em>tm_polygons()</em> is in fact a wrapper for two other functions:</p>
+<ul>
+<li><p><strong>tm_fill()</strong> which shades the polygons with the default colour scheme</p></li>
+<li><p><strong>tm_border()</strong> which adds the borders of the shapefile into our generated choropleth map.</p></li>
+</ul>
+<p>This is how the map looks like with the use of just <em>tm_fill()</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>And here’s the map when we add in the borders with the use of <em>tm_borders()</em>. I have used 3 attributes here:</p>
+<ul>
+<li><p>lwd-indicates a value for width of the borderline. Default value is 1</p></li>
+<li><p>col - indicates the colour of the borderline.</p></li>
+<li><p>alpha - indicates the transparency of the borderline. This is one a scale of 0-1, where 0 is completely transparent and 1 is full opacity.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">lwd =</span> <span class="fl">0.1</span>,  <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">col=</span> <span class="st">"#9ca5f9"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="data-classification-methods-in-tmap" class="level3">
+<h3 class="anchored" data-anchor-id="data-classification-methods-in-tmap">2.4.5 Data classification methods in tmap</h3>
+<p><strong>tmap</strong> provides a total ten data classification methods, namely: <em>fixed</em>, <em>sd</em>, <em>equal</em>, <em>pretty</em> (default), <em>quantile</em>, <em>kmeans</em>, <em>hclust</em>, <em>bclust</em>, <em>fisher</em>, and <em>jenks</em>.</p>
+<p>To define a data classification method, the <em>style</em> argument of <em>tm_fill()</em> or <em>tm_polygons()</em> will be used.</p>
+<section id="plotting-choropleth-maps-using-the-built-in-classification-methods" class="level4">
+<h4 class="anchored" data-anchor-id="plotting-choropleth-maps-using-the-built-in-classification-methods">2.4.5.1 Plotting choropleth maps using the built-in classification methods</h4>
+<p>Here I used quantile style with 5 classes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"equal"</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot above is using the “equal” data classification.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"fisher"</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 </section>
 

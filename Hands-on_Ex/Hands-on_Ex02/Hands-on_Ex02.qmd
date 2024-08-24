@@ -181,3 +181,87 @@ tm_shape(mpsz_pop2020)+
 ```
 
 <br>
+
+### 2.4.3 Plotting a base map
+
+*tm_shape()* is used to build the base map and this is followed up by one or more layering elements, which can be included with the use of functions like *tm_fill()* and *tm_polygons().*
+
+```{r}
+tm_shape(mpsz_pop2020) + tm_polygons()
+```
+
+In this code line above, I used *tm_shape()* to firstly define the input data from `mpz_pop2020` and drew the planning subzone polygons with the use of *tm_polygons()*.
+
+We can also take this one step further and plot a choropleth map that shows the geographical distribution of a variable of our choice by planning subzone. To do this, we set the variable in the *tm_polygons()* function to our desired variable. Here, I have set it to *Dependency*.
+
+```{r}
+tm_shape(mpsz_pop2020) + tm_polygons("DEPENDENCY")
+```
+
+### **2.4.4 Breaking down tm_polygons()**
+
+*tm_polygons()* is in fact a wrapper for two other functions:
+
+-   **tm_fill()** which shades the polygons with the default colour scheme
+
+-   **tm_border()** which adds the borders of the shapefile into our generated choropleth map.
+
+This is how the map looks like with the use of just *tm_fill()*.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY")
+```
+
+<br>
+
+And here's the map when we add in the borders with the use of *tm_borders()*. I have used 3 attributes here:
+
+-   lwd-indicates a value for width of the borderline. Default value is 1
+
+-   col - indicates the colour of the borderline.
+
+-   alpha - indicates the transparency of the borderline. This is one a scale of 0-1, where 0 is completely transparent and 1 is full opacity.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY") +
+  tm_borders(lwd = 0.1,  alpha = 1, col= "#9ca5f9")
+```
+
+### 2.4.5 Data classification methods in tmap
+
+**tmap** provides a total ten data classification methods, namely: *fixed*, *sd*, *equal*, *pretty* (default), *quantile*, *kmeans*, *hclust*, *bclust*, *fisher*, and *jenks*.
+
+To define a data classification method, the *style* argument of *tm_fill()* or *tm_polygons()* will be used.
+
+#### 2.4.5.1 Plotting choropleth maps using the built-in classification methods
+
+Here I used quantile style with 5 classes.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+  tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5)
+
+```
+
+This plot above is using the "equal" data classification.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "fisher") +
+  tm_borders(alpha = 0.5)
+```
