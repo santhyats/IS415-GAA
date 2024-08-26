@@ -9,7 +9,7 @@ execute:
   freeze: true
 ---
 
-## Getting Started 
+## Getting Started
 
 First and foremost, we will load the needed packages into our Rstudio using paccman's `p_load` function.
 
