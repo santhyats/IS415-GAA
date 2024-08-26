@@ -23,6 +23,8 @@ We can now load our data into our R environment as new data frames.
 mpsz14_shp <- st_read(dsn="data", layer="MP14_SUBZONE_WEB_PL")
 ```
 
+checking to make sure that th
+
 ```{r}
 class(mpsz14_shp)
 ```
@@ -32,10 +34,49 @@ class(mpsz14_shp)
 st_write(mpsz14_shp, "data/MP14_SUBZONE_WEB_PL.kml", delete_dsn=TRUE)
 ```
 
+changing the crs of the data files
+
 ```{r}
-mpsz19_kml = st_read ("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+mpsz19_kml = st_read ("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml") %>% 
+  st_transform(crs=3414)
 ```
 
 ```{r}
-mpsz19_shp = st_read(dsn = "data/", layer = "MPSZ-2019")
+mpsz19_shp = st_read(dsn = "data/", layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+```
+
+checking the crs of the data files
+
+```{r}
+st_crs(mpsz19_shp)
+```
+
+```{r}
+st_crs(mpsz19_kml)
+```
+
+```{r}
+popdata23 <- read_csv("data/respopagesextod2023.csv") 
+```
+
+```{r}
+popdata_2023 <- read_csv("data/respopagesextod2023.csv") %>% 
+  group_by(PA, SZ, AG) %>% 
+  summarise('POP'= sum(`Pop`)) %>% 
+  ungroup() %>% 
+  pivot_wider(names_from=AG, 
+              values_from=POP)
+
+```
+
+```{r}
+popdata_2023 <- popdata_2023 %>%
+  mutate_at(.vars = vars(PA, SZ), 
+          .funs = list(toupper))
+```
+
+```{r}
+mpsz_pop2020 <- left_join(popdata_2023, mpsz19_shp,
+                          by = c("SZ" = "SUBZONE_N"))
 ```
