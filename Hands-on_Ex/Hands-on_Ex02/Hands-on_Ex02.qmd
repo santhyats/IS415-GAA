@@ -58,8 +58,8 @@ I will be using two data sets for the creation of my chloropleth map:
 I used the *st_read()* function of **sf** package to import `MP14_SUBZONE_WEB_PL` shapefile into R as a simple feature data frame called `mpsz`. Below is the code:
 
 ```{r}
-mpsz <- st_read(dsn="data/geospatial", 
-                layer = "MP14_SUBZONE_WEB_PL")
+mpsz <- st_read (dsn="data/geospatial", 
+                layer= "MP14_SUBZONE_WEB_PL")
 ```
 
 <br>By typing the name of the variable `mpsz`, we will be able to view its contents, as seen below.

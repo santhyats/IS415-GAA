@@ -1,0 +1,41 @@
+---
+title: "In-class Exercise 2"
+author: "Santhya Selvan"
+date: "August 26, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+## Getting Started 
+
+First and foremost, we will load the needed packages into our Rstudio using paccman's `p_load` function.
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+We can now load our data into our R environment as new data frames.
+
+```{r}
+mpsz14_shp <- st_read(dsn="data", layer="MP14_SUBZONE_WEB_PL")
+```
+
+```{r}
+class(mpsz14_shp)
+```
+
+```{r}
+#| output: false
+st_write(mpsz14_shp, "data/MP14_SUBZONE_WEB_PL.kml", delete_dsn=TRUE)
+```
+
+```{r}
+mpsz19_kml = st_read ("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+```
+
+```{r}
+mpsz19_shp = st_read(dsn = "data/", layer = "MPSZ-2019")
+```

@@ -1,0 +1,15 @@
+{
+  "hash": "446b289dc0c40ede0881c6d13642310d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class Exercise 2\"\nauthor: \"Santhya Selvan\"\ndate: \"August 26, 2024\"\ndate-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  freeze: true\n---\n\n\n## Getting Started \n\nFirst and foremost, we will load the needed packages into our Rstudio using paccman's `p_load` function.\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, tidyverse)\n```\n:::\n\n\nWe can now load our data into our R environment as new data frames.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nmpsz14_shp <- st_read(dsn=\"data\", layer=\"MP14_SUBZONE_WEB_PL\")\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\santhyats\\IS415-GAA\\In-class_Ex\\In-class_Ex02\\data' using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nclass(mpsz14_shp)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"sf\"         \"data.frame\"\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nst_write(mpsz14_shp, \"data/MP14_SUBZONE_WEB_PL.kml\", delete_dsn=TRUE)\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
