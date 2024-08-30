@@ -73,7 +73,7 @@ mpsz2
 This is Illustrated below.
 
 ```{r}
-popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv")
+popdata <- read_csv("data2/aspatial/respopagesextod2011to2020.csv")
 ```
 
 ### **2.3.2 Preparing the data**
