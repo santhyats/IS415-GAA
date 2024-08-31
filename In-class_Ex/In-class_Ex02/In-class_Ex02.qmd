@@ -11,13 +11,13 @@ execute:
 
 ## Getting Started
 
-First and foremost, we will load the needed packages into our Rstudio using paccman's `p_load` function.
+First and foremost, we will load the needed packages into our Rstudio using pacman's `p_load` function.
 
 ```{r}
 pacman::p_load(sf, tidyverse)
 ```
 
-We can now load our data into our R environment as new data3 frames.
+We can now load our data into our R environment as new data frames.
 
 ```{r}
 mpsz14_shp <- st_read(dsn="data3", layer="MP14_SUBZONE_WEB_PL")
