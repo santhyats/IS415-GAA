@@ -5,6 +5,8 @@ author: "Santhya Selvan"
 
 When we need to use packages that have been retired, we can download them from archives. In this example below I am downloading fro posit package manager. The date indicates the version of the package.
 
+However, it is not recommended to use retired packages.
+
 ```{r}
 #| eval: false
 install.packages ("maptools",
@@ -16,4 +18,14 @@ This code is used to derive the coastal outline sf tibble data frame. We don't n
 ```{r}
 sg_sf <- mpsz_sf %>% st_union()
 plot(sg_sf)
+```
+
+Loading in data for Take Home 3
+
+```{r}
+acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>% 
+  st_as_sf(coords = c("longitude", "latitude"), 
+           crs = 4326) %>% 
+  st_transform(crs = 32647) %>% 
+  mutate(event_date = dmy(event_date))
 ```
