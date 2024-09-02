@@ -10,3 +10,10 @@ When we need to use packages that have been retired, we can download them from a
 install.packages ("maptools",
                   repos = "https://packagemanager.posit.co/cran/2023-10-13")
 ```
+
+This code is used to derive the coastal outline sf tibble data frame. We don't need the coastal outline dataframe if we are going by this method.
+
+```{r}
+sg_sf <- mpsz_sf %>% st_union()
+plot(sg_sf)
+```
