@@ -1,0 +1,5 @@
+---
+title: "Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar"
+author: "Santhya Selvan"
+date: "August 30, 2024"
+---
