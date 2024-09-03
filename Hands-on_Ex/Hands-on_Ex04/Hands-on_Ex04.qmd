@@ -1,4 +1,4 @@
 ---
-title: "Hands-on Exercise 2"
+title: "Network contained Spatial Point Pattern Analysis"
 author: "Santhya Selvan"
 ---
