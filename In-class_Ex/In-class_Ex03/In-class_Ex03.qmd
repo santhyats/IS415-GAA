@@ -20,8 +20,8 @@ install.packages ("maptools",
 This code is used to derive the coastal outline sf tibble data frame. We don't need the coastal outline dataframe if we are going by this method.
 
 ```{r}
-sg_sf <- mpsz_sf %>% st_union()
-plot(sg_sf)
+#sg_sf <- mpsz_sf %>% st_union()
+#plot(sg_sf)
 ```
 
 ![](images/clipboard-3503840553.png)Loading in data for Take Home 3
