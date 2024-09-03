@@ -3,6 +3,10 @@ title: "In Class Exercise 3"
 author: "Santhya Selvan"
 ---
 
+```{r}
+pacman::p_load(tidyverse, sf, spatstat, tmap)
+```
+
 When we need to use packages that have been retired, we can download them from archives. In this example below I am downloading fro posit package manager. The date indicates the version of the package.
 
 However, it is not recommended to use retired packages.
@@ -20,7 +24,7 @@ sg_sf <- mpsz_sf %>% st_union()
 plot(sg_sf)
 ```
 
-Loading in data for Take Home 3
+![](images/clipboard-3503840553.png)Loading in data for Take Home 3
 
 ```{r}
 acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>% 
@@ -28,4 +32,17 @@ acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>%
            crs = 4326) %>% 
   st_transform(crs = 32647) %>% 
   mutate(event_date = dmy(event_date))
+```
+
+```{r}
+
+tmap_mode('view')
+acled_sf %>% 
+  filter(year==2023 | event_type =='Political violence') %>% 
+  tm_shape() + 
+  tm_dots()
+```
+
+```{r}
+tmap_mode("plot")
 ```
