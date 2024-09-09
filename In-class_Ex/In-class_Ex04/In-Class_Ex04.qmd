@@ -1,0 +1,163 @@
+---
+title: "In Class Ex 4"
+author: "Santhya Selvan"
+---
+
+## 4.0 Loading R Packages
+
+```{r}
+pacman::p_load(sf, raster, tidyverse, spatstat, sparr, tmap)
+```
+
+sf: data wrangling for spatial data
+
+tidyverse: data wrangling for non-spatial data
+
+raster: for handling raster data
+
+tmap: mapping functions
+
+spatstat: statistic analysis for spatial point process analysis
+
+sparr: statistic analysis for spatio-temporal data
+
+## 4.1 Importing the Data 
+
+```{r}
+stud_area <- st_read(ds ='data/rawdata', 
+                     layer = 'Kepulauan_Bangka_Belitung') %>% 
+  st_union() %>% 
+  st_zm(drop = TRUE, what = 'ZM') %>% 
+  st_transform(crs = 32748)
+```
+
+-   We use st_union() to dissolve the polygons into a single surface.
+
+-   st_zm () is used to drop the Z and M coordinates in the dataset.
+
+-   Finally, st_transform() is used to transform the coordinate reference system to that of Indonesia.
+
+#### 4.1.1 Converting to Owin object
+
+```{r}
+stud_owin <- as.owin(stud_area)
+stud_owin
+class(stud_owin)
+```
+
+#### 4.1.2 Importing Forest Fire Data 
+
+We will now read the information from the csv file and save it as a sf dataframe.
+
+```{r}
+fire_sf <- read_csv("data/rawdata/forestfires.csv") %>% 
+  st_as_sf(coords = c('longitude', 'latitude'), 
+           crs= 4326) %>% 
+  st_transform(crs = 32748)
+  
+
+```
+
+st_as_af() is used to take the longitude and langitude found in the csv file and transform it into spatial data that we can use.
+
+the sequence of "longitude" and "latitude" should not be switched.
+
+In the newly transformed dataframe, the longitude and latitude values are used to compute a new column called 'geometry', which contains the data for the point events
+
+#### 4.1.3 Preparing the Forest Fire Data (Time)
+
+For our ppp object, we need the month to be in numeric form, so it is easier to manipulate time data.
+
+```{r}
+fire_sf <- fire_sf %>% 
+  mutate(DayOfYear = yday(acq_date)) %>% 
+  mutate(Month_num = month(acq_date)) %>% 
+  mutate(Month_fac = month(acq_date,
+                           label = TRUE,
+                           abbr = FALSE))
+
+```
+
+-   mutate() is used to add columns to our dataframe.
+
+-   here, we add three new columns, one for Day of Year, and 2 for months
+
+-   under the month columns, one column is reserved for the numeric representation of the months
+
+-   the other displays the month as the full form.
+
+##  
+
+## 4.2 Visualising the fire points 
+
+We will not plot our study area indicating the fire events. Take note to always plot the base polygons and the shapes first, before we plot the point events.
+
+```{r}
+tm_shape(stud_area) + 
+  tm_polygons() +
+  tm_shape(fire_sf) +
+  tm_dots()
+
+```
+
+#### 4.2.1 Visualising the Fire Events by Months 
+
+```{r}
+tm_shape(stud_area) +
+  tm_polygons() +
+  tm_shape(fire_sf) +
+  tm_dots(size = 0.1) +
+  tm_facets(by = 'Month_fac', 
+            free.coords = FALSE,
+            drop.units= TRUE)
+```
+
+## 4.3 Computing SKDE by Month 
+
+#### 4.3.1 Preparing ppp object
+
+We will prepare our ppp object in this stage. First, we select the necessary columns from our fire_sf dataframe. We only need the Month_numeric column. We save this to a new variable called fire_month
+
+```{r}
+fire_month <- fire_sf %>% 
+  select('Month_num')
+```
+
+In order to use spatstat, we need a ppp object. Hence, we will convert our fire_month sf to a ppp object using the as.ppp() function as demonstrated below.
+
+```{r}
+fire_month_ppp <- as.ppp(fire_month)
+fire_month_ppp
+```
+
+#### 4.3.2 Preparing Owin layer
+
+We will now include our owin object from before to create our Owin layer.
+
+```{r}
+fire_month_owin <- fire_month_ppp[stud_owin]
+summary(fire_month_owin)
+```
+
+#### 4.3.3 Computing Spatio-Temporal KDE 
+
+We will use the spattemp.density() function to compute the kde of the fire_month_owin.
+
+```{r}
+st_kde <- spattemp.density(fire_month_owin)
+summary(st_kde)
+```
+
+4.3.4 Plotting the Spatio-Temporal KDE object
+
+```{r}
+tims <- c(7,8,9,10,11,12)
+par(mfcol = c(2,3))
+
+for(i in tims){
+  plot(st_kde, i, 
+       override.par = FALSE, 
+       fix.range = TRUE,
+       main=paste("KDE Of Month", i))
+}
+```
