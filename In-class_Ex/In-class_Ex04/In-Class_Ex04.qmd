@@ -21,7 +21,7 @@ spatstat: statistic analysis for spatial point process analysis
 
 sparr: statistic analysis for spatio-temporal data
 
-## 4.1 Importing the Data 
+## 4.1 Importing the Data
 
 ```{r}
 stud_area <- st_read(ds ='data/rawdata', 
@@ -45,16 +45,16 @@ stud_owin
 class(stud_owin)
 ```
 
-#### 4.1.2 Importing Forest Fire Data 
+#### 4.1.2 Importing Forest Fire Data
 
 We will now read the information from the csv file and save it as a sf dataframe.
 
 ```{r}
-fire_sf <- read_csv("data/rawdata/forestfires.csv") %>% 
-  st_as_sf(coords = c('longitude', 'latitude'), 
-           crs= 4326) %>% 
-  st_transform(crs = 32748)
-  
+fire_sf <- read_csv("data/rawdata/forestfires.csv") %>%
+  st_as_sf(coords = c('longitude', 'latitude'),
+           crs=4326) %>% 
+  st_transform(crs=32748)
+
 
 ```
 
@@ -86,9 +86,9 @@ fire_sf <- fire_sf %>%
 
 -   the other displays the month as the full form.
 
-##  
+## 
 
-## 4.2 Visualising the fire points 
+## 4.2 Visualising the fire points
 
 We will not plot our study area indicating the fire events. Take note to always plot the base polygons and the shapes first, before we plot the point events.
 
@@ -100,7 +100,7 @@ tm_shape(stud_area) +
 
 ```
 
-#### 4.2.1 Visualising the Fire Events by Months 
+#### 4.2.1 Visualising the Fire Events by Months
 
 ```{r}
 tm_shape(stud_area) +
@@ -112,7 +112,7 @@ tm_shape(stud_area) +
             drop.units= TRUE)
 ```
 
-## 4.3 Computing SKDE by Month 
+## 4.3 Computing SKDE by Month
 
 #### 4.3.1 Preparing ppp object
 
@@ -139,7 +139,7 @@ fire_month_owin <- fire_month_ppp[stud_owin]
 summary(fire_month_owin)
 ```
 
-#### 4.3.3 Computing Spatio-Temporal KDE 
+#### 4.3.3 Computing Spatio-Temporal KDE
 
 We will use the spattemp.density() function to compute the kde of the fire_month_owin.
 
