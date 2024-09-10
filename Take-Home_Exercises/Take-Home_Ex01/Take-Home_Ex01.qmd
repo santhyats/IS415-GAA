@@ -5,3 +5,78 @@ date: "August 30, 2024"
 ---
 
 ## 1.0 Overview
+
+......
+
+#### 1.1 Loading R packages
+
+These are the packages that I will be using in this exercise.
+
+**sf**: Used in spatial data wrangling
+
+**tidyverse**: Used in data wrangling for non-spatial data
+
+**raster**: For reading, writing and manipulating raster data
+
+**tmap**: For functions relating to mapping point patterns
+
+**spatstat**: Provides functions for spatial point process analysis
+
+**sparr**: Provides functions for spatio-temporal point process analysis
+
+```{r}
+pacman::p_load(sf, raster, tidyverse, spatstat, sparr, tmap)
+```
+
+## 2.0 Data Preparation
+
+In this section, I will be retrieving the required data and performing the necessary data wrangling methods in order to transform the data into a form that is best suitable for our analytic needs for this exercise. The datasets used in this exercise are:
+
+-   `Myanmar_All_2021-24.csv`: A csv file downloaded from ACLED, which contains all the details of the internal conflicts in Myanmar from 2021-2024. Note that the file name has been renamed for ease of use.
+
+-   `MBoundary`: A shapefile downloaded from Myanmar Information Management Unit, MIMU. This shapefile maps out the boundary of Myanmar. I have also renamed this file for ease of use.
+
+#### 2.1 Importing the Data
+
+importing the base map of myanmar/ geospatial data. transform the crs to that of Myanmar.
+
+```{r}
+boundary <- st_read(dsn="data/raw",
+                    layer = "MBoundary") %>% 
+  st_transform(crs=32646)
+
+st_crs(boundary)
+```
+
+importing and reading the csv file into a dataframe. transform the crs to that of Myanmars
+
+```{r}
+all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>% 
+  st_as_sf(coords = c('longitude', 'latitude'),
+           crs=4326) %>% 
+  st_transform(crs=32646)
+
+st_crs(all_sf)
+```
+
+filter out the event types we will be focusing on in the exercise and save them into different dataframes.
+
+```{r}
+battles_sf <- all_sf %>%  filter(event_type == 'Battles')
+
+exp_sf <- all_sf %>%  filter(event_type == "Explosions/Remote violence")
+
+civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians")
+
+riots_sf <- all_sf %>%  filter(event_type=='Riots')
+
+strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic Developments')
+
+
+```
+
+mapping out the spatial data and the spatial points to observe for any areas of interest.
+
+```{r}
+tm_shape(boundary) + tm_polygons() +tm_shape(all_sf) + tm_dots()
+```
