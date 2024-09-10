@@ -22,9 +22,15 @@ This code is used to derive the coastal outline sf tibble data frame. We don't n
 ```{r}
 #sg_sf <- mpsz_sf %>% st_union()
 #plot(sg_sf)
+
+
+mpsz_sf2 <- st_read(dsn ='data' , layer = 'MP14_SUBZONE_WEB_PL')
+
+sg_sf2 <- mpsz_sf2 %>% st_union()
+plot(sg_sf2)
 ```
 
-![](images/clipboard-3503840553.png)Loading in data for Take Home 3
+![](images/clipboard-3503840553.png)Loading in data for Take Home 1
 
 ```{r}
 acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>% 
@@ -36,13 +42,9 @@ acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>%
 
 ```{r}
 
-tmap_mode('view')
+tmap_mode('plot')
 acled_sf %>% 
   filter(year==2023 | event_type =='Political violence') %>% 
   tm_shape() + 
   tm_dots()
-```
-
-```{r}
-tmap_mode("plot")
 ```

@@ -110,7 +110,7 @@ We are able to plot all the data sets on the same map because we have ensured th
 Alternatively, we can also prepare a pin map by using the code chunk below.
 
 ```{r}
-tmap_mode('view')
+tmap_mode('plot')
 tm_shape(childcare_sf)+
   tm_dots()
 ```
@@ -164,7 +164,7 @@ sum(multiplicity(childcare_ppp) > 1)
 From the output, we see that there are 128 duplicated point events. To see the locations of these, we will plot them out.\
 
 ```{r}
-tmap_mode('view')
+tmap_mode('plot')
 tm_shape(childcare_sf) +
   tm_dots(alpha=0.4, 
           size=0.05)
