@@ -48,13 +48,15 @@ boundary <- st_read(dsn="data/raw",
 st_crs(boundary)
 ```
 
+Importing the regional boundaries of Myanmar
+
 ```{r}
 regions_sf <- st_read(dsn="data/raw",
                       layer="regions") %>% 
   st_transform(crs = 32646)
 ```
 
-importing and reading the csv file into a dataframe. transform the crs to that of Myanmars
+importing and reading the csv file containing the data about the conflicts into a dataframe. transform the crs to that of Myanmars
 
 ```{r}
 all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>% 
@@ -85,4 +87,49 @@ mapping out the spatial data and the spatial points by the event type to observe
 
 ```{r}
 tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
+```
+
+2.2 Data Wrangling
+
+2.2.1 Converting the sf objects to ppp objects using
+
+```{r}
+battles_ppp <- as.ppp(st_coordinates(battles_sf), st_bbox(battles_sf))
+```
+
+```{r}
+any(duplicated(battles_ppp))
+```
+
+```{r}
+battles_ppp_jitt <- rjitter(battles_ppp, retry=TRUE, nsim = 1, drop=TRUE)
+any(duplicated(battles_ppp_jitt))
+```
+
+2.2.2 converting the boundary to an owin object
+
+```{r}
+boundary_owin <- as.owin(boundary)
+```
+
+combining the ppp object to the owin object
+
+```{r}
+battles_ppp_com <- battles_ppp_jitt[boundary_owin]
+```
+
+```{r}
+plot(battles_ppp_com)
+```
+
+test plotting the kde layer for battles over the 4 years
+
+```{r}
+battles_ppp_com <- rescale.ppp(battles_ppp_com, 1000, 'km')
+battles_kde <- density(battles_ppp_com, sigma=bw.diggle,
+                              edge=TRUE,
+                            kernel="gaussian") 
+
+plot(battles_kde)
+
 ```
