@@ -48,6 +48,12 @@ boundary <- st_read(dsn="data/raw",
 st_crs(boundary)
 ```
 
+```{r}
+regions_sf <- st_read(dsn="data/raw",
+                      layer="regions") %>% 
+  st_transform(crs = 32646)
+```
+
 importing and reading the csv file into a dataframe. transform the crs to that of Myanmars
 
 ```{r}
@@ -78,7 +84,5 @@ strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic Developments')
 mapping out the spatial data and the spatial points by the event type to observe for any areas of interest.
 
 ```{r}
-tm_shape(boundary) + tm_polygons() +tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type',
-                                                                             free.coords = FALSE,
-                                                                              drop.units= TRUE)
+tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
 ```
