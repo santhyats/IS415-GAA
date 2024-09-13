@@ -125,7 +125,14 @@ str(wm_q)
 
 #### 5.4.2 Computing Contiguity Neighbors - ROOK
 
-Another type of contiguity in spatial objects is Rook, which indicates the neighbors that are directly adjacent to the spatial object horizontally and vertically, but does not account for the diagonal neighbors.
+Another type of contiguity in spatial objects is Rook, which indicates the neighbors that are directly adjacent to the spatial object horizontally and vertically, but does not account for the diagonal neighbors. In this section, we will be computing the contiguity of the spatial objects using the Rook method.
+
+```{r}
+wm_r <- poly2nb(hunan, queen=FALSE)
+summary(wm_r)
+```
+
+5.4.3
 
 ## 5.5 Computing Distance-based Neighbours
 

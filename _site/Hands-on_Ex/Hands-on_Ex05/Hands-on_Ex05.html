@@ -248,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 13, 2024</p>
+      <p class="date-modified">September 14, 2024</p>
     </div>
   </div>
     
@@ -517,7 +517,27 @@ Link number distribution:
 </section>
 <section id="computing-contiguity-neighbors---rook" class="level4">
 <h4 class="anchored" data-anchor-id="computing-contiguity-neighbors---rook">5.4.2 Computing Contiguity Neighbors - ROOK</h4>
-<p>Another type of contiguity in spatial objects is Rook, which indicates the neighbors that are directly adjacent to the spatial object horizontally and vertically, but does not account for the diagonal neighbors.</p>
+<p>Another type of contiguity in spatial objects is Rook, which indicates the neighbors that are directly adjacent to the spatial object horizontally and vertically, but does not account for the diagonal neighbors. In this section, we will be computing the contiguity of the spatial objects using the Rook method.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>wm_r <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(hunan, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 88 
+Number of nonzero links: 440 
+Percentage nonzero weights: 5.681818 
+Average number of links: 5 
+Link number distribution:
+
+ 1  2  3  4  5  6  7  8  9 10 
+ 2  2 12 20 21 14 11  3  2  1 
+2 least connected regions:
+30 65 with 1 link
+1 most connected region:
+85 with 10 links</code></pre>
+</div>
+</div>
+<p>5.4.3</p>
 </section>
 </section>
 <section id="computing-distance-based-neighbours" class="level2">
