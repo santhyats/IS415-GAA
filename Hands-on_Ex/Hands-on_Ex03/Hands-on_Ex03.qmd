@@ -58,6 +58,7 @@ pacman::p_load(sf, spatstat, raster, tidyverse, tmap)
 I will use [*st_read()*](https://r-spatial.github.io/sf/reference/st_read.html) of **sf** package to import the three geospatial data sets into R.
 
 ```{r}
+
 childcare_sf <- st_read("data4/child-care-services-geojson.geojson") %>% st_transform(crs = 3414)
 ```
 
