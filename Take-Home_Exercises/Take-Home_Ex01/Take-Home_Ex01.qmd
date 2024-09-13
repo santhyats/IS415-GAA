@@ -1,7 +1,7 @@
 ---
 title: "Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar"
 author: "Santhya Selvan"
-date: "August 30, 2024"
+date: "September 4, 2024"
 ---
 
 ## 1.0 Overview
@@ -45,6 +45,9 @@ boundary <- st_read(dsn="data/raw",
                     layer = "MBoundary") %>% 
   st_transform(crs=32646)
 
+```
+
+```{r}
 st_crs(boundary)
 ```
 
@@ -67,10 +70,17 @@ all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>%
 st_crs(all_sf)
 ```
 
+convertinfg the date format to be more usable.
+
+```{r}
+all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y")
+```
+
 filter out the event types we will be focusing on in the exercise and save them into different dataframes.
 
 ```{r}
 battles_sf <- all_sf %>%  filter(event_type == 'Battles')
+battles_sf
 
 exp_sf <- all_sf %>%  filter(event_type == "Explosions/Remote violence")
 
@@ -89,24 +99,38 @@ mapping out the spatial data and the spatial points by the event type to observe
 tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
 ```
 
-2.2 Data Wrangling
+split the dataset into quarterly
 
-2.2.1 Converting the sf objects to ppp objects using
+::: panel-tabset
+## Battles
+
+## Explosions
+
+## Violence against civillians
+
+## Strategic Developments
+:::
 
 ```{r}
-battles_ppp <- as.ppp(st_coordinates(battles_sf), st_bbox(battles_sf))
+q1_21_battles_sf <- battles_sf %>% 
+  filter(year == '2021' ) %>% 
+  filter(quarter(event_date) == 1)
+
 ```
 
 ```{r}
-any(duplicated(battles_ppp))
+tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(q1_21_battles_sf) + tm_dots()
 ```
+
+#### 2.2 Data Wrangling
+
+##### 2.2.1 Converting the sf objects to ppp objects using
 
 ```{r}
-battles_ppp_jitt <- rjitter(battles_ppp, retry=TRUE, nsim = 1, drop=TRUE)
-any(duplicated(battles_ppp_jitt))
+battles_ppp <- as.ppp(st_coordinates(q1_21_battles_sf), st_bbox(q1_21_battles_sf))
 ```
 
-2.2.2 converting the boundary to an owin object
+##### 2.2.2 Converting the boundary to an owin object
 
 ```{r}
 boundary_owin <- as.owin(boundary)
@@ -115,20 +139,23 @@ boundary_owin <- as.owin(boundary)
 combining the ppp object to the owin object
 
 ```{r}
-battles_ppp_com <- battles_ppp_jitt[boundary_owin]
+battles_ppp_com <- battles_ppp[boundary_owin]
 ```
 
 ```{r}
 plot(battles_ppp_com)
 ```
 
-test plotting the kde layer for battles over the 4 years
+test plotting the kde layer for battles for q1 of 2021
 
 ```{r}
-battles_ppp_com <- rescale.ppp(battles_ppp_com, 1000, 'km')
-battles_kde <- density(battles_ppp_com, sigma=bw.diggle,
-                              edge=TRUE,
-                            kernel="gaussian") 
+battles_ppp_com.km <- rescale.ppp(battles_ppp_com, 1000, 'km')
+```
+
+## 3.0 Computing the quarterly KDE Layers
+
+```{r}
+battles_kde <- density(battles_ppp_com, sigma=bw.diggle, edge=TRUE, kernel="gaussian") 
 
 plot(battles_kde)
 
