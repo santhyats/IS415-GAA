@@ -110,5 +110,68 @@
     "title": "IS415: Geospatial Analytics and Applications",
     "section": "",
     "text": "Welcome to IS415 Geospatial Analytics Homepage! In this website, you will find all the coursework prepared by me in this course :) :&gt;"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html",
+    "title": "5 Spatial Weights and Application",
+    "section": "",
+    "text": "In this exercise, I will be computing spatial weights using R. The main learning points are:\n\nTo perform relational joints using appropriate join function of the dplyr package\nUsing the appropriate functions of the spdep package to:\n\ncompute spatial weights\ncalculate spatially lagged variables\n\n\nI will install the needed packages into our R environment first.\n\npacman::p_load(sf, tidyverse, spdep, tmap, knitr)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#overview",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#overview",
+    "title": "5 Spatial Weights and Application",
+    "section": "",
+    "text": "In this exercise, I will be computing spatial weights using R. The main learning points are:\n\nTo perform relational joints using appropriate join function of the dplyr package\nUsing the appropriate functions of the spdep package to:\n\ncompute spatial weights\ncalculate spatially lagged variables\n\n\nI will install the needed packages into our R environment first.\n\npacman::p_load(sf, tidyverse, spdep, tmap, knitr)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#importing-and-preparing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#importing-and-preparing-data",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.2 Importing and Preparing Data",
+    "text": "5.2 Importing and Preparing Data\nIn this exercise, I will be using the following datasets:\n\nHunan county boundary layer. This is a geospatial data set in ESRI shapefile format.\nHunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.\n\n\n5.2.1 Importing the shapefile\nst_read() of the sf package is used to import the shapefile into R. We will save it to a variable hunan.\n\nhunan &lt;- st_read(dsn=\"data/geospatial\",\n                 layer=\"Hunan\")\n\nReading layer `Hunan' from data source \n  `C:\\santhyats\\IS415-GAA\\Hands-on_Ex\\Hands-on_Ex05\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 88 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812\nGeodetic CRS:  WGS 84\n\n\n\n\n5.2.2 Importing the CSV\nI will import the csv file using the read_csv() function of the readr package and save it to a variable named hunan2012.\n\nhunan2012 &lt;- read_csv(\"data/aspatial/Hunan_2012.csv\")\n\nRows: 88 Columns: 29\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (2): County, City\ndbl (27): avg_wage, deposite, FAI, Gov_Rev, Gov_Exp, GDP, GDPPC, GIO, Loan, ...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n5.2.3 Performing relational join\nThe code chunk below will be used to update the attribute table of hunan’s SpatialPolygonsDataFrame with the attribute fields of hunan2012 dataframe. This is performed by using left_join() of dplyr package.\n\nhunan &lt;- left_join(hunan, hunan2012) %&gt;% \n  select(1:4, 7, 15)\n\nJoining with `by = join_by(County)`"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-regional-development-indicator",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#visualising-regional-development-indicator",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.3 Visualising Regional Development Indicator",
+    "text": "5.3 Visualising Regional Development Indicator\nNow, I am going to prepare a basemap and a choropleth map showing the distribution of GDPPC 2012 by using qtm() of tmap package.\n\nbasemap &lt;- tm_shape(hunan) +\n  tm_polygons() +\n  tm_text(\"NAME_3\", size=0.5)\n\ngdppc &lt;- qtm(hunan, \"GDPPC\")\ntmap_arrange(basemap, gdppc, asp=1, ncol=2)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-contiguity-spatial-weights",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-contiguity-spatial-weights",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.4 Computing Contiguity Spatial Weights",
+    "text": "5.4 Computing Contiguity Spatial Weights"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-distance-based-neighbours",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-distance-based-neighbours",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.5 Computing Distance-based Neighbours",
+    "text": "5.5 Computing Distance-based Neighbours"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-weights-based-on-idw",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#computing-weights-based-on-idw",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.6 Computing weights based on IDW",
+    "text": "5.6 Computing weights based on IDW"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#row-standardised-weights-matrix",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#row-standardised-weights-matrix",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.7 Row-standardised Weights Matrix",
+    "text": "5.7 Row-standardised Weights Matrix"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#applications-of-spatial-weights-matrix",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html#applications-of-spatial-weights-matrix",
+    "title": "5 Spatial Weights and Application",
+    "section": "5.8 Applications of Spatial Weights Matrix",
+    "text": "5.8 Applications of Spatial Weights Matrix"
   }
 ]

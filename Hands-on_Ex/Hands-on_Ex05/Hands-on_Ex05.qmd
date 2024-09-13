@@ -1,10 +1,87 @@
 ---
-title: "3. 1st Order Spatial Point Patterns Analysis Methods"
+title: "5 Spatial Weights and Application"
 author: "Santhya Selvan"
-date: "August 30, 2024"
+date: "September 13, 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
   echo: true
   freeze: true
 ---
+
+## 5.1 Overview
+
+In this exercise, I will be computing spatial weights using R. The main learning points are:
+
+-   To perform relational joints using appropriate join function of the **dplyr** package
+
+-   Using the appropriate functions of the **spdep** package to:
+
+    -   compute spatial weights
+
+    -   calculate spatially lagged variables
+
+I will install the needed packages into our R environment first.
+
+```{r}
+pacman::p_load(sf, tidyverse, spdep, tmap, knitr)
+```
+
+## 5.2 Importing and Preparing Data
+
+In this exercise, I will be using the following datasets:
+
+-   Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.
+
+-   Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.
+
+#### 5.2.1 Importing the shapefile 
+
+*st_read()* of the **sf** package is used to import the shapefile into R. We will save it to a variable `hunan`.
+
+```{r}
+hunan <- st_read(dsn="data/geospatial",
+                 layer="Hunan")
+```
+
+#### 5.2.2 Importing the CSV 
+
+I will import the csv file using the *read_csv()* function of the **readr** package and save it to a variable named `hunan2012.`
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+#### 5.2.3 Performing relational join
+
+The code chunk below will be used to update the attribute table of *hunan*’s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed by using *left_join()* of **dplyr** package.
+
+```{r}
+hunan <- left_join(hunan, hunan2012) %>% 
+  select(1:4, 7, 15)
+```
+
+## 5.3 Visualising Regional Development Indicator 
+
+Now, I am going to prepare a basemap and a choropleth map showing the distribution of GDPPC 2012 by using *qtm()* of **tmap** package.
+
+```{r}
+basemap <- tm_shape(hunan) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.5)
+
+gdppc <- qtm(hunan, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+
+## 5.4 Computing Contiguity Spatial Weights
+
+## 5.5 Computing Distance-based Neighbours
+
+## 5.6 Computing weights based on IDW
+
+## 5.7 Row-standardised Weights Matrix
+
+## 5.8 Applications of Spatial Weights Matrix
+
+## 
