@@ -76,16 +76,56 @@ tmap_arrange(basemap, gdppc, asp=1, ncol=2)
 
 ## 5.4 Computing Contiguity Spatial Weights
 
-Contiguity is the idea of spatial objects being in neighbours or in contact with one another. There are different types of contiguity to reference the neighbours and one of the types in the Queen contiguity, which refers to neighbors of the spatial object both adjacent and diagonally.
+Contiguity is the idea of spatial objects being in neighbours or in contact with one another. There are different types of contiguity to reference the neighbors and one of the types in the Queen contiguity, which refers to neighbors of the spatial object both adjacent and diagonally.
 
-In this section, I will use  [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package to compute contiguity weight matrices for the study area. This function takes in an argument, queen. If the queen argument is not set to fault, the list of neighbours will be computed with the queen criteria.
+In this section, I will use  [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package to compute contiguity weight matrices for the study area. This function takes in an argument, queen. If the queen argument is not set to FALSE, the list of neighbors will be computed with the queen criteria by default.
 
-#### 5.4.1 Computing Contiguity neighbours (Queen)
+#### 5.4.1 Computing Contiguity Neighbours - QUEEN
 
 ```{r}
 wm_q <- poly2nb(hunan, queen=TRUE)
 summary(wm_q)
 ```
+
+The code output above shows that there are a total of 88 spatial objects in hunan as well as the the most connected regions with it's corresponding number of links. It also shows us that there are 2 regions with the least connections of 1 link each.
+
+To see the neighbours of each spatial object, we can simply call the variable and indicate the index. For example, to see the neighbours of the 1st polygon:
+
+```{r}
+wm_q[1]
+```
+
+We are also able to view other details of this polygon and its neighbours using the following codes:
+
+-   to retrieve the county name of the polygon
+
+```{r}
+hunan$County[1]
+```
+
+-   retrieve the county names of its neighbors
+
+```{r}
+hunan$NAME_3[c(2, 3,  4,  57,  85)]
+```
+
+-   the GDPPCs of the five counties
+
+```{r}
+nb1 <- wm_q[[1]]
+nb1 <- hunan$GDPPC[nb1]
+nb1
+```
+
+-   view the complete weights matrix of all the spatial objects using *str()*.
+
+```{r}
+str(wm_q)
+```
+
+#### 5.4.2 Computing Contiguity Neighbors - ROOK
+
+Another type of contiguity in spatial objects is Rook, which indicates the neighbors that are directly adjacent to the spatial object horizontally and vertically, but does not account for the diagonal neighbors.
 
 ## 5.5 Computing Distance-based Neighbours
 
