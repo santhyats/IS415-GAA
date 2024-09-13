@@ -350,6 +350,30 @@ dbl (27): avg_wage, deposite, FAI, Gov_Rev, Gov_Exp, GDP, GDPPC, GIO, Loan, ...
 </section>
 <section id="computing-contiguity-spatial-weights" class="level2">
 <h2 class="anchored" data-anchor-id="computing-contiguity-spatial-weights">5.4 Computing Contiguity Spatial Weights</h2>
+<p>Contiguity is the idea of spatial objects being in neighbours or in contact with one another. There are different types of contiguity to reference the neighbours and one of the types in the Queen contiguity, which refers to neighbors of the spatial object both adjacent and diagonally.</p>
+<p>In this section, I will use &nbsp;<a href="https://r-spatial.github.io/spdep/reference/poly2nb.html"><em>poly2nb()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>&nbsp;package to compute contiguity weight matrices for the study area. This function takes in an argument, queen. If the queen argument is not set to fault, the list of neighbours will be computed with the queen criteria.</p>
+<section id="computing-contiguity-neighbours-queen" class="level4">
+<h4 class="anchored" data-anchor-id="computing-contiguity-neighbours-queen">5.4.1 Computing Contiguity neighbours (Queen)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(hunan, <span class="at">queen=</span><span class="cn">TRUE</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wm_q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 88 
+Number of nonzero links: 448 
+Percentage nonzero weights: 5.785124 
+Average number of links: 5.090909 
+Link number distribution:
+
+ 1  2  3  4  5  6  7  8  9 11 
+ 2  2 12 16 24 14 11  4  2  1 
+2 least connected regions:
+30 65 with 1 link
+1 most connected region:
+85 with 11 links</code></pre>
+</div>
+</div>
+</section>
 </section>
 <section id="computing-distance-based-neighbours" class="level2">
 <h2 class="anchored" data-anchor-id="computing-distance-based-neighbours">5.5 Computing Distance-based Neighbours</h2>

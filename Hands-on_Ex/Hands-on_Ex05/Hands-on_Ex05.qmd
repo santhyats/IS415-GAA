@@ -76,6 +76,17 @@ tmap_arrange(basemap, gdppc, asp=1, ncol=2)
 
 ## 5.4 Computing Contiguity Spatial Weights
 
+Contiguity is the idea of spatial objects being in neighbours or in contact with one another. There are different types of contiguity to reference the neighbours and one of the types in the Queen contiguity, which refers to neighbors of the spatial object both adjacent and diagonally.
+
+In this section, I will use  [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package to compute contiguity weight matrices for the study area. This function takes in an argument, queen. If the queen argument is not set to fault, the list of neighbours will be computed with the queen criteria.
+
+#### 5.4.1 Computing Contiguity neighbours (Queen)
+
+```{r}
+wm_q <- poly2nb(hunan, queen=TRUE)
+summary(wm_q)
+```
+
 ## 5.5 Computing Distance-based Neighbours
 
 ## 5.6 Computing weights based on IDW
