@@ -1459,6 +1459,97 @@ Percentage nonzero weights: 6.921488
 Average number of links: 6.090909 </code></pre>
 </div>
 </div>
+<p>Next, we will assign binary weights to this neighbor structure</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>b_weights <span class="ot">&lt;-</span> <span class="fu">lapply</span>(wm_qs, <span class="cf">function</span>(x) <span class="dv">0</span><span class="sc">*</span>x <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>b_weights[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1 1 1 1 1 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>b_weights2 <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(wm_qs, </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">glist =</span> b_weights, </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">style =</span> <span class="st">"B"</span>)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>b_weights2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 88 
+Number of nonzero links: 536 
+Percentage nonzero weights: 6.921488 
+Average number of links: 6.090909 
+
+Weights style: B 
+Weights constants summary:
+   n   nn  S0   S1    S2
+B 88 7744 536 1072 14160</code></pre>
+</div>
+</div>
+<p>We can now compute our lag variable with lag.listw().</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>w_sum_gdppc <span class="ot">&lt;-</span> <span class="fu">list</span>(hunan<span class="sc">$</span>NAME_3, <span class="fu">lag.listw</span>(b_weights2, hunan<span class="sc">$</span>GDPPC))</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>w_sum_gdppc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+ [1] "Anxiang"       "Hanshou"       "Jinshi"        "Li"           
+ [5] "Linli"         "Shimen"        "Liuyang"       "Ningxiang"    
+ [9] "Wangcheng"     "Anren"         "Guidong"       "Jiahe"        
+[13] "Linwu"         "Rucheng"       "Yizhang"       "Yongxing"     
+[17] "Zixing"        "Changning"     "Hengdong"      "Hengnan"      
+[21] "Hengshan"      "Leiyang"       "Qidong"        "Chenxi"       
+[25] "Zhongfang"     "Huitong"       "Jingzhou"      "Mayang"       
+[29] "Tongdao"       "Xinhuang"      "Xupu"          "Yuanling"     
+[33] "Zhijiang"      "Lengshuijiang" "Shuangfeng"    "Xinhua"       
+[37] "Chengbu"       "Dongan"        "Dongkou"       "Longhui"      
+[41] "Shaodong"      "Suining"       "Wugang"        "Xinning"      
+[45] "Xinshao"       "Shaoshan"      "Xiangxiang"    "Baojing"      
+[49] "Fenghuang"     "Guzhang"       "Huayuan"       "Jishou"       
+[53] "Longshan"      "Luxi"          "Yongshun"      "Anhua"        
+[57] "Nan"           "Yuanjiang"     "Jianghua"      "Lanshan"      
+[61] "Ningyuan"      "Shuangpai"     "Xintian"       "Huarong"      
+[65] "Linxiang"      "Miluo"         "Pingjiang"     "Xiangyin"     
+[69] "Cili"          "Chaling"       "Liling"        "Yanling"      
+[73] "You"           "Zhuzhou"       "Sangzhi"       "Yueyang"      
+[77] "Qiyang"        "Taojiang"      "Shaoyang"      "Lianyuan"     
+[81] "Hongjiang"     "Hengyang"      "Guiyang"       "Changsha"     
+[85] "Taoyuan"       "Xiangtan"      "Dao"           "Jiangyong"    
+
+[[2]]
+ [1] 147903 134605 131165 135423 134635 133381 238106 297281 344573 268982
+[11] 106510 136141 126832 103303 151645 196097 207589 143926 178242 175235
+[21] 138765 155699 160150 117145 113730  89002  63532 112988  59330  35930
+[31] 154439 145795 112587 107515 162322 145517  61826  79925  82589  83352
+[41] 119897 116749  81510  63530 151986 174193 210294  97361  96472 108936
+[51]  79819 108871  48531 128935  84305 188958 171869 148402  83813 104663
+[61] 155742  73336 112705  78084  58257 279414 237883 219273  83354  90124
+[71] 168462 165714 165668 311663 126892 229971 165876 271045 117731 256646
+[81] 126603 127467 295688 336838 267729 431516  85667  51028</code></pre>
+</div>
+</div>
+<p>Next, we will convert the lag variable into a dataframe and append it to the hunan datframe using left_join().</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>w_sum_gdppc.res <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(w_sum_gdppc)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(w_sum_gdppc.res) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"NAME_3"</span>, <span class="st">"w_sum GDPPC"</span>)</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>hunan <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hunan, w_sum_gdppc.res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(NAME_3)`</code></pre>
+</div>
+</div>
+<p>Lastly, we will once again plot the maps for comparison</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>w_sum_gdppc <span class="ot">&lt;-</span> <span class="fu">qtm</span>(hunan, <span class="st">"w_sum GDPPC"</span>)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(lag_sum_gdppc, w_sum_gdppc, <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>
