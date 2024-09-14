@@ -2,6 +2,11 @@
 title: "Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar"
 author: "Santhya Selvan"
 date: "September 4, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
 ---
 
 ## 1.0 Overview
@@ -70,7 +75,7 @@ all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>%
 st_crs(all_sf)
 ```
 
-convertinfg the date format to be more usable.
+converting the date format to be more usable.
 
 ```{r}
 all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y")

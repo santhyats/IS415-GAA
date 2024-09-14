@@ -1,6 +1,12 @@
 ---
 title: "In Class Ex 4"
 author: "Santhya Selvan"
+date: "September 9 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
 ---
 
 ## 4.0 Loading R Packages
