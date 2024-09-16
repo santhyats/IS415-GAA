@@ -1017,11 +1017,71 @@ plot(exp_q224_kde, main="Explosions in 2nd Quarter of 2024")
 ::: panel-tabset
 ## 2021
 
+```{r}
+strat_dev_q121_kde<- density(strat_devQ121_ppp_com, sigma=bw.CvL(strat_devQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+
+strat_dev_q221_kde<-density(strat_devQ221_ppp_com, sigma=bw.CvL(strat_devQ221_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q321_kde<-density(strat_devQ321_ppp_com, sigma=bw.CvL(strat_devQ321_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q421_kde<-density(strat_devQ421_ppp_com, sigma=bw.CvL(strat_devQ421_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(strat_dev_q121_kde, main="Strategic Developments in 1st Quarter of 2021")
+plot(strat_dev_q221_kde, main="Strategic Developments in 2nd Quarter of 2021")
+plot(strat_dev_q321_kde, main="Strategic Developments in 3rd Quarter of 2021")
+plot(strat_dev_q421_kde, main="Strategic Developments in 4th Quarter of 2021")
+```
+
 ## 2022
+
+```{r}
+strat_dev_q122_kde<- density(strat_devQ122_ppp_com, sigma=bw.CvL(strat_devQ122_ppp_com), edge=TRUE, kernel="gaussian") 
+
+strat_dev_q222_kde<-density(strat_devQ222_ppp_com, sigma=bw.CvL(strat_devQ222_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q322_kde<-density(strat_devQ322_ppp_com, sigma=bw.CvL(strat_devQ322_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q422_kde<-density(strat_devQ422_ppp_com, sigma=bw.CvL(strat_devQ422_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(strat_dev_q122_kde, main="Strategic Developments in 1st Quarter of 2022")
+plot(strat_dev_q222_kde, main="Strategic Developments in 2nd Quarter of 2022")
+plot(strat_dev_q322_kde, main="Strategic Developments in 3rd Quarter of 2022")
+plot(strat_dev_q422_kde, main="Strategic Developments in 4th Quarter of 2022")
+```
 
 ## 2023
 
+```{r}
+strat_dev_q123_kde<- density(strat_devQ123_ppp_com, sigma=bw.CvL(strat_devQ123_ppp_com), edge=TRUE, kernel="gaussian") 
+
+strat_dev_q223_kde<-density(strat_devQ223_ppp_com, sigma=bw.CvL(strat_devQ223_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q323_kde<-density(strat_devQ323_ppp_com, sigma=bw.CvL(strat_devQ323_ppp_com), edge=TRUE, kernel="gaussian")
+
+strat_dev_q423_kde<-density(strat_devQ423_ppp_com, sigma=bw.CvL(strat_devQ423_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(strat_dev_q123_kde, main="Strategic Developments in 1st Quarter of 2023")
+plot(strat_dev_q223_kde, main="Strategic Developments in 2nd Quarter of 2023")
+plot(strat_dev_q323_kde, main="Strategic Developments in 3rd Quarter of 2023")
+plot(strat_dev_q423_kde, main="Strategic Developments in 4th Quarter of 2023")
+```
+
 ## 2024
+
+```{r}
+strat_dev_q124_kde<- density(strat_devQ124_ppp_com, sigma=bw.CvL(strat_devQ124_ppp_com), edge=TRUE, kernel="gaussian") 
+
+strat_dev_q224_kde<-density(strat_devQ224_ppp_com, sigma=bw.CvL(strat_devQ224_ppp_com), edge=TRUE, kernel="gaussian")
+
+
+par(mfrow=c(1,2))
+plot(strat_dev_q124_kde, main="Strategic Developments in 1st Quarter of 2024")
+plot(strat_dev_q224_kde, main="Strategic Developments in 2nd Quarter of 2024")
+
+```
 :::
 
 ## Violence against Civilians
@@ -1029,10 +1089,71 @@ plot(exp_q224_kde, main="Explosions in 2nd Quarter of 2024")
 ::: panel-tabset
 ## 2021
 
+```{r}
+civViolence_q121_kde<- density(civViolenceQ121_ppp_com, sigma=bw.CvL(civViolenceQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+
+civViolence_q221_kde<-density(civViolenceQ221_ppp_com, sigma=bw.CvL(civViolenceQ221_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q321_kde<-density(civViolenceQ321_ppp_com, sigma=bw.CvL(civViolenceQ321_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q421_kde<-density(civViolenceQ421_ppp_com, sigma=bw.CvL(civViolenceQ421_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(civViolence_q121_kde, main="Violence Against Civilians in 1st Quarter of 2021")
+plot(civViolence_q221_kde, main="Violence Against Civilians in 2nd Quarter of 2021")
+plot(civViolence_q321_kde, main="Violence Against Civilians in 3rd Quarter of 2021")
+plot(civViolence_q421_kde, main="Violence Against Civilians in 4th Quarter of 2021")
+```
+
 ## 2022
+
+```{r}
+civViolence_q122_kde<- density(civViolenceQ122_ppp_com, sigma=bw.CvL(civViolenceQ122_ppp_com), edge=TRUE, kernel="gaussian") 
+
+civViolence_q222_kde<-density(civViolenceQ222_ppp_com, sigma=bw.CvL(civViolenceQ222_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q322_kde<-density(civViolenceQ322_ppp_com, sigma=bw.CvL(civViolenceQ322_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q422_kde<-density(civViolenceQ422_ppp_com, sigma=bw.CvL(civViolenceQ422_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(civViolence_q122_kde, main="Violence Against Civilians in 1st Quarter of 2022")
+plot(civViolence_q222_kde, main="Violence Against Civilians in 2nd Quarter of 2022")
+plot(civViolence_q322_kde, main="Violence Against Civilians in 3rd Quarter of 2022")
+plot(civViolence_q422_kde, main="Violence Against Civilians in 4th Quarter of 2022")
+```
 
 ## 2023
 
+```{r}
+civViolence_q123_kde<- density(civViolenceQ123_ppp_com, sigma=bw.CvL(civViolenceQ123_ppp_com), edge=TRUE, kernel="gaussian") 
+
+civViolence_q223_kde<-density(civViolenceQ223_ppp_com, sigma=bw.CvL(civViolenceQ223_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q323_kde<-density(civViolenceQ323_ppp_com, sigma=bw.CvL(civViolenceQ323_ppp_com), edge=TRUE, kernel="gaussian")
+
+civViolence_q423_kde<-density(civViolenceQ423_ppp_com, sigma=bw.CvL(civViolenceQ423_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(civViolence_q123_kde, main="Violence Against Civilians in 1st Quarter of 2023")
+plot(civViolence_q223_kde, main="Violence Against Civilians in 2nd Quarter of 2023")
+plot(civViolence_q323_kde, main="Violence Against Civilians in 3rd Quarter of 2023")
+plot(civViolence_q423_kde, main="Violence Against Civilians in 4th Quarter of 2023")
+```
+
 ## 2024
+
+```{r}
+civViolence_q124_kde<- density(civViolenceQ124_ppp_com, sigma=bw.CvL(civViolenceQ124_ppp_com), edge=TRUE, kernel="gaussian") 
+
+civViolence_q224_kde<-density(civViolenceQ224_ppp_com, sigma=bw.CvL(civViolenceQ224_ppp_com), edge=TRUE, kernel="gaussian")
+
+
+
+par(mfrow=c(1,2))
+plot(civViolence_q124_kde, main="Violence Against Civilians in 1st Quarter of 2024")
+plot(civViolence_q224_kde, main="Violence Against Civilians in 2nd Quarter of 2024")
+
+```
 :::
 :::

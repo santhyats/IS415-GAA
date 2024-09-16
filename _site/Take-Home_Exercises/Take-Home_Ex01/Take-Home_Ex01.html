@@ -1487,16 +1487,95 @@ PROJCRS["WGS 84 / UTM zone 46N",
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">2021</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">2022</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">2023</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false">2024</a></li></ul>
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>strat_dev_q121_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(strat_devQ121_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ121_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a>strat_dev_q221_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ221_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ221_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb144-4"><a href="#cb144-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>strat_dev_q321_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ321_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ321_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb144-6"><a href="#cb144-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>strat_dev_q421_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ421_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ421_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb144-8"><a href="#cb144-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-9"><a href="#cb144-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb144-10"><a href="#cb144-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q121_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 1st Quarter of 2021"</span>)</span>
+<span id="cb144-11"><a href="#cb144-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q221_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 2nd Quarter of 2021"</span>)</span>
+<span id="cb144-12"><a href="#cb144-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q321_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 3rd Quarter of 2021"</span>)</span>
+<span id="cb144-13"><a href="#cb144-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q421_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 4th Quarter of 2021"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>strat_dev_q122_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(strat_devQ122_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ122_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>strat_dev_q222_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ222_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ222_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>strat_dev_q322_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ322_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ322_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>strat_dev_q422_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ422_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ422_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb145-8"><a href="#cb145-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-9"><a href="#cb145-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb145-10"><a href="#cb145-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q122_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 1st Quarter of 2022"</span>)</span>
+<span id="cb145-11"><a href="#cb145-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q222_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 2nd Quarter of 2022"</span>)</span>
+<span id="cb145-12"><a href="#cb145-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q322_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 3rd Quarter of 2022"</span>)</span>
+<span id="cb145-13"><a href="#cb145-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q422_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 4th Quarter of 2022"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>strat_dev_q123_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(strat_devQ123_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ123_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>strat_dev_q223_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ223_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ223_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>strat_dev_q323_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ323_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ323_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>strat_dev_q423_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ423_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ423_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-9"><a href="#cb146-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb146-10"><a href="#cb146-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q123_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 1st Quarter of 2023"</span>)</span>
+<span id="cb146-11"><a href="#cb146-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q223_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 2nd Quarter of 2023"</span>)</span>
+<span id="cb146-12"><a href="#cb146-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q323_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 3rd Quarter of 2023"</span>)</span>
+<span id="cb146-13"><a href="#cb146-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q423_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 4th Quarter of 2023"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>strat_dev_q124_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(strat_devQ124_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ124_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-3"><a href="#cb147-3" aria-hidden="true" tabindex="-1"></a>strat_dev_q224_kde<span class="ot">&lt;-</span><span class="fu">density</span>(strat_devQ224_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(strat_devQ224_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb147-4"><a href="#cb147-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-5"><a href="#cb147-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-6"><a href="#cb147-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb147-7"><a href="#cb147-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q124_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 1st Quarter of 2024"</span>)</span>
+<span id="cb147-8"><a href="#cb147-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(strat_dev_q224_kde, <span class="at">main=</span><span class="st">"Strategic Developments in 2nd Quarter of 2024"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1506,16 +1585,96 @@ PROJCRS["WGS 84 / UTM zone 46N",
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">2021</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">2022</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">2023</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false">2024</a></li></ul>
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>civViolence_q121_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(civViolenceQ121_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ121_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a>civViolence_q221_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ221_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ221_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb148-4"><a href="#cb148-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb148-5"><a href="#cb148-5" aria-hidden="true" tabindex="-1"></a>civViolence_q321_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ321_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ321_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb148-6"><a href="#cb148-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb148-7"><a href="#cb148-7" aria-hidden="true" tabindex="-1"></a>civViolence_q421_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ421_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ421_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb148-8"><a href="#cb148-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb148-9"><a href="#cb148-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb148-10"><a href="#cb148-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q121_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 1st Quarter of 2021"</span>)</span>
+<span id="cb148-11"><a href="#cb148-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q221_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 2nd Quarter of 2021"</span>)</span>
+<span id="cb148-12"><a href="#cb148-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q321_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 3rd Quarter of 2021"</span>)</span>
+<span id="cb148-13"><a href="#cb148-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q421_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 4th Quarter of 2021"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>civViolence_q122_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(civViolenceQ122_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ122_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a>civViolence_q222_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ222_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ222_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb149-5"><a href="#cb149-5" aria-hidden="true" tabindex="-1"></a>civViolence_q322_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ322_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ322_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb149-6"><a href="#cb149-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb149-7"><a href="#cb149-7" aria-hidden="true" tabindex="-1"></a>civViolence_q422_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ422_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ422_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb149-8"><a href="#cb149-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb149-9"><a href="#cb149-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb149-10"><a href="#cb149-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q122_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 1st Quarter of 2022"</span>)</span>
+<span id="cb149-11"><a href="#cb149-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q222_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 2nd Quarter of 2022"</span>)</span>
+<span id="cb149-12"><a href="#cb149-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q322_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 3rd Quarter of 2022"</span>)</span>
+<span id="cb149-13"><a href="#cb149-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q422_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 4th Quarter of 2022"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>civViolence_q123_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(civViolenceQ123_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ123_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>civViolence_q223_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ223_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ223_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-5"><a href="#cb150-5" aria-hidden="true" tabindex="-1"></a>civViolence_q323_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ323_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ323_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb150-6"><a href="#cb150-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-7"><a href="#cb150-7" aria-hidden="true" tabindex="-1"></a>civViolence_q423_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ423_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ423_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb150-8"><a href="#cb150-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-9"><a href="#cb150-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb150-10"><a href="#cb150-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q123_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 1st Quarter of 2023"</span>)</span>
+<span id="cb150-11"><a href="#cb150-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q223_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 2nd Quarter of 2023"</span>)</span>
+<span id="cb150-12"><a href="#cb150-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q323_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 3rd Quarter of 2023"</span>)</span>
+<span id="cb150-13"><a href="#cb150-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q423_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 4th Quarter of 2023"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div id="tabset-7-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-4-tab">
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>civViolence_q124_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(civViolenceQ124_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ124_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>civViolence_q224_kde<span class="ot">&lt;-</span><span class="fu">density</span>(civViolenceQ224_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(civViolenceQ224_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb151-4"><a href="#cb151-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-5"><a href="#cb151-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-6"><a href="#cb151-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-7"><a href="#cb151-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb151-8"><a href="#cb151-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q124_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 1st Quarter of 2024"</span>)</span>
+<span id="cb151-9"><a href="#cb151-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(civViolence_q224_kde, <span class="at">main=</span><span class="st">"Violence Against Civilians in 2nd Quarter of 2024"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
