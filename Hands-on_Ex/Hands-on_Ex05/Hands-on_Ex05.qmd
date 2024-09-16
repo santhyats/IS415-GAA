@@ -138,7 +138,7 @@ In order to visualise the contiguity graphs, we need them to be in the form of a
 
 To get points that represent the polygons, we will use the centroids of the polygons. Here are the steps used to derive them:
 
-1.   Extract the Longitude and Latitude values of the polygons into a separate dataframe using the *st_centroid()* and *map_dbl()* functions.
+1.  Extract the Longitude and Latitude values of the polygons into a separate dataframe using the *st_centroid()* and *map_dbl()* functions.
 
 ```{r}
 longitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
@@ -205,7 +205,7 @@ summary(k1dists)
 
 From the results, we will use the largest distance of 61.79km as the upper threshold.
 
-#### 5.5.2 Computing fixed distance weights matrix 
+#### 5.5.2 Computing fixed distance weights matrix
 
 ```{r}
 wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
@@ -362,7 +362,7 @@ lag_sum_gdppc <- qtm(hunan, "lag_sum GDPPC")
 tmap_arrange(gdppc, lag_sum_gdppc, asp=1, ncol=2)
 ```
 
-#### 5.8.3 Spatial window average 
+#### 5.8.3 Spatial window average
 
 The spatial window average uses row-standardized weights and includes the diagonal element. To do this in R, we need to go back to the neighbors structure and add the diagonal element before assigning weights.
 
@@ -407,7 +407,7 @@ w_avg_gdppc <- qtm(hunan, "lag_window_avg GDPPC")
 tmap_arrange(lag_gdppc, w_avg_gdppc, asp=1, ncol=2)
 ```
 
-#### 8.9.4 Spatial Window sum 
+#### 8.9.4 Spatial Window sum
 
 The spatial window sum is the counter part of the window average, but without using row-standardized weights. As in the previous section, we will include the diagonal neighbors using the include.self() function of spdep
 
