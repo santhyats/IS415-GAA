@@ -139,3 +139,22 @@ Next, cbind() used to append newly created dataframe onto the hunan_sf dataframe
 ```{r}
 hunan_gstat <- cbind(hunan_sf, gwstat_df)
 ```
+
+#### 5.1.6 Plotting the geographically weighted summary mean
+
+We can finally map the geographically weighted summary statistics
+
+```{r}
+tm_shape(hunan_gstat) + 
+  tm_fill('GDPPC_LM',
+          n =5,
+          style = "quantile") +
+  tm_borders(alpha=0.5) + 
+  tm_layout(main.title="Distribution of Geographically Weighted Mean",
+            main.title.position = 'center',
+            main.title.size = 2.0,
+            legend.text.size = 1.2,
+            legend.height=1.50,
+            legend.width=1.50,
+            frame=TRUE)
+```
