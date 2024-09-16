@@ -665,203 +665,213 @@ battlesQ421_ppp_com<- battlesQ421_ppp[boundary_owin]
 battlesQ421_ppp_com<- rescale(battlesQ421_ppp_com, 1000, "km")
 
 #2022
-battlesQ122_ppp<- rescale(battlesQ122_ppp, 1000, "km") 
+ 
 battlesQ122_ppp_com<- battlesQ122_ppp[boundary_owin]
+battlesQ122_ppp_com<- rescale(battlesQ122_ppp_com, 1000, "km")
 
-battlesQ222_ppp<- rescale(battlesQ222_ppp, 1000, "km") 
 battlesQ222_ppp_com<- battlesQ222_ppp[boundary_owin]
+battlesQ222_ppp_com<- rescale(battlesQ222_ppp_com, 1000, "km")
 
-battlesQ322_ppp<- rescale(battlesQ322_ppp, 1000, "km") 
-battlesQ3122_ppp_com<- battlesQ322_ppp[boundary_owin]
+battlesQ322_ppp_com<- battlesQ322_ppp[boundary_owin]
+battlesQ322_ppp_com<- rescale(battlesQ322_ppp_com, 1000, "km")
 
-battlesQ422_ppp<- rescale(battlesQ422_ppp, 1000, "km") 
 battlesQ422_ppp_com<- battlesQ422_ppp[boundary_owin]
-                                                                                #2023
+battlesQ422_ppp_com<- rescale(battlesQ422_ppp_com, 1000, "km")                                                                                
+#2023
                                       
-battlesQ123_ppp<- rescale(battlesQ123_ppp, 1000, "km") 
 battlesQ123_ppp_com<- battlesQ123_ppp[boundary_owin]
+battlesQ123_ppp_com<- rescale(battlesQ123_ppp_com, 1000, "km")
 
-battlesQ223_ppp<- rescale(battlesQ223_ppp, 1000, "km") 
 battlesQ223_ppp_com<- battlesQ223_ppp[boundary_owin]
+battlesQ223_ppp_com<- rescale(battlesQ223_ppp_com, 1000, "km")
 
-battlesQ323_ppp<- rescale(battlesQ323_ppp, 1000, "km") 
-battlesQ3123_ppp_com<- battlesQ323_ppp[boundary_owin]
+battlesQ323_ppp_com<- battlesQ323_ppp[boundary_owin]
+battlesQ323_ppp_com<- rescale(battlesQ323_ppp_com, 1000, "km")
 
-battlesQ423_ppp<- rescale(battlesQ423_ppp, 1000, "km") 
 battlesQ423_ppp_com<- battlesQ423_ppp[boundary_owin]
+battlesQ423_ppp_com<- rescale(battlesQ423_ppp_com, 1000, "km")
 
 #2024
 
-battlesQ124_ppp<- rescale(battlesQ124_ppp, 1000, "km") 
 battlesQ124_ppp_com<- battlesQ124_ppp[boundary_owin]
+battlesQ124_ppp<- rescale(battlesQ124_ppp_com, 1000, "km")
 
-battlesQ224_ppp<- rescale(battlesQ224_ppp, 1000, "km") 
 battlesQ224_ppp_com<- battlesQ224_ppp[boundary_owin]
+battlesQ224_ppp_com<- rescale(battlesQ224_ppp_com, 1000, "km")
 ```
 
 ## Explosions
 
 ```{r}
-expQ121_ppp<- rescale(expQ121_ppp, 1000, "km") 
+ 
 expQ121_ppp_com<- expQ121_ppp[boundary_owin]
+expQ121_ppp_com<- rescale(expQ121_ppp_com, 1000, "km")
 
-expQ221_ppp<- rescale(expQ221_ppp, 1000, "km") 
 expQ221_ppp_com<- expQ221_ppp[boundary_owin]
+expQ221_ppp_com<- rescale(expQ221_ppp_com, 1000, "km")
 
-expQ321_ppp<- rescale(expQ321_ppp, 1000, "km") 
-expQ3121_ppp_com<- expQ321_ppp[boundary_owin]
+expQ321_ppp_com<- expQ321_ppp[boundary_owin]
+expQ321_ppp_com<- rescale(expQ321_ppp_com, 1000, "km") 
 
-expQ421_ppp<- rescale(expQ421_ppp, 1000, "km") 
 expQ421_ppp_com<- expQ421_ppp[boundary_owin]
+expQ421_ppp_com<- rescale(expQ421_ppp_com, 1000, "km")
 
 #2022
-expQ122_ppp<- rescale(expQ122_ppp, 1000, "km") 
+ 
 expQ122_ppp_com<- expQ122_ppp[boundary_owin]
+expQ122_ppp_com<- rescale(expQ122_ppp_com, 1000, "km")
 
-expQ222_ppp<- rescale(expQ222_ppp, 1000, "km") 
 expQ222_ppp_com<- expQ222_ppp[boundary_owin]
+expQ222_ppp_com<- rescale(expQ222_ppp_com, 1000, "km")
 
-expQ322_ppp<- rescale(expQ322_ppp, 1000, "km") 
-expQ3122_ppp_com<- expQ322_ppp[boundary_owin]
+expQ322_ppp_com<- expQ322_ppp[boundary_owin]
+expQ322_ppp_com<- rescale(expQ322_ppp_com, 1000, "km")
 
-expQ422_ppp<- rescale(expQ422_ppp, 1000, "km") 
 expQ422_ppp_com<- expQ422_ppp[boundary_owin]
-                                      
+expQ422_ppp_com<- rescale(expQ422_ppp_com, 1000, "km") 
+
 #2023
                                       
-expQ123_ppp<- rescale(expQ123_ppp, 1000, "km") 
+ 
 expQ123_ppp_com<- expQ123_ppp[boundary_owin]
+expQ123_ppp<- rescale(expQ123_ppp_com, 1000, "km")
 
-expQ223_ppp<- rescale(expQ223_ppp, 1000, "km") 
+ 
 expQ223_ppp_com<- expQ223_ppp[boundary_owin]
+expQ223_ppp_com<- rescale(expQ223_ppp_com, 1000, "km")
 
-expQ323_ppp<- rescale(expQ323_ppp, 1000, "km") 
-expQ3123_ppp_com<- expQ323_ppp[boundary_owin]
+ 
+expQ323_ppp_com<- expQ323_ppp[boundary_owin]
+expQ323_ppp_com<- rescale(expQ323_ppp_com, 1000, "km")
 
-expQ423_ppp<- rescale(expQ423_ppp, 1000, "km") 
+ 
 expQ423_ppp_com<- expQ423_ppp[boundary_owin]
+expQ423_ppp_com<- rescale(expQ423_ppp_com, 1000, "km")
 
 #2024
 
-expQ124_ppp<- rescale(expQ124_ppp, 1000, "km") 
 expQ124_ppp_com<- expQ124_ppp[boundary_owin]
+expQ124_ppp_com<- rescale(expQ124_ppp_com, 1000, "km")
+
+expQ224_ppp_com<-expQ224_ppp[boundary_owin]
+expQ224_ppp_com<- rescale(expQ224_ppp_com, 1000, "km")
 ```
 
 ## Strategic Developments
 
 ```{r}
-strat_devQ121_ppp<- rescale(strat_devQ121_ppp, 1000, "km") 
+ 
 strat_devQ121_ppp_com<- strat_devQ121_ppp[boundary_owin]
+strat_devQ121_ppp_com<- rescale(strat_devQ121_ppp_com, 1000, "km")
 
-strat_devQ221_ppp<- rescale(strat_devQ221_ppp, 1000, "km") 
 strat_devQ221_ppp_com<- strat_devQ221_ppp[boundary_owin]
+strat_devQ221_ppp_com<- rescale(strat_devQ221_ppp_com, 1000, "km")
 
-strat_devQ321_ppp<- rescale(strat_devQ321_ppp, 1000, "km") 
-strat_devQ3121_ppp_com<- strat_devQ321_ppp[boundary_owin]
+strat_devQ321_ppp_com<- strat_devQ321_ppp[boundary_owin]
+strat_devQ321_ppp_com<- rescale(strat_devQ321_ppp_com, 1000, "km")
 
-strat_devQ421_ppp<- rescale(strat_devQ421_ppp, 1000, "km") 
 strat_devQ421_ppp_com<- strat_devQ421_ppp[boundary_owin]
+strat_devQ421_ppp_com<- rescale(strat_devQ421_ppp_com, 1000, "km")
 
 #2022
-strat_devQ122_ppp<- rescale(strat_devQ122_ppp, 1000, "km") 
+
 strat_devQ122_ppp_com<- strat_devQ122_ppp[boundary_owin]
+strat_devQ122_ppp_com<- rescale(strat_devQ122_ppp_com, 1000, "km")
 
-strat_devQ222_ppp<- rescale(strat_devQ222_ppp, 1000, "km") 
 strat_devQ222_ppp_com<- strat_devQ222_ppp[boundary_owin]
+strat_devQ222_ppp_com<- rescale(strat_devQ222_ppp_com, 1000, "km")
 
-strat_devQ322_ppp<- rescale(strat_devQ322_ppp, 1000, "km") 
-strat_devQ3122_ppp_com<- strat_devQ322_ppp[boundary_owin]
+strat_devQ322_ppp_com<- strat_devQ322_ppp[boundary_owin]
+strat_devQ322_ppp_com<- rescale(strat_devQ322_ppp_com, 1000, "km")
 
-strat_devQ422_ppp<- rescale(strat_devQ422_ppp, 1000, "km") 
 strat_devQ422_ppp_com<- strat_devQ422_ppp[boundary_owin]
+strat_devQ422_ppp_com<- rescale(strat_devQ422_ppp_com, 1000, "km")
 
 #2023
                                       
-strat_devQ123_ppp<- rescale(strat_devQ123_ppp, 1000, "km") 
+ 
 strat_devQ123_ppp_com<- strat_devQ123_ppp[boundary_owin]
-
-strat_devQ223_ppp<- rescale(strat_devQ223_ppp, 1000, "km") 
+strat_devQ123_ppp_com<- rescale(strat_devQ123_ppp_com, 1000, "km")
+ 
 strat_devQ223_ppp_com<- strat_devQ223_ppp[boundary_owin]
+strat_devQ223_ppp_com<- rescale(strat_devQ223_ppp_com, 1000, "km")
 
-strat_devQ323_ppp<- rescale(strat_devQ323_ppp, 1000, "km") 
-strat_devQ3123_ppp_com<- strat_devQ323_ppp[boundary_owin]
+strat_devQ323_ppp_com<- strat_devQ323_ppp[boundary_owin]
+strat_devQ323_ppp_com<- rescale(strat_devQ323_ppp_com, 1000, "km")
 
-strat_devQ423_ppp<- rescale(strat_devQ423_ppp, 1000, "km") 
 strat_devQ423_ppp_com<- strat_devQ423_ppp[boundary_owin]
+strat_devQ423_ppp_com<- rescale(strat_devQ423_ppp_com, 1000, "km")
 
 #2024
 
-strat_devQ124_ppp<- rescale(strat_devQ124_ppp, 1000, "km") 
 strat_devQ124_ppp_com<- strat_devQ124_ppp[boundary_owin]
+strat_devQ124_ppp_com<- rescale(strat_devQ124_ppp_com, 1000, "km")
+
+strat_devQ224_ppp_com<-strat_devQ224_ppp[boundary_owin]
+strat_devQ224_ppp_com<- rescale(strat_devQ224_ppp_com, 1000, "km")
 ```
 
 ## Violence Against Civilians
 
 ```{r}
-civViolenceQ121_ppp<- rescale(civViolenceQ121_ppp, 1000, "km") 
+
 civViolenceQ121_ppp_com<- civViolenceQ121_ppp[boundary_owin]
+civViolenceQ121_ppp_com<- rescale(civViolenceQ121_ppp_com, 1000, "km")
 
-civViolenceQ221_ppp<- rescale(civViolenceQ221_ppp, 1000, "km") 
 civViolenceQ221_ppp_com<- civViolenceQ221_ppp[boundary_owin]
+civViolenceQ221_ppp_com<- rescale(civViolenceQ221_ppp_com, 1000, "km")
+ 
+civViolenceQ321_ppp_com<- civViolenceQ321_ppp[boundary_owin]
+civViolenceQ321_ppp_com<- rescale(civViolenceQ321_ppp_com, 1000, "km")
 
-civViolenceQ321_ppp<- rescale(civViolenceQ321_ppp, 1000, "km") 
-civViolenceQ3121_ppp_com<- civViolenceQ321_ppp[boundary_owin]
-
-civViolenceQ421_ppp<- rescale(civViolenceQ421_ppp, 1000, "km") 
 civViolenceQ421_ppp_com<- civViolenceQ421_ppp[boundary_owin]
+civViolenceQ421_ppp_com<- rescale(civViolenceQ421_ppp_com, 1000, "km")
 
 #2022
-civViolenceQ122_ppp<- rescale(civViolenceQ122_ppp, 1000, "km") 
+
 civViolenceQ122_ppp_com<- civViolenceQ122_ppp[boundary_owin]
+civViolenceQ122_ppp_com<- rescale(civViolenceQ122_ppp_com, 1000, "km")
 
-civViolenceQ222_ppp<- rescale(civViolenceQ222_ppp, 1000, "km") 
 civViolenceQ222_ppp_com<- civViolenceQ222_ppp[boundary_owin]
+civViolenceQ222_ppp_com<- rescale(civViolenceQ222_ppp_com, 1000, "km")
 
-civViolenceQ322_ppp<- rescale(civViolenceQ322_ppp, 1000, "km") 
-civViolenceQ3122_ppp_com<- civViolenceQ322_ppp[boundary_owin]
+civViolenceQ322_ppp_com<- civViolenceQ322_ppp[boundary_owin]
+civViolenceQ322_ppp_com<- rescale(civViolenceQ322_ppp_com, 1000, "km")
 
-civViolenceQ422_ppp<- rescale(civViolenceQ422_ppp, 1000, "km") 
 civViolenceQ422_ppp_com<- civViolenceQ422_ppp[boundary_owin]
+civViolenceQ422_ppp_com<- rescale(civViolenceQ422_ppp_com, 1000, "km")
 
 #2023
                                       
-civViolenceQ123_ppp<- rescale(civViolenceQ123_ppp, 1000, "km") 
 civViolenceQ123_ppp_com<- civViolenceQ123_ppp[boundary_owin]
+civViolenceQ123_ppp_com<- rescale(civViolenceQ123_ppp_com, 1000, "km")
 
-civViolenceQ223_ppp<- rescale(civViolenceQ223_ppp, 1000, "km") 
 civViolenceQ223_ppp_com<- civViolenceQ223_ppp[boundary_owin]
+civViolenceQ223_ppp_com<- rescale(civViolenceQ223_ppp_com, 1000, "km")
 
-civViolenceQ323_ppp<- rescale(civViolenceQ323_ppp, 1000, "km") 
-civViolenceQ3123_ppp_com<- civViolenceQ323_ppp[boundary_owin]
+civViolenceQ323_ppp_com<- civViolenceQ323_ppp[boundary_owin]
+civViolenceQ323_ppp_com<- rescale(civViolenceQ323_ppp_com, 1000, "km")
 
-civViolenceQ423_ppp<- rescale(civViolenceQ423_ppp, 1000, "km") 
 civViolenceQ423_ppp_com<- civViolenceQ423_ppp[boundary_owin]
+civViolenceQ423_ppp_com<- rescale(civViolenceQ423_ppp_com, 1000, "km")
 
 #2024
 
-civViolenceQ124_ppp<- rescale(civViolenceQ124_ppp, 1000, "km") 
 civViolenceQ124_ppp_com<- civViolenceQ124_ppp[boundary_owin]
+civViolenceQ124_ppp_com<- rescale(civViolenceQ124_ppp_com, 1000, "km")
+
+civViolenceQ224_ppp_com<- civViolenceQ224_ppp[boundary_owin]
+civViolenceQ224_ppp_com<- rescale(civViolenceQ224_ppp_com, 1000, "km")
 ```
 :::
 
 ## 3.0 Computing the quarterly KDE Layers
-
-```{r}
-#battles_kde <- density(battles_ppp_com, sigma=bw.CvL(battles_ppp_com), edge=TRUE, kernel="gaussian") 
-
-#plot(battles_kde)
-
-```
 
 ::: panel-tabset
 ## Battles
 
 ::: panel-tabset
 ## 2021
-
-```{r}
-bw.CvL(battlesQ121_ppp_com)
-```
 
 ```{r}
 bat_q121_kde<- density(battlesQ121_ppp_com, sigma=bw.CvL(battlesQ121_ppp_com), edge=TRUE, kernel="gaussian") 
@@ -882,14 +892,147 @@ plot(bat_q421_kde, main="Battles in 4th Quarter of 2021")
 
 ## 2022
 
+```{r}
+bat_q122_kde<- density(battlesQ122_ppp_com, sigma=bw.CvL(battlesQ122_ppp_com), edge=TRUE, kernel="gaussian") 
+
+bat_q222_kde<-density(battlesQ222_ppp_com, sigma=bw.CvL(battlesQ222_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q322_kde<-density(battlesQ322_ppp_com, sigma=bw.CvL(battlesQ322_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q422_kde<-density(battlesQ422_ppp_com, sigma=bw.CvL(battlesQ422_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(bat_q122_kde, main="Battles in 1st Quarter of 2022")
+plot(bat_q222_kde, main="Battles in 2nd Quarter of 2022")
+plot(bat_q322_kde, main="Battles in 3rd Quarter of 2022")
+plot(bat_q422_kde, main="Battles in 4th Quarter of 2022")
+```
+
+## 2023
+
+```{r}
+bat_q123_kde<- density(battlesQ123_ppp_com, sigma=bw.CvL(battlesQ123_ppp_com), edge=TRUE, kernel="gaussian") 
+
+bat_q223_kde<-density(battlesQ223_ppp_com, sigma=bw.CvL(battlesQ223_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q323_kde<-density(battlesQ323_ppp_com, sigma=bw.CvL(battlesQ323_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q423_kde<-density(battlesQ423_ppp_com, sigma=bw.CvL(battlesQ423_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(bat_q123_kde, main="Battles in 1st Quarter of 2023")
+plot(bat_q223_kde, main="Battles in 2nd Quarter of 2023")
+plot(bat_q323_kde, main="Battles in 3rd Quarter of 2023")
+plot(bat_q423_kde, main="Battles in 4th Quarter of 2023")
+```
+
+## 2024
+
+```{r}
+bat_q124_kde<- density(battlesQ124_ppp_com, sigma=bw.CvL(battlesQ124_ppp_com), edge=TRUE, kernel="gaussian") 
+
+bat_q224_kde<-density(battlesQ224_ppp_com, sigma=bw.CvL(battlesQ224_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(1,2))
+plot(bat_q124_kde, main="Battles in 1st Quarter of 2024")
+plot(bat_q224_kde, main="Battles in 2nd Quarter of 2024")
+
+```
+:::
+
+## Explosions
+
+::: panel-tabset
+## 2021
+
+```{r}
+exp_q121_kde<- density(expQ121_ppp_com, sigma=bw.CvL(expQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+
+exp_q221_kde<-density(expQ221_ppp_com, sigma=bw.CvL(expQ221_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q321_kde<-density(expQ321_ppp_com, sigma=bw.CvL(expQ321_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q421_kde<-density(expQ421_ppp_com, sigma=bw.CvL(expQ421_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(exp_q121_kde, main="Explosions in 1st Quarter of 2021")
+plot(exp_q221_kde, main="Explosions in 2nd Quarter of 2021")
+plot(exp_q321_kde, main="Explosions in 3rd Quarter of 2021")
+plot(exp_q421_kde, main="Explosions in 4th Quarter of 2021")
+```
+
+## 2022
+
+```{r}
+exp_q122_kde<- density(expQ122_ppp_com, sigma=bw.CvL(expQ122_ppp_com), edge=TRUE, kernel="gaussian") 
+
+exp_q222_kde<-density(expQ222_ppp_com, sigma=bw.CvL(expQ222_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q322_kde<-density(expQ322_ppp_com, sigma=bw.CvL(expQ322_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q422_kde<-density(expQ422_ppp_com, sigma=bw.CvL(expQ422_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(exp_q122_kde, main="Explosions in 1st Quarter of 2022")
+plot(exp_q222_kde, main="Explosions in 2nd Quarter of 2022")
+plot(exp_q322_kde, main="Explosions in 3rd Quarter of 2022")
+plot(exp_q422_kde, main="Explosions in 4th Quarter of 2022")
+```
+
+## 2023
+
+```{r}
+exp_q123_kde<- density(expQ123_ppp_com, sigma=bw.CvL(expQ123_ppp_com), edge=TRUE, kernel="gaussian") 
+
+exp_q223_kde<-density(expQ223_ppp_com, sigma=bw.CvL(expQ223_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q323_kde<-density(expQ323_ppp_com, sigma=bw.CvL(expQ323_ppp_com), edge=TRUE, kernel="gaussian")
+
+exp_q423_kde<-density(expQ423_ppp_com, sigma=bw.CvL(expQ423_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(exp_q123_kde, main="Explosions in 1st Quarter of 2023")
+plot(exp_q223_kde, main="Explosions in 2nd Quarter of 2023")
+plot(exp_q323_kde, main="Explosions in 3rd Quarter of 2023")
+plot(exp_q423_kde, main="Explosions in 4th Quarter of 2023")
+```
+
+## 2024
+
+```{r}
+exp_q124_kde<- density(expQ124_ppp_com, sigma=bw.CvL(expQ124_ppp_com), edge=TRUE, kernel="gaussian") 
+
+exp_q224_kde<-density(expQ224_ppp_com, sigma=bw.CvL(expQ224_ppp_com), edge=TRUE, kernel="gaussian")
+
+
+par(mfrow=c(1,2))
+plot(exp_q124_kde, main="Explosions in 1st Quarter of 2024")
+plot(exp_q224_kde, main="Explosions in 2nd Quarter of 2024")
+
+```
+:::
+
+## Strategic Developments
+
+::: panel-tabset
+## 2021
+
+## 2022
+
 ## 2023
 
 ## 2024
 :::
 
-## Explosions
-
-## Strategic Developments
-
 ## Violence against Civilians
+
+::: panel-tabset
+## 2021
+
+## 2022
+
+## 2023
+
+## 2024
+:::
 :::
