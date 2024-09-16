@@ -67,3 +67,75 @@ GWmodel uses the sp data object to handle spatial data in r. As such, we will no
 hunan_sp<- hunan_sf %>% 
   as_Spatial()
 ```
+
+#### 5.1.2 Determine the Adaptive Bandwidth
+
+There are 2 methods we can use to derive the adaptive bandwidth, AIC and Cross-Validation (CV). To toggle between approaches, we can just set the approach field to our required method.
+
+```{r}
+bw_AIC<- bw.gwr(GDPPC ~ 1,
+                data = hunan_sp, 
+                approach = 'AIC',
+                adaptive= TRUE, 
+                kernel = 'bisquare',
+                longlat = T
+                )
+bw_AIC
+```
+
+```{r}
+bw_CV<-bw.gwr(GDPPC ~ 1,
+                data = hunan_sp, 
+                approach = 'CV',
+                adaptive= TRUE, 
+                kernel = 'bisquare',
+                longlat = T
+                )
+
+bw_CV
+```
+
+#### 5.1.3 Determining Fixed Bandwidth
+
+To use Fixed Bandwidth, we just need to change the adaptive field to FALSE.
+
+```{r}
+#| eval: false
+bw_CV_f<-bw.gwr(GDPPC ~ 1,
+                data = hunan_sp, 
+                approach = 'CV',
+                adaptive= FALSE, 
+                kernel = 'bisquare',
+                longlat = T
+                )
+
+bw_CV_f
+
+```
+
+#### 5.1.4 Computing geoghraphically weighted summary statistics 
+
+To achieve this, we will make use of the gwss() function of the GWmodel package. Take note that the kernel, adaptive, and longlat fields should follow what is stored in our adaptive bandwidth variable.
+
+```{r}
+gwstat <- gwss(hunan_sp, 
+               vars='GDPPC',
+               bw = bw_AIC,
+               kernel = "bisquare",
+               adaptive = TRUE,
+               longlat = T)
+```
+
+#### 5.1.5 Preparing the output data 
+
+We will now extract the SDF portion of the gwstat_df object and convert it to a new dataframe.
+
+```{r}
+gwstat_df<- as.data.frame(gwstat$SDF)
+```
+
+Next, cbind() used to append newly created dataframe onto the hunan_sf dataframe.
+
+```{r}
+hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
