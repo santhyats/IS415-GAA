@@ -1070,51 +1070,53 @@ PROJCRS["WGS 84 / UTM zone 46N",
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>battlesQ121_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ121_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>battlesQ121_ppp_com<span class="ot">&lt;-</span> battlesQ121_ppp[boundary_owin]</span>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>battlesQ121_ppp_com<span class="ot">&lt;-</span> battlesQ121_ppp[boundary_owin]</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>battlesQ121_ppp_com<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ121_ppp_com, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
 <span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>battlesQ221_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ221_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a>battlesQ221_ppp_com<span class="ot">&lt;-</span> battlesQ221_ppp[boundary_owin]</span>
-<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a>battlesQ321_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ321_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a>battlesQ3121_ppp_com<span class="ot">&lt;-</span> battlesQ321_ppp[boundary_owin]</span>
-<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a>battlesQ421_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ421_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-11"><a href="#cb132-11" aria-hidden="true" tabindex="-1"></a>battlesQ421_ppp_com<span class="ot">&lt;-</span> battlesQ421_ppp[boundary_owin]</span>
-<span id="cb132-12"><a href="#cb132-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-13"><a href="#cb132-13" aria-hidden="true" tabindex="-1"></a><span class="co">#2022</span></span>
-<span id="cb132-14"><a href="#cb132-14" aria-hidden="true" tabindex="-1"></a>battlesQ122_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ122_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-15"><a href="#cb132-15" aria-hidden="true" tabindex="-1"></a>battlesQ122_ppp_com<span class="ot">&lt;-</span> battlesQ122_ppp[boundary_owin]</span>
-<span id="cb132-16"><a href="#cb132-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-17"><a href="#cb132-17" aria-hidden="true" tabindex="-1"></a>battlesQ222_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ222_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-18"><a href="#cb132-18" aria-hidden="true" tabindex="-1"></a>battlesQ222_ppp_com<span class="ot">&lt;-</span> battlesQ222_ppp[boundary_owin]</span>
-<span id="cb132-19"><a href="#cb132-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-20"><a href="#cb132-20" aria-hidden="true" tabindex="-1"></a>battlesQ322_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ322_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-21"><a href="#cb132-21" aria-hidden="true" tabindex="-1"></a>battlesQ3122_ppp_com<span class="ot">&lt;-</span> battlesQ322_ppp[boundary_owin]</span>
-<span id="cb132-22"><a href="#cb132-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-23"><a href="#cb132-23" aria-hidden="true" tabindex="-1"></a>battlesQ422_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ422_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-24"><a href="#cb132-24" aria-hidden="true" tabindex="-1"></a>battlesQ422_ppp_com<span class="ot">&lt;-</span> battlesQ422_ppp[boundary_owin]</span>
-<span id="cb132-25"><a href="#cb132-25" aria-hidden="true" tabindex="-1"></a>                                                                                <span class="co">#2023</span></span>
-<span id="cb132-26"><a href="#cb132-26" aria-hidden="true" tabindex="-1"></a>                                      </span>
-<span id="cb132-27"><a href="#cb132-27" aria-hidden="true" tabindex="-1"></a>battlesQ123_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ123_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-28"><a href="#cb132-28" aria-hidden="true" tabindex="-1"></a>battlesQ123_ppp_com<span class="ot">&lt;-</span> battlesQ123_ppp[boundary_owin]</span>
-<span id="cb132-29"><a href="#cb132-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-30"><a href="#cb132-30" aria-hidden="true" tabindex="-1"></a>battlesQ223_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ223_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-31"><a href="#cb132-31" aria-hidden="true" tabindex="-1"></a>battlesQ223_ppp_com<span class="ot">&lt;-</span> battlesQ223_ppp[boundary_owin]</span>
-<span id="cb132-32"><a href="#cb132-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-33"><a href="#cb132-33" aria-hidden="true" tabindex="-1"></a>battlesQ323_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ323_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-34"><a href="#cb132-34" aria-hidden="true" tabindex="-1"></a>battlesQ3123_ppp_com<span class="ot">&lt;-</span> battlesQ323_ppp[boundary_owin]</span>
-<span id="cb132-35"><a href="#cb132-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-36"><a href="#cb132-36" aria-hidden="true" tabindex="-1"></a>battlesQ423_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ423_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-37"><a href="#cb132-37" aria-hidden="true" tabindex="-1"></a>battlesQ423_ppp_com<span class="ot">&lt;-</span> battlesQ423_ppp[boundary_owin]</span>
-<span id="cb132-38"><a href="#cb132-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-39"><a href="#cb132-39" aria-hidden="true" tabindex="-1"></a><span class="co">#2024</span></span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a>battlesQ221_ppp_com<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ221_ppp_com, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a>battlesQ321_ppp_com<span class="ot">&lt;-</span> battlesQ321_ppp[boundary_owin]</span>
+<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a>battlesQ321_ppp_com<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ321_ppp_com, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-11"><a href="#cb132-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-12"><a href="#cb132-12" aria-hidden="true" tabindex="-1"></a>battlesQ421_ppp_com<span class="ot">&lt;-</span> battlesQ421_ppp[boundary_owin]</span>
+<span id="cb132-13"><a href="#cb132-13" aria-hidden="true" tabindex="-1"></a>battlesQ421_ppp_com<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ421_ppp_com, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb132-14"><a href="#cb132-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-15"><a href="#cb132-15" aria-hidden="true" tabindex="-1"></a><span class="co">#2022</span></span>
+<span id="cb132-16"><a href="#cb132-16" aria-hidden="true" tabindex="-1"></a>battlesQ122_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ122_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-17"><a href="#cb132-17" aria-hidden="true" tabindex="-1"></a>battlesQ122_ppp_com<span class="ot">&lt;-</span> battlesQ122_ppp[boundary_owin]</span>
+<span id="cb132-18"><a href="#cb132-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-19"><a href="#cb132-19" aria-hidden="true" tabindex="-1"></a>battlesQ222_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ222_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-20"><a href="#cb132-20" aria-hidden="true" tabindex="-1"></a>battlesQ222_ppp_com<span class="ot">&lt;-</span> battlesQ222_ppp[boundary_owin]</span>
+<span id="cb132-21"><a href="#cb132-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-22"><a href="#cb132-22" aria-hidden="true" tabindex="-1"></a>battlesQ322_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ322_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-23"><a href="#cb132-23" aria-hidden="true" tabindex="-1"></a>battlesQ3122_ppp_com<span class="ot">&lt;-</span> battlesQ322_ppp[boundary_owin]</span>
+<span id="cb132-24"><a href="#cb132-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-25"><a href="#cb132-25" aria-hidden="true" tabindex="-1"></a>battlesQ422_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ422_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-26"><a href="#cb132-26" aria-hidden="true" tabindex="-1"></a>battlesQ422_ppp_com<span class="ot">&lt;-</span> battlesQ422_ppp[boundary_owin]</span>
+<span id="cb132-27"><a href="#cb132-27" aria-hidden="true" tabindex="-1"></a>                                                                                <span class="co">#2023</span></span>
+<span id="cb132-28"><a href="#cb132-28" aria-hidden="true" tabindex="-1"></a>                                      </span>
+<span id="cb132-29"><a href="#cb132-29" aria-hidden="true" tabindex="-1"></a>battlesQ123_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ123_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-30"><a href="#cb132-30" aria-hidden="true" tabindex="-1"></a>battlesQ123_ppp_com<span class="ot">&lt;-</span> battlesQ123_ppp[boundary_owin]</span>
+<span id="cb132-31"><a href="#cb132-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-32"><a href="#cb132-32" aria-hidden="true" tabindex="-1"></a>battlesQ223_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ223_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-33"><a href="#cb132-33" aria-hidden="true" tabindex="-1"></a>battlesQ223_ppp_com<span class="ot">&lt;-</span> battlesQ223_ppp[boundary_owin]</span>
+<span id="cb132-34"><a href="#cb132-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-35"><a href="#cb132-35" aria-hidden="true" tabindex="-1"></a>battlesQ323_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ323_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-36"><a href="#cb132-36" aria-hidden="true" tabindex="-1"></a>battlesQ3123_ppp_com<span class="ot">&lt;-</span> battlesQ323_ppp[boundary_owin]</span>
+<span id="cb132-37"><a href="#cb132-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-38"><a href="#cb132-38" aria-hidden="true" tabindex="-1"></a>battlesQ423_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ423_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-39"><a href="#cb132-39" aria-hidden="true" tabindex="-1"></a>battlesQ423_ppp_com<span class="ot">&lt;-</span> battlesQ423_ppp[boundary_owin]</span>
 <span id="cb132-40"><a href="#cb132-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-41"><a href="#cb132-41" aria-hidden="true" tabindex="-1"></a>battlesQ124_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ124_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-42"><a href="#cb132-42" aria-hidden="true" tabindex="-1"></a>battlesQ124_ppp_com<span class="ot">&lt;-</span> battlesQ124_ppp[boundary_owin]</span>
-<span id="cb132-43"><a href="#cb132-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-44"><a href="#cb132-44" aria-hidden="true" tabindex="-1"></a>battlesQ224_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ224_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
-<span id="cb132-45"><a href="#cb132-45" aria-hidden="true" tabindex="-1"></a>battlesQ224_ppp_com<span class="ot">&lt;-</span> battlesQ224_ppp[boundary_owin]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb132-41"><a href="#cb132-41" aria-hidden="true" tabindex="-1"></a><span class="co">#2024</span></span>
+<span id="cb132-42"><a href="#cb132-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-43"><a href="#cb132-43" aria-hidden="true" tabindex="-1"></a>battlesQ124_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ124_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-44"><a href="#cb132-44" aria-hidden="true" tabindex="-1"></a>battlesQ124_ppp_com<span class="ot">&lt;-</span> battlesQ124_ppp[boundary_owin]</span>
+<span id="cb132-45"><a href="#cb132-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-46"><a href="#cb132-46" aria-hidden="true" tabindex="-1"></a>battlesQ224_ppp<span class="ot">&lt;-</span> <span class="fu">rescale</span>(battlesQ224_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>) </span>
+<span id="cb132-47"><a href="#cb132-47" aria-hidden="true" tabindex="-1"></a>battlesQ224_ppp_com<span class="ot">&lt;-</span> battlesQ224_ppp[boundary_owin]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
@@ -1268,6 +1270,67 @@ PROJCRS["WGS 84 / UTM zone 46N",
 <div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="co">#battles_kde &lt;- density(battles_ppp_com, sigma=bw.CvL(battles_ppp_com), edge=TRUE, kernel="gaussian") </span></span>
 <span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(battles_kde)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Battles</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Explosions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Strategic Developments</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">Violence against Civilians</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">2021</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">2022</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">2023</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">2024</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bw.CvL</span>(battlesQ121_ppp_com)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   sigma 
+129.0744 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>bat_q121_kde<span class="ot">&lt;-</span> <span class="fu">density</span>(battlesQ121_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(battlesQ121_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>) </span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>bat_q221_kde<span class="ot">&lt;-</span><span class="fu">density</span>(battlesQ221_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(battlesQ221_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a>bat_q321_kde<span class="ot">&lt;-</span><span class="fu">density</span>(battlesQ321_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(battlesQ321_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a>bat_q421_kde<span class="ot">&lt;-</span><span class="fu">density</span>(battlesQ421_ppp_com, <span class="at">sigma=</span><span class="fu">bw.CvL</span>(battlesQ421_ppp_com), <span class="at">edge=</span><span class="cn">TRUE</span>, <span class="at">kernel=</span><span class="st">"gaussian"</span>)</span>
+<span id="cb139-8"><a href="#cb139-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-9"><a href="#cb139-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb139-10"><a href="#cb139-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bat_q121_kde, <span class="at">main=</span><span class="st">"Battles in 1st Quarter of 2021"</span>)</span>
+<span id="cb139-11"><a href="#cb139-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bat_q221_kde, <span class="at">main=</span><span class="st">"Battles in 2nd Quarter of 2021"</span>)</span>
+<span id="cb139-12"><a href="#cb139-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bat_q321_kde, <span class="at">main=</span><span class="st">"Battles in 3rd Quarter of 2021"</span>)</span>
+<span id="cb139-13"><a href="#cb139-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bat_q421_kde, <span class="at">main=</span><span class="st">"Battles in 4th Quarter of 2021"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+
+</div>
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
+
+</div>
+</div>
 </div>
 
 

@@ -649,17 +649,20 @@ Once we have our ppp object and owin object, we can start combining them to one 
 ## Battles
 
 ```{r}
-battlesQ121_ppp<- rescale(battlesQ121_ppp, 1000, "km") 
+
 battlesQ121_ppp_com<- battlesQ121_ppp[boundary_owin]
+battlesQ121_ppp_com<- rescale(battlesQ121_ppp_com, 1000, "km") 
 
-battlesQ221_ppp<- rescale(battlesQ221_ppp, 1000, "km") 
+
 battlesQ221_ppp_com<- battlesQ221_ppp[boundary_owin]
+battlesQ221_ppp_com<- rescale(battlesQ221_ppp_com, 1000, "km") 
 
-battlesQ321_ppp<- rescale(battlesQ321_ppp, 1000, "km") 
-battlesQ3121_ppp_com<- battlesQ321_ppp[boundary_owin]
 
-battlesQ421_ppp<- rescale(battlesQ421_ppp, 1000, "km") 
+battlesQ321_ppp_com<- battlesQ321_ppp[boundary_owin]
+battlesQ321_ppp_com<- rescale(battlesQ321_ppp_com, 1000, "km") 
+
 battlesQ421_ppp_com<- battlesQ421_ppp[boundary_owin]
+battlesQ421_ppp_com<- rescale(battlesQ421_ppp_com, 1000, "km")
 
 #2022
 battlesQ122_ppp<- rescale(battlesQ122_ppp, 1000, "km") 
@@ -849,3 +852,44 @@ civViolenceQ124_ppp_com<- civViolenceQ124_ppp[boundary_owin]
 #plot(battles_kde)
 
 ```
+
+::: panel-tabset
+## Battles
+
+::: panel-tabset
+## 2021
+
+```{r}
+bw.CvL(battlesQ121_ppp_com)
+```
+
+```{r}
+bat_q121_kde<- density(battlesQ121_ppp_com, sigma=bw.CvL(battlesQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+
+bat_q221_kde<-density(battlesQ221_ppp_com, sigma=bw.CvL(battlesQ221_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q321_kde<-density(battlesQ321_ppp_com, sigma=bw.CvL(battlesQ321_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q421_kde<-density(battlesQ421_ppp_com, sigma=bw.CvL(battlesQ421_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(bat_q121_kde, main="Battles in 1st Quarter of 2021")
+plot(bat_q221_kde, main="Battles in 2nd Quarter of 2021")
+plot(bat_q321_kde, main="Battles in 3rd Quarter of 2021")
+plot(bat_q421_kde, main="Battles in 4th Quarter of 2021")
+
+```
+
+## 2022
+
+## 2023
+
+## 2024
+:::
+
+## Explosions
+
+## Strategic Developments
+
+## Violence against Civilians
+:::
