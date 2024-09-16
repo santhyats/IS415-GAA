@@ -212,6 +212,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">5.0 Getting started</a></li>
+  <li><a href="#visualising-the-prepared-data" id="toc-visualising-the-prepared-data" class="nav-link" data-scroll-target="#visualising-the-prepared-data">5.1 Visualising the prepared data</a>
+  <ul class="collapse">
+  <li><a href="#converting-to-spatialpolygondataframe" id="toc-converting-to-spatialpolygondataframe" class="nav-link" data-scroll-target="#converting-to-spatialpolygondataframe">5.1.1 Converting to SpatialPolygonDataframe</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -267,39 +271,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hunan_sf<span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">'data/geospatial'</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer=</span><span class="st">'Hunan'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `Hunan' from data source 
-  `C:\santhyats\IS415-GAA\In-class_Ex\In-class_Ex05\data\geospatial' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 88 features and 7 fields
-Geometry type: POLYGON
-Dimension:     XY
-Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
-Geodetic CRS:  WGS 84</code></pre>
-</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hunan2012_sf<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_2012.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 88 Columns: 29
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr  (2): County, City
-dbl (27): avg_wage, deposite, FAI, Gov_Rev, Gov_Exp, GDP, GDPPC, GIO, Loan, ...
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hunan2012_sf<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_2012.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We will now perform a left join of the 2 sf objects based on their common identifiers</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hunan_sf<span class="ot">&lt;-</span><span class="fu">left_join</span>(hunan_sf, hunan2012_sf) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">31</span>, <span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Joining with `by = join_by(County)`</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hunan_sf<span class="ot">&lt;-</span><span class="fu">left_join</span>(hunan_sf, hunan2012_sf) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">31</span>, <span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is recommended that we check for common columns with the same values before we perform the join, so that the tables can be joined using the column. We would also perform the join first before looking at the columns that are necessary for us and selecting them accordingly.</p>
+<p>We can save this new sf object into a new rds file, so we can keep track of our processed data that we have used for the task.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(hunan_sf, <span class="st">"data/rds/hunan_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we want to access this newly processed data, we will simply use the read_rds function and pass in the file path. We can make use of the echo: false to hide this code chunk on the render, so the data processing can be handled on the backend.</p>
+</section>
+</section>
+<section id="visualising-the-prepared-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-the-prepared-data">5.1 Visualising the prepared data</h2>
+<section id="converting-to-spatialpolygondataframe" class="level3">
+<h3 class="anchored" data-anchor-id="converting-to-spatialpolygondataframe">5.1.1 Converting to SpatialPolygonDataframe</h3>
+<p>GWmodel uses the sp data object to handle spatial data in r. As such, we will now convert our sf object to a spatial polygon dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hunan_sp<span class="ot">&lt;-</span> hunan_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_Spatial</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

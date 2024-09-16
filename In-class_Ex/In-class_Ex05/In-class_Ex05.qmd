@@ -22,20 +22,48 @@ pacman::p_load(sf, spdep, tmap, tidyverse, GWmodel)
 We will then read the datafiles into sf objects
 
 ```{r}
+#| eval: false
 hunan_sf<- st_read(dsn='data/geospatial',
                 layer='Hunan')
 ```
 
 ```{r}
+#| eval: false
 hunan2012_sf<- read_csv("data/aspatial/Hunan_2012.csv")
 ```
 
 We will now perform a left join of the 2 sf objects based on their common identifiers
 
 ```{r}
+#| eval: false 
 hunan_sf<-left_join(hunan_sf, hunan2012_sf) %>% 
   select(1:3, 7, 15, 16, 31, 32)
 
 ```
 
 It is recommended that we check for common columns with the same values before we perform the join, so that the tables can be joined using the column. We would also perform the join first before looking at the columns that are necessary for us and selecting them accordingly.
+
+We can save this new sf object into a new rds file, so we can keep track of our processed data that we have used for the task.
+
+```{r}
+#| eval: false
+write_rds(hunan_sf, "data/rds/hunan_sf.rds")
+```
+
+If we want to access this newly processed data, we will simply use the read_rds function and pass in the file path. We can make use of the echo: false to hide this code chunk on the render, so the data processing can be handled on the backend.
+
+```{r}
+#| echo: false
+hunan_sf <- read_rds("data/rds/hunan_sf.rds")
+```
+
+## 5.1 Visualising the prepared data
+
+### 5.1.1 Converting to SpatialPolygonDataframe
+
+GWmodel uses the sp data object to handle spatial data in r. As such, we will now convert our sf object to a spatial polygon dataframe.
+
+```{r}
+hunan_sp<- hunan_sf %>% 
+  as_Spatial()
+```
