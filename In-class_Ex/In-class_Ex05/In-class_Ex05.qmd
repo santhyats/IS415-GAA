@@ -37,3 +37,5 @@ hunan_sf<-left_join(hunan_sf, hunan2012_sf) %>%
   select(1:3, 7, 15, 16, 31, 32)
 
 ```
+
+It is recommended that we check for common columns with the same values before we perform the join, so that the tables can be joined using the column. We would also perform the join first before looking at the columns that are necessary for us and selecting them accordingly.
