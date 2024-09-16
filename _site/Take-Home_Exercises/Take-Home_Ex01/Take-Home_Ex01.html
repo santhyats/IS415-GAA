@@ -212,8 +212,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1.0 Overview</a></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2.0 Data Preparation</a></li>
-  <li><a href="#computing-the-quarterly-kde-layers" id="toc-computing-the-quarterly-kde-layers" class="nav-link" data-scroll-target="#computing-the-quarterly-kde-layers">3.0 Computing the quarterly KDE Layers</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">1.2 Data Preparation</a></li>
+  <li><a href="#computing-the-quarterly-kde-layers" id="toc-computing-the-quarterly-kde-layers" class="nav-link" data-scroll-target="#computing-the-quarterly-kde-layers">1.3 Computing the quarterly KDE Layers</a></li>
   </ul>
 </nav>
     </div>
@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Myanmar has been going through civil wars and internal conflicts for decades now. These conflicts have mainly been due to ethnic tensions and general unhappiness in the governing party. Conflicts range from battles, riots, violence against civilians, strategic developments and more. In this exercise, I will be analysing the distribution of conflicts in Myanmar.</p>
 <p>To do this, I will mainly be performing quarterly KDE analysis on 4 main types of conflicts: Battles, Explosions, Violence against Civillians and Strategic Developments through the years of 2021-2024. I will also be performing the second order spatial point pattern process as well as the spatio temporal point process analysis for these segments. Let’s get started.</p>
 <section id="loading-r-packages" class="level4">
-<h4 class="anchored" data-anchor-id="loading-r-packages">1.1 Loading R packages</h4>
+<h4 class="anchored" data-anchor-id="loading-r-packages">1.0.1 Loading R packages</h4>
 <p>These are the packages that I will be using in this exercise.</p>
 <p><strong>sf</strong>: Used in spatial data wrangling</p>
 <p><strong>tidyverse</strong>: Used in data wrangling for non-spatial data</p>
@@ -276,14 +276,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="data-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-preparation">2.0 Data Preparation</h2>
+<h2 class="anchored" data-anchor-id="data-preparation">1.2 Data Preparation</h2>
 <p>In this section, I will be retrieving the required data and performing the necessary data wrangling methods in order to transform the data into a form that is best suitable for our analytic needs for this exercise. The datasets used in this exercise are:</p>
 <ul>
 <li><p><code>Myanmar_All_2021-24.csv</code>: A csv file downloaded from ACLED, which contains all the details of the internal conflicts in Myanmar from 2021-2024. Note that the file name has been renamed for ease of use.</p></li>
 <li><p><code>MBoundary</code>: A shapefile downloaded from Myanmar Information Management Unit, MIMU. This shapefile maps out the boundary of Myanmar. I have also renamed this file for ease of use.</p></li>
 </ul>
 <section id="importing-the-data" class="level4">
-<h4 class="anchored" data-anchor-id="importing-the-data">2.1 Importing the Data</h4>
+<h4 class="anchored" data-anchor-id="importing-the-data">1.2.1 Importing the Data</h4>
 <p>Firstly, I will be importing the base map of Myanmar in shapefile format. I will also transform the crs to that of Myanmar.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"data/raw"</span>,</span>
@@ -441,7 +441,7 @@ PROJCRS["WGS 84 / UTM zone 46N",
 </div>
 </section>
 <section id="preparing-the-data" class="level4">
-<h4 class="anchored" data-anchor-id="preparing-the-data">2.2 Preparing the Data</h4>
+<h4 class="anchored" data-anchor-id="preparing-the-data">1.2.2 Preparing the Data</h4>
 <p>Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all_sf<span class="sc">$</span>event_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(all_sf<span class="sc">$</span>event_date, <span class="at">format =</span> <span class="st">"%d %B %Y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1283,7 +1283,7 @@ PROJCRS["WGS 84 / UTM zone 46N",
 </section>
 </section>
 <section id="computing-the-quarterly-kde-layers" class="level2">
-<h2 class="anchored" data-anchor-id="computing-the-quarterly-kde-layers">3.0 Computing the quarterly KDE Layers</h2>
+<h2 class="anchored" data-anchor-id="computing-the-quarterly-kde-layers">1.3 Computing the quarterly KDE Layers</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Battles</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Explosions</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">Strategic Developments</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-4" role="tab" aria-controls="tabset-8-4" aria-selected="false">Violence against Civilians</a></li></ul>
 <div class="tab-content">
