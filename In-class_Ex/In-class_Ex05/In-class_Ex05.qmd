@@ -113,7 +113,7 @@ bw_CV_f
 
 ```
 
-#### 5.1.4 Computing geoghraphically weighted summary statistics 
+#### 5.1.4 Computing geoghraphically weighted summary statistics
 
 To achieve this, we will make use of the gwss() function of the GWmodel package. Take note that the kernel, adaptive, and longlat fields should follow what is stored in our adaptive bandwidth variable.
 
@@ -126,7 +126,7 @@ gwstat <- gwss(hunan_sp,
                longlat = T)
 ```
 
-#### 5.1.5 Preparing the output data 
+#### 5.1.5 Preparing the output data
 
 We will now extract the SDF portion of the gwstat_df object and convert it to a new dataframe.
 

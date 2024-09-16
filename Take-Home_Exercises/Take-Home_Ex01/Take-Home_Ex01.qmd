@@ -11,7 +11,13 @@ execute:
 
 ## 1.0 Overview
 
-......
+Myanmar has been going through civil wars and internal conflicts for decades now. These conflicts have mainly been due to ethnic tensions and general unhappiness in the governing party. Conflicts range from battles, riots, violence against civilians, strategic developments and more. In this exercise, I will be analysing the distribution of conflicts in Myanmar.
+
+To do this, I will mainly be performing quarterly KDE analysis on 4 main types of conflicts: Battles, Explosions, Violence against Civillians and Strategic Developments through the years of 2021-2024. I will also be performing the second order spatial point pattern process as well as the spatio temporal point process analysis for these segments. Let's get started.
+
+```{r}
+
+```
 
 #### 1.1 Loading R packages
 
@@ -43,7 +49,7 @@ In this section, I will be retrieving the required data and performing the neces
 
 #### 2.1 Importing the Data
 
-importing the base map of myanmar/ geospatial data. transform the crs to that of Myanmar.
+Firstly, I will be importing the base map of Myanmar in shapefile format. I will also transform the crs to that of Myanmar.
 
 ```{r}
 boundary <- st_read(dsn="data/raw",
@@ -56,7 +62,7 @@ boundary <- st_read(dsn="data/raw",
 st_crs(boundary)
 ```
 
-Importing the regional boundaries of Myanmar
+Next, I will also be Importing the regional boundaries of Myanmar.
 
 ```{r}
 regions_sf <- st_read(dsn="data/raw",
@@ -64,9 +70,10 @@ regions_sf <- st_read(dsn="data/raw",
   st_transform(crs = 32646)
 ```
 
-importing and reading the csv file containing the data about the conflicts into a dataframe. transform the crs to that of Myanmars
+Lastly, I will be importing and reading the csv file containing the data about the conflicts into a dataframe. I will once again ensure that the crs of the data is transformed to that of Myanmar's.
 
 ```{r}
+
 all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>% 
   st_as_sf(coords = c('longitude', 'latitude'),
            crs=4326) %>% 
@@ -75,15 +82,28 @@ all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>%
 st_crs(all_sf)
 ```
 
-converting the date format to be more usable.
+#### 2.2 Preparing the Data
+
+Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations.
 
 ```{r}
+
 all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y")
 ```
 
-filter out the event types we will be focusing on in the exercise and save them into different dataframes.
+Before we can filter out the data that we need, I will be visualising the data according to the event types to observe for any patterns or similarity.
 
 ```{r}
+
+tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
+```
+
+From the patterns observed above, we see that Battles, Strategic Developments, Explosions and Violence against civilians all have similar distribution of conflicts across the space and that Riots and Protests do not have that many spatial points even over the aggregated 4 year dataset. As such, I will be focusing my analysis on these four main categories of conflicts: **Battles, Strategic Developments, Violence against Civilians and Explosions.**
+
+I will filter out the data according to these event types and save them in separate sf objects.
+
+```{r}
+#|
 battles_sf <- all_sf %>%  filter(event_type == 'Battles')
 battles_sf
 
@@ -91,40 +111,370 @@ exp_sf <- all_sf %>%  filter(event_type == "Explosions/Remote violence")
 
 civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians")
 
-riots_sf <- all_sf %>%  filter(event_type=='Riots')
-
 strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic Developments')
 
 
 ```
 
-mapping out the spatial data and the spatial points by the event type to observe for any areas of interest.
-
-```{r}
-tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
-```
-
-split the dataset into quarterly
+Finally, I will further split the datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder so I won't mix them up with the unprocessed data.
 
 ::: panel-tabset
 ## Battles
 
+```{r}
+#| eval: false
+q1_21_battles_sf <- battles_sf %>% 
+  filter(year == '2021' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Battles/2021/q1.rds")
+
+q2_21_battles_sf <-battles_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Battles/2021/q2.rds")
+
+q3_21_battles_sf <-battles_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Battles/2021/q3.rds")
+
+q4_21_battles_sf <-battles_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Battles/2021/q4.rds")
+
+#2022
+
+q1_22_battles_sf <- battles_sf %>% 
+  filter(year == '2022' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Battles/2022/q1.rds")
+
+q2_22_battles_sf <-battles_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Battles/2022/q2.rds")
+
+q3_22_battles_sf <-battles_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Battles/2022/q3.rds")
+
+q4_22_battles_sf <-battles_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Battles/2022/q4.rds")
+
+#2023
+
+q1_23_battles_sf <- battles_sf %>% 
+  filter(year == '2023' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Battles/2023/q1.rds")
+
+q2_23_battles_sf <-battles_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Battles/2023/q2.rds")
+
+q3_23_battles_sf <-battles_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Battles/2023/q3.rds")
+
+q4_23_battles_sf <-battles_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Battles/2023/q4.rds")
+
+#2024
+
+q1_24_battles_sf <- battles_sf %>% 
+  filter(year == '2024' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Battles/2024/q1.rds")
+
+q2_24_battles_sf <-battles_sf %>% 
+  filter(year == '2024') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Battles/2024/q2.rds")
+
+```
+
 ## Explosions
+
+```{r}
+#| eval: false
+
+q1_21_exp_sf <- exp_sf %>% 
+  filter(year == '2021' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Explosions/2021/q1.rds")
+
+q2_21_exp_sf <-exp_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Explosions/2021/q2.rds")
+
+q3_21_exp_sf <-exp_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Explosions/2021/q3.rds")
+
+q4_21_exp_sf <-exp_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Explosions/2021/q4.rds")
+
+#2022
+
+q1_22_exp_sf <- exp_sf %>% 
+  filter(year == '2022' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Explosions/2022/q1.rds")
+
+q2_22_exp_sf <-exp_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Explosions/2022/q2.rds")
+
+q3_22_exp_sf <-exp_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Explosions/2022/q3.rds")
+
+q4_22_exp_sf <-exp_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Explosions/2022/q4.rds")
+
+#2023
+
+q1_23_exp_sf <-exp_sf %>% 
+  filter(year == '2023' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Explosions/2023/q1.rds")
+
+q2_23_exp_sf <-exp_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Explosions/2023/q2.rds")
+
+q3_23_exp_sf <-exp_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Explosions/2023/q3.rds")
+
+q4_23_exp_sf <-battles_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Explosions/2023/q4.rds")
+
+#2024
+
+q1_24_exp_sf <- exp_sf %>% 
+  filter(year == '2024' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Explosions/2024/q1.rds")
+
+q2_24_exp_sf <-exp_sf %>% 
+  filter(year == '2024') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Explosions/2024/q2.rds")
+```
 
 ## Violence against civillians
 
+```{r}
+#| eval: false
+q1_21_civViolence_sf <- civViolence_sf %>% 
+  filter(year == '2021' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Violence/2021/q1.rds")
+
+q2_21_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Violence/2021/q2.rds")
+
+q3_21_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Violence/2021/q3.rds")
+
+q4_21_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Violence/2021/q4.rds")
+
+#2022
+
+q1_22_civViolence_sf <- civViolence_sf %>% 
+  filter(year == '2022' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Violence/2022/q1.rds")
+
+q2_22_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Violence/2022/q2.rds")
+
+q3_22_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Violence/2022/q3.rds")
+
+q4_22_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Violence/2022/q4.rds")
+
+#2023
+
+q1_23_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2023' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Violence/2023/q1.rds")
+
+q2_23_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Violence/2023/q2.rds")
+
+q3_23_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Violence/2023/q3.rds")
+
+q4_23_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Violence/2023/q4.rds")
+
+#2024
+
+q1_24_civViolence_sf <- civViolence_sf %>% 
+  filter(year == '2024' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Violence/2024/q1.rds")
+
+q2_24_civViolence_sf <-civViolence_sf %>% 
+  filter(year == '2024') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Violence/2024/q2.rds")
+```
+
 ## Strategic Developments
+
+```{r}
+#| eval: false
+q1_21_strat_dev_sf <- strat_dev_sf %>% 
+  filter(year == '2021' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Strat_Dev/2021/q1.rds")
+
+q2_21_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Strat_Dev/2021/q2.rds")
+
+q3_21_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Strat_Dev/2021/q3.rds")
+
+q4_21_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2021') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Strat_Dev/2021/q4.rds")
+
+#2022
+
+q1_22_strat_dev_sf <- strat_dev_sf %>% 
+  filter(year == '2022' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Strat_Dev/2022/q1.rds")
+
+q2_22_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Strat_Dev/2022/q2.rds")
+
+q3_22_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Strat_Dev/2022/q3.rds")
+
+q4_22_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2022') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Strat_Dev/2022/q4.rds")
+
+#2023
+
+q1_23_strat_dev_sf <-civViolence_sf %>% 
+  filter(year == '2023' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Strat_Dev/2023/q1.rds")
+
+q2_23_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Strat_Dev/2023/q2.rds")
+
+q3_23_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 3)%>%  
+  write_rds("data/rds/Strat_Dev/2023/q3.rds")
+
+q4_23_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2023') %>% 
+  filter(quarter(event_date) == 4)%>%  
+  write_rds("data/rds/Strat_Dev/2023/q4.rds")
+
+#2024
+
+q1_24_strat_dev_sf <- strat_dev_sf %>% 
+  filter(year == '2024' ) %>% 
+  filter(quarter(event_date) == 1) %>%  
+  write_rds("data/rds/Strat_Dev/2024/q1.rds")
+
+q2_24_strat_dev_sf <-strat_dev_sf %>% 
+  filter(year == '2024') %>% 
+  filter(quarter(event_date) == 2)%>%  
+  write_rds("data/rds/Strat_Dev/2024/q2.rds")
+```
 :::
 
 ```{r}
-q1_21_battles_sf <- battles_sf %>% 
-  filter(year == '2021' ) %>% 
-  filter(quarter(event_date) == 1)
+#| echo: false
+#Battles
+q1_21_battles_sf<-read_rds("data/rds/Battles/2021/q1.rds")
+q2_21_battles_sf<-read_rds("data/rds/Battles/2021/q2.rds")
+q3_21_battles_sf<-read_rds("data/rds/Battles/2021/q3.rds")
+q4_21_battles_sf<-read_rds("data/rds/Battles/2021/q4.rds")
+
+q1_22_battles_sf<-read_rds("data/rds/Battles/2022/q1.rds")
+q2_22_battles_sf<-read_rds("data/rds/Battles/2022/q2.rds")
+q3_22_battles_sf<-read_rds("data/rds/Battles/2022/q3.rds")
+q4_22_battles_sf<-read_rds("data/rds/Battles/2022/q4.rds")
+
+q1_23_battles_sf<-read_rds("data/rds/Battles/2023/q1.rds")
+q2_23_battles_sf<-read_rds("data/rds/Battles/2023/q2.rds")
+q3_23_battles_sf<-read_rds("data/rds/Battles/2023/q3.rds")
+q4_23_battles_sf<-read_rds("data/rds/Battles/2023/q4.rds")
+
+q1_24_battles_sf<-read_rds("data/rds/Battles/2024/q1.rds")
+q2_24_battles_sf<-read_rds("data/rds/Battles/2024/q2.rds")
 
 ```
 
 ```{r}
-tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(q1_21_battles_sf) + tm_dots()
+q1<- tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(q1_21_battles_sf) + tm_dots() 
+
+q2<- tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(q2_21_battles_sf) + tm_dots() 
+
+tmap_arrange(q1, q2, ncol = 2) 
 ```
 
 #### 2.2 Data Wrangling
@@ -153,15 +503,11 @@ plot(battles_ppp_com)
 
 test plotting the kde layer for battles for q1 of 2021
 
-```{r}
-battles_ppp_com.km <- rescale.ppp(battles_ppp_com, 1000, 'km')
-```
-
 ## 3.0 Computing the quarterly KDE Layers
 
 ```{r}
-battles_kde <- density(battles_ppp_com, sigma=bw.diggle, edge=TRUE, kernel="gaussian") 
+#battles_kde <- density(battles_ppp_com, sigma=bw.CvL(), edge=TRUE, kernel="gaussian") 
 
-plot(battles_kde)
+#plot(battles_kde)
 
 ```
