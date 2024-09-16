@@ -15,10 +15,6 @@ Myanmar has been going through civil wars and internal conflicts for decades now
 
 To do this, I will mainly be performing quarterly KDE analysis on 4 main types of conflicts: Battles, Explosions, Violence against Civillians and Strategic Developments through the years of 2021-2024. I will also be performing the second order spatial point pattern process as well as the spatio temporal point process analysis for these segments. Let's get started.
 
-```{r}
-
-```
-
 #### 1.1 Loading R packages
 
 These are the packages that I will be using in this exercise.
@@ -103,7 +99,7 @@ From the patterns observed above, we see that Battles, Strategic Developments, E
 I will filter out the data according to these event types and save them in separate sf objects.
 
 ```{r}
-#|
+#| eval: false
 battles_sf <- all_sf %>%  filter(event_type == 'Battles')
 battles_sf
 
@@ -467,6 +463,66 @@ q4_23_battles_sf<-read_rds("data/rds/Battles/2023/q4.rds")
 q1_24_battles_sf<-read_rds("data/rds/Battles/2024/q1.rds")
 q2_24_battles_sf<-read_rds("data/rds/Battles/2024/q2.rds")
 
+#Explosions
+
+q1_21_exp_sf<-read_rds("data/rds/Explosions/2021/q1.rds")
+q2_21_exp_sf<-read_rds("data/rds/Explosions/2021/q2.rds")
+q3_21_exp_sf<-read_rds("data/rds/Explosions/2021/q3.rds")
+q4_21_exp_sf<-read_rds("data/rds/Explosions/2021/q4.rds")
+
+q1_22_exp_sf<-read_rds("data/rds/Explosions/2022/q1.rds")
+q2_22_exp_sf<-read_rds("data/rds/Explosions/2022/q2.rds")
+q3_22_exp_sf<-read_rds("data/rds/Explosions/2022/q3.rds")
+q4_22_exp_sf<-read_rds("data/rds/Explosions/2022/q4.rds")
+
+q1_23_exp_sf<-read_rds("data/rds/Explosions/2023/q1.rds")
+q2_23_exp_sf<-read_rds("data/rds/Explosions/2023/q2.rds")
+q3_23_exp_sf<-read_rds("data/rds/Explosions/2023/q3.rds")
+q4_23_exp_sf<-read_rds("data/rds/Explosions/2023/q4.rds")
+
+q1_24_exp_sf<-read_rds("data/rds/Explosions/2024/q1.rds")
+q2_24_exp_sf<-read_rds("data/rds/Explosions/2024/q2.rds")
+
+
+#Strat Dev
+
+q1_21_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2021/q1.rds")
+q2_21_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2021/q2.rds")
+q3_21_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2021/q3.rds")
+q4_21_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2021/q4.rds")
+
+q1_22_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2022/q1.rds")
+q2_22_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2022/q2.rds")
+q3_22_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2022/q3.rds")
+q4_22_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2022/q4.rds")
+
+q1_23_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2023/q1.rds")
+q2_23_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2023/q2.rds")
+q3_23_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2023/q3.rds")
+q4_23_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2023/q4.rds")
+
+q1_24_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2024/q1.rds")
+q2_24_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2024/q2.rds")
+
+#Violence
+
+q1_21_civViolence_sf<-read_rds("data/rds/Violence/2021/q1.rds")
+q2_21_civViolence_sf<-read_rds("data/rds/Violence/2021/q2.rds")
+q3_21_civViolence_sf<-read_rds("data/rds/Violence/2021/q3.rds")
+q4_21_civViolence_sf<-read_rds("data/rds/Violence/2021/q4.rds")
+
+q1_22_civViolence_sf<-read_rds("data/rds/Violence/2022/q1.rds")
+q2_22_civViolence_sf<-read_rds("data/rds/Violence/2022/q2.rds")
+q3_22_civViolence_sf<-read_rds("data/rds/Violence/2022/q3.rds")
+q4_22_civViolence_sf<-read_rds("data/rds/Violence/2022/q4.rds")
+
+q1_23_civViolence_sf<-read_rds("data/rds/Violence/2023/q1.rds")
+q2_23_civViolence_sf<-read_rds("data/rds/Violence/2023/q2.rds")
+q3_23_civViolence_sf<-read_rds("data/rds/Violence/2023/q3.rds")
+q4_23_civViolence_sf<-read_rds("data/rds/Violence/2023/q4.rds")
+
+q1_24_civViolence_sf<-read_rds("data/rds/Violence/2024/q1.rds")
+q2_24_civViolence_sf<-read_rds("data/rds/Violence/2024/q2.rds")
 ```
 
 ```{r}
@@ -506,8 +562,8 @@ test plotting the kde layer for battles for q1 of 2021
 ## 3.0 Computing the quarterly KDE Layers
 
 ```{r}
-#battles_kde <- density(battles_ppp_com, sigma=bw.CvL(), edge=TRUE, kernel="gaussian") 
+battles_kde <- density(battles_ppp_com, sigma=bw.CvL(battles_ppp_com), edge=TRUE, kernel="gaussian") 
 
-#plot(battles_kde)
+plot(battles_kde)
 
 ```
