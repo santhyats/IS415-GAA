@@ -69,22 +69,26 @@ regions_sf <- st_read(dsn="data/raw",
 Lastly, I will be importing and reading the csv file containing the data about the conflicts into a dataframe. I will once again ensure that the crs of the data is transformed to that of Myanmar's.
 
 ```{r}
-
-all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>% 
+all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv') %>% 
   st_as_sf(coords = c('longitude', 'latitude'),
            crs=4326) %>% 
-  st_transform(crs=32646)
+  st_transform(crs=32646) %>% 
+   select(1:4, 6,19, 29, 30) 
 
 st_crs(all_sf)
+ 
+  
 ```
 
 #### 1.2.2 Preparing the Data
 
-Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations.
+Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations. I will also add in a new column to keep track of our quarters.
 
 ```{r}
 
-all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y")
+all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y") 
+all_sf$quarters <- paste(quarters(all_sf$event_date), year(all_sf$event_date), sep="_")
+all_sf$num_quarters<-quarter(all_sf$event_date)
 ```
 
 Before we can filter out the data that we need, I will be visualising the data according to the event types to observe for any patterns or similarity.
@@ -99,7 +103,7 @@ From the patterns observed above, we see that Battles, Strategic Developments, E
 I will filter out the data according to these event types and save them in separate sf objects.
 
 ```{r}
-#| eval: false
+
 battles_sf <- all_sf %>%  filter(event_type == 'Battles')
 battles_sf
 
@@ -110,6 +114,22 @@ civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians")
 strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments')
 
 
+```
+
+I will also be creating a separate sf containing the timeframe and the geometry, to be used in our Spatio Temporal KDE layers later.
+
+```{r}
+quart_geo_bat<- battles_sf %>% 
+  select(3,8,10)
+
+quart_geo_civ <- civViolence_sf %>% 
+  select(3,8:10)
+
+quart_geo_exp<- exp_sf %>% 
+  select(3,8,10)
+
+quart_geo_strat<- strat_dev_sf %>% 
+  select(3,8,10)
 ```
 
 Finally, I will further split the datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder so I won't mix them up with the unprocessed data.
@@ -1367,6 +1387,7 @@ plot(exp_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2021
 
 ```{r}
+#| eval: false
 strat_dev_q121_k = Kest(strat_devQ121_ppp_com, correction = "Ripley") 
 strat_dev_q121_k.csr <- envelope(strat_devQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1389,6 +1410,7 @@ plot(strat_dev_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
+#| eval: false
 strat_dev_q122_k = Kest(strat_devQ122_ppp_com, correction = "Ripley") 
 strat_dev_q122_k.csr <- envelope(strat_devQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1411,6 +1433,7 @@ plot(strat_dev_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
+#| eval: false
 strat_dev_q123_k = Kest(strat_devQ123_ppp_com, correction = "Ripley") 
 strat_dev_q123_k.csr <- envelope(strat_devQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1433,6 +1456,7 @@ plot(strat_dev_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
+#| eval: false
 strat_dev_q124_k = Kest(strat_devQ124_ppp_com, correction = "Ripley") 
 strat_dev_q124_k.csr <- envelope(strat_devQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1452,6 +1476,7 @@ plot(strat_dev_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2021
 
 ```{r}
+#| eval: false
 civViolence_q121_k = Kest(civViolenceQ121_ppp_com, correction = "Ripley") 
 civViolence_q121_k.csr <- envelope(civViolenceQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1475,6 +1500,7 @@ plot(civViolence_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
+#| eval: false
 civViolence_q122_k = Kest(civViolenceQ122_ppp_com, correction = "Ripley") 
 civViolence_q122_k.csr <- envelope(civViolenceQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1497,6 +1523,7 @@ plot(civViolence_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
+#| eval: false
 civViolence_q123_k = Kest(civViolenceQ123_ppp_com, correction = "Ripley") 
 civViolence_q123_k.csr <- envelope(civViolenceQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1519,6 +1546,7 @@ plot(civViolence_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
+#| eval: false
 civViolence_q124_k = Kest(civViolenceQ124_ppp_com, correction = "Ripley") 
 civViolence_q124_k.csr <- envelope(civViolenceQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1535,5 +1563,347 @@ plot(civViolence_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 ## 1.5 Computing the Quarterly Spatio-Temporal KDE Layers
 
+::: panel-tabset
+## Battles
+
+::: panel-tabset
+## 2021
+
 ```{r}
+
+battle_st_21<- quart_geo_bat %>% 
+  filter(year=="2021") %>% 
+  select(2,3)
+
+battle_21_ppp<- as.ppp(battle_st_21, coordinates=battle_st_21)
+battle_21_owin<- battle_21_ppp[boundary_owin]
+
+battles_st_21_kde<- spattemp.density(battle_21_owin)
+
+tims2<-unique(battle_st_21$num_quarters)
+
+
+for (i in tims2){
+  plot(battles_st_21_kde, i,
+  main = paste('STKDE of Q', i, " 2021", sep=""))
+}
 ```
+
+## 2022
+
+```{r}
+battle_st_22<- quart_geo_bat %>% 
+  filter(year=="2022") %>% 
+  select(2,3)
+
+battle_22_ppp<- as.ppp(battle_st_22, coordinates=battle_st_22)
+battle_22_owin<- battle_22_ppp[boundary_owin]
+
+battles_st_22_kde<- spattemp.density(battle_22_owin)
+
+for (i in tims2){
+  plot(battles_st_22_kde, i,
+  main = paste('STKDE of Q', i, " 2022", sep=""))
+}
+```
+
+## 2023
+
+```{r}
+battle_st_23<- quart_geo_bat %>% 
+  filter(year=="2023") %>% 
+  select(2,3)
+
+battle_23_ppp<- as.ppp(battle_st_23, coordinates=battle_st_23)
+battle_23_owin<- battle_23_ppp[boundary_owin]
+
+battles_st_23_kde<- spattemp.density(battle_23_owin)
+
+for (i in tims2){
+  plot(battles_st_23_kde, i,
+  main = paste('STKDE of Q', i, " 2023", sep=""))
+}
+```
+
+## 2024
+
+```{r}
+battle_st_24<- quart_geo_bat %>% 
+  filter(year=="2024") %>% 
+  select(2,3)
+
+battle_24_ppp<- as.ppp(battle_st_24, coordinates=battle_st_24)
+battle_24_owin<- battle_24_ppp[boundary_owin]
+
+battles_st_24_kde<- spattemp.density(battle_24_owin)
+tims2<-unique(battle_st_24$num_quarters)
+
+for (i in tims2){
+  plot(battles_st_24_kde, i,
+  main = paste('STKDE of Q', i, " 2024", sep=""))
+}
+```
+:::
+
+## Explosions
+
+::: panel-tabset
+## 2021
+
+```{r}
+Exp_st_21<- quart_geo_exp %>% 
+  filter(year=="2021") %>% 
+  select(2,3)
+
+Exp_21_ppp<- as.ppp(Exp_st_21, coordinates=Exp_st_21)
+Exp_21_owin<- Exp_21_ppp[boundary_owin]
+
+Exp_st_21_kde<- spattemp.density(Exp_21_owin)
+
+tims2<-unique(Exp_st_21$num_quarters)
+
+
+for (i in tims2){
+  plot(Exp_st_21_kde, i,
+  main = paste('STKDE of Q', i, " 2021", sep=""))
+}
+```
+
+## 2022
+
+```{r}
+Exp_st_22<- quart_geo_exp %>% 
+  filter(year=="2022") %>% 
+  select(2,3)
+
+Exp_22_ppp<- as.ppp(Exp_st_22, coordinates=Exp_st_22)
+Exp_22_owin<- Exp_22_ppp[boundary_owin]
+
+Exp_st_22_kde<- spattemp.density(Exp_22_owin)
+
+tims2<-unique(Exp_st_22$num_quarters)
+
+
+for (i in tims2){
+  plot(Exp_st_22_kde, i,
+  main = paste('STKDE of Q', i, " 2022", sep=""))
+}
+```
+
+## 2023
+
+```{r}
+Exp_st_23<- quart_geo_exp %>% 
+  filter(year=="2023") %>% 
+  select(2,3)
+
+Exp_23_ppp<- as.ppp(Exp_st_23, coordinates=Exp_st_23)
+Exp_23_owin<- Exp_23_ppp[boundary_owin]
+
+Exp_st_23_kde<- spattemp.density(Exp_23_owin)
+
+tims2<-unique(Exp_st_23$num_quarters)
+
+
+for (i in tims2){
+  plot(Exp_st_23_kde, i,
+  main = paste('STKDE of Q', i, " 2023", sep=""))
+}
+```
+
+## 2024
+
+```{r}
+Exp_st_24<- quart_geo_exp %>% 
+  filter(year=="2024") %>% 
+  select(2,3)
+
+Exp_24_ppp<- as.ppp(Exp_st_24, coordinates=Exp_st_24)
+Exp_24_owin<- Exp_24_ppp[boundary_owin]
+
+Exp_st_24_kde<- spattemp.density(Exp_24_owin)
+tims2<-unique(Exp_st_24$num_quarters)
+
+for (i in tims2){
+  plot(Exp_st_24_kde, i,
+  main = paste('STKDE of Q', i, " 2024", sep=""))
+}
+```
+:::
+
+## Strategic Developments
+
+::: panel-tabset
+## 2021
+
+```{r}
+strat_dev_st_21<- quart_geo_strat_dev %>% 
+  filter(year=="2021") %>% 
+  select(2,3)
+
+strat_dev_21_ppp<- as.ppp(strat_dev_st_21, coordinates=strat_dev_st_21)
+strat_dev_21_owin<- strat_dev_21_ppp[boundary_owin]
+
+strat_dev_st_21_kde<- spattemp.density(strat_dev_21_owin)
+
+tims2<-unique(strat_dev_st_21$num_quarters)
+
+
+for (i in tims2){
+  plot(strat_dev_st_21_kde, i,
+  main = paste('STKDE of Q', i, " 2021", sep=""))
+}
+```
+
+## 2022
+
+```{r}
+strat_dev_st_22<- quart_geo_strat_dev %>% 
+  filter(year=="2022") %>% 
+  select(2,3)
+
+strat_dev_22_ppp<- as.ppp(strat_dev_st_22, coordinates=strat_dev_st_22)
+strat_dev_22_owin<- strat_dev_22_ppp[boundary_owin]
+
+strat_dev_st_22_kde<- spattemp.density(strat_dev_22_owin)
+
+tims2<-unique(strat_dev_st_22$num_quarters)
+
+
+for (i in tims2){
+  plot(strat_dev_st_22_kde, i,
+  main = paste('STKDE of Q', i, " 2022", sep=""))
+}
+```
+
+## 2023
+
+```{r}
+strat_dev_st_23<- quart_geo_strat_dev %>% 
+  filter(year=="2023") %>% 
+  select(2,3)
+
+strat_dev_23_ppp<- as.ppp(strat_dev_st_23, coordinates=strat_dev_st_23)
+strat_dev_23_owin<- strat_dev_23_ppp[boundary_owin]
+
+strat_dev_st_23_kde<- spattemp.density(strat_dev_23_owin)
+
+tims2<-unique(strat_dev_st_23$num_quarters)
+
+
+for (i in tims2){
+  plot(strat_dev_st_23_kde, i,
+  main = paste('STKDE of Q', i, " 2023", sep=""))
+}
+```
+
+## 2024
+
+```{r}
+strat_dev_st_24<- quart_geo_exp %>% 
+  filter(year=="2024") %>% 
+  select(2,3)
+
+strat_dev_24_ppp<- as.ppp(strat_dev_st_24, coordinates=strat_dev_st_24)
+strat_dev_24_owin<- strat_dev_24_ppp[boundary_owin]
+
+strat_dev_st_24_kde<- spattemp.density(strat_dev_24_owin)
+tims2<-unique(strat_dev_st_24$num_quarters)
+
+for (i in tims2){
+  plot(strat_dev_st_24_kde, i,
+  main = paste('STKDE of Q', i, " 2024", sep=""))
+}
+```
+:::
+
+## Violence Against Civilians
+
+::: panel-tabset
+## 2021
+
+```{r}
+civ_st_21<- quart_geo_civ %>% 
+  filter(year=="2021") %>% 
+  select(2,3)
+
+civ_21_ppp<- as.ppp(civ_st_21, coordinates=civ_st_21)
+civ_21_owin<- civ_21_ppp[boundary_owin]
+
+civ_st_21_kde<- spattemp.density(civ_21_owin)
+
+tims2<-unique(civ_st_21$num_quarters)
+
+
+for (i in tims2){
+  plot(civ_st_21_kde, i,
+  main = paste('STKDE of Q', i, " 2021", sep=""))
+}
+
+```
+
+## 2022
+
+```{r}
+civ_st_22<- quart_geo_civ %>% 
+  filter(year=="2022") %>% 
+  select(2,3)
+civ_22_ppp<- as.ppp(civ_st_22, coordinates=civ_st_22)
+civ_22_owin<- civ_22_ppp[boundary_owin]
+
+civ_st_22_kde<- spattemp.density(civ_22_owin)
+
+tims2<-unique(civ_st_22$num_quarters)
+
+
+for (i in tims2){
+  plot(civ_st_22_kde, i,
+  main = paste('STKDE of Q', i, " 2022", sep=""))
+}
+
+```
+
+## 2023
+
+```{r}
+civ_st_23<- quart_geo_civ %>% 
+  filter(year=="2023") %>% 
+  select(2,3)
+
+civ_23_ppp<- as.ppp(civ_st_23, coordinates=civ_st_23)
+civ_23_owin<- civ_23_ppp[boundary_owin]
+
+civ_st_23_kde<- spattemp.density(civ_23_owin)
+
+tims2<-unique(civ_st_23$num_quarters)
+
+
+for (i in tims2){
+  plot(civ_st_23_kde, i,
+  main = paste('STKDE of Q', i, " 2023", sep=""))
+}
+
+```
+
+## 2024
+
+```{r}
+civ_st_24<- quart_geo_civ %>% 
+  filter(year=="2024") %>% 
+  select(2,3)
+
+civ_24_ppp<- as.ppp(civ_st_24, coordinates=civ_st_24)
+civ_24_owin<- civ_24_ppp[boundary_owin]
+
+civ_st_24_kde<- spattemp.density(civ_24_owin)
+
+tims2<-unique(civ_st_24$num_quarters)
+
+
+for (i in tims2){
+  plot(civ_st_24_kde, i,
+  main = paste('STKDE of Q', i, " 2024", sep=""))
+}
+```
+:::
+:::

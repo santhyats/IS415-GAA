@@ -77,24 +77,28 @@ Lastly, I will be importing and reading the csv file containing the data about t
 
 
 ```{r}
-
-all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv')%>% 
+all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv') %>% 
   st_as_sf(coords = c('longitude', 'latitude'),
            crs=4326) %>% 
-  st_transform(crs=32646)
+  st_transform(crs=32646) %>% 
+   select(1:4, 6,19, 29, 30) 
 
 st_crs(all_sf)
+ 
+  
 ```
 
 
 #### 1.2.2 Preparing the Data
 
-Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations.
+Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations. I will also add in a new column to keep track of our quarters.
 
 
 ```{r}
 
-all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y")
+all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y") 
+all_sf$quarters <- paste(quarters(all_sf$event_date), year(all_sf$event_date), sep="_")
+all_sf$num_quarters<-quarter(all_sf$event_date)
 ```
 
 
@@ -113,7 +117,7 @@ I will filter out the data according to these event types and save them in separ
 
 
 ```{r}
-#| eval: false
+
 battles_sf <- all_sf %>%  filter(event_type == 'Battles')
 battles_sf
 
@@ -124,6 +128,24 @@ civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians")
 strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments')
 
 
+```
+
+
+I will also be creating a separate sf containing the timeframe and the geometry, to be used in our Spatio Temporal KDE layers later.
+
+
+```{r}
+quart_geo_bat<- battles_sf %>% 
+  select(3,8,10)
+
+quart_geo_civ <- civViolence_sf %>% 
+  select(3,8:10)
+
+quart_geo_exp<- exp_sf %>% 
+  select(3,8,10)
+
+quart_geo_strat<- strat_dev_sf %>% 
+  select(3,8,10)
 ```
 
 
@@ -1459,6 +1481,7 @@ plot(exp_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 strat_dev_q121_k = Kest(strat_devQ121_ppp_com, correction = "Ripley") 
 strat_dev_q121_k.csr <- envelope(strat_devQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1483,6 +1506,7 @@ plot(strat_dev_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 strat_dev_q122_k = Kest(strat_devQ122_ppp_com, correction = "Ripley") 
 strat_dev_q122_k.csr <- envelope(strat_devQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1507,6 +1531,7 @@ plot(strat_dev_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 strat_dev_q123_k = Kest(strat_devQ123_ppp_com, correction = "Ripley") 
 strat_dev_q123_k.csr <- envelope(strat_devQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1531,6 +1556,7 @@ plot(strat_dev_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 strat_dev_q124_k = Kest(strat_devQ124_ppp_com, correction = "Ripley") 
 strat_dev_q124_k.csr <- envelope(strat_devQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1552,6 +1578,7 @@ plot(strat_dev_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 civViolence_q121_k = Kest(civViolenceQ121_ppp_com, correction = "Ripley") 
 civViolence_q121_k.csr <- envelope(civViolenceQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1577,6 +1604,7 @@ plot(civViolence_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 civViolence_q122_k = Kest(civViolenceQ122_ppp_com, correction = "Ripley") 
 civViolence_q122_k.csr <- envelope(civViolenceQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1601,6 +1629,7 @@ plot(civViolence_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 civViolence_q123_k = Kest(civViolenceQ123_ppp_com, correction = "Ripley") 
 civViolence_q123_k.csr <- envelope(civViolenceQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1625,6 +1654,7 @@ plot(civViolence_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 
 ```{r}
+#| eval: false
 civViolence_q124_k = Kest(civViolenceQ124_ppp_com, correction = "Ripley") 
 civViolence_q124_k.csr <- envelope(civViolenceQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1642,7 +1672,100 @@ plot(civViolence_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 ## 1.5 Computing the Quarterly Spatio-Temporal KDE Layers
 
+::: panel-tabset
+## Battles
+
+::: panel-tabset
+## 2021
+
 
 ```{r}
+
+battle_st_21<- quart_geo_bat %>% 
+  filter(year=="2021") %>% 
+  select(2,3)
+
+battle_21_ppp<- as.ppp(battle_st_21, coordinates=battle_st_21)
+battle_21_owin<- battle_21_ppp[boundary_owin]
+
+battles_st_kde<- spattemp.density(battle_21_owin)
+
+tims2<-unique(battle_st_21$num_quarters)
+
+
+for (i in tims2){
+  plot(battles_st_kde, i,
+  main = paste('STKDE of Q', i, " 2021", sep=""))
+}
 ```
+
+
+## 2022
+
+
+```{r}
+battle_st_22<- quart_geo_bat %>% 
+  filter(year=="2022") %>% 
+  select(2,3)
+
+battle_22_ppp<- as.ppp(battle_st_22, coordinates=battle_st_22)
+battle_22_owin<- battle_22_ppp[boundary_owin]
+
+battles_st_kde<- spattemp.density(battle_22_owin)
+
+for (i in tims2){
+  plot(battles_st_kde, i,
+  main = paste('STKDE of Q', i, " 2022", sep=""))
+}
+```
+
+
+## 2023
+
+
+```{r}
+battle_st_23<- quart_geo_bat %>% 
+  filter(year=="2023") %>% 
+  select(2,3)
+
+battle_23_ppp<- as.ppp(battle_st_23, coordinates=battle_st_23)
+battle_23_owin<- battle_23_ppp[boundary_owin]
+
+battles_st_kde<- spattemp.density(battle_23_owin)
+
+for (i in tims2){
+  plot(battles_st_kde, i,
+  main = paste('STKDE of Q', i, " 2023", sep=""))
+}
+```
+
+
+## 2024
+
+
+```{r}
+battle_st_24<- quart_geo_bat %>% 
+  filter(year=="2024") %>% 
+  select(2,3)
+
+battle_24_ppp<- as.ppp(battle_st_24, coordinates=battle_st_24)
+battle_24_owin<- battle_24_ppp[boundary_owin]
+
+battles_st_kde<- spattemp.density(battle_24_owin)
+tims2<-unique(battle_st_24$num_quarters)
+
+for (i in tims2){
+  plot(battles_st_kde, i,
+  main = paste('STKDE of Q', i, " 2024", sep=""))
+}
+```
+
+:::
+
+## Explosions
+
+## Strategic Developments
+
+## Violence Against Civilians
+:::
 
