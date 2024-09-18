@@ -587,7 +587,7 @@ clarkevans.test(childcare_tm_ppp,
 
 #### 3.9.1 Analysing Spatial Point Pattern using G- Function
 
-The G function measures the distribution of the distances from an arbitrary event to its nearest event. In this section, I will compute G-function estimation by using [*Gest()*](https://rdrr.io/cran/spatstat/man/Gest.html) of **spatstat** package. I will also perform monta carlo simulation test using [*envelope()*](https://rdrr.io/cran/spatstat/man/envelope.html) of **spatstat** package.
+The G function measures the distribution of the distances from an arbitrary event to its nearest event. In this section, I will compute G-function estimation by using [*Gest()*](https://rdrr.io/cran/spatstat/man/Gest.html) of **spatstat** package. I will also perform monte carlo simulation test using [*envelope()*](https://rdrr.io/cran/spatstat/man/envelope.html) of **spatstat** package.
 
 ##### 3.9.1.1 Choa Chu Kang Planning Area
 
