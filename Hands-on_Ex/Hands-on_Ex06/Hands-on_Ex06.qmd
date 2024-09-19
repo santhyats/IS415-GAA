@@ -1,0 +1,10 @@
+---
+title: "6 Global and Local measures of Spatial Association"
+author: "Santhya Selvan"
+date: "September 19, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---

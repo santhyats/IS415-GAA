@@ -1190,10 +1190,25 @@ In this section, I will be computing the quarterly second order spatial point pr
 ## Battles
 
 ::: panel-tabset
+```{r}
+battles_ppp<- as.ppp(st_coordinates(battles_sf), st_bbox(battles_sf))
+battles_ppp_com<- battles_ppp[boundary_owin]
+battles_ppp_com<-rescale(battles_ppp_com, 1000, 'km')
+```
+
+```{r}
+
+battles_k = Kest(battles_ppp_com, correction = "Ripley") 
+battles_k.csr <- envelope(battles_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
+plot(battles_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
+
+
+```
+
 ## 2021
 
 ```{r}
-#| eval: false
+
 battles_q121_k = Kest(battlesQ121_ppp_com, correction = "Ripley") 
 battles_q121_k.csr <- envelope(battlesQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1219,7 +1234,7 @@ plot(battles_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
-#| eval: false
+
 battles_q122_k <- Kest(battlesQ122_ppp_com, correction = "Ripley") 
 battles_q122_k.csr <- envelope(battlesQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1245,7 +1260,6 @@ plot(battles_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
-#| eval: false
 battles_q123_k <- Kest(battlesQ123_ppp_com, correction = "Ripley") 
 battles_q123_k.csr <- envelope(battlesQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1270,7 +1284,7 @@ plot(battles_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
-#| eval: false
+
 battles_q124_k <- Kest(battlesQ124_ppp_com, correction = "Ripley") 
 battles_q124_k.csr <- envelope(battlesQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1291,7 +1305,6 @@ plot(battles_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 
 ```{r}
 
-#| eval: false
 exp_q121_k = Kest(expQ121_ppp_com, correction = "Ripley") 
 exp_q121_k.csr <- envelope(expQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1315,7 +1328,7 @@ plot(exp_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
-#| eval: false
+
 exp_q122_k <- Kest(expQ122_ppp_com, correction = "Ripley") 
 exp_q122_k.csr <- envelope(expQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1341,7 +1354,7 @@ plot(exp_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
-#| eval: false
+
 exp_q123_k <- Kest(expQ123_ppp_com, correction = "Ripley") 
 exp_q123_k.csr <- envelope(expQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1366,7 +1379,6 @@ plot(exp_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
-#| eval: false
 exp_q124_k <- Kest(expQ124_ppp_com, correction = "Ripley") 
 exp_q124_k.csr <- envelope(expQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1387,7 +1399,7 @@ plot(exp_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2021
 
 ```{r}
-#| eval: false
+
 strat_dev_q121_k = Kest(strat_devQ121_ppp_com, correction = "Ripley") 
 strat_dev_q121_k.csr <- envelope(strat_devQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1410,7 +1422,7 @@ plot(strat_dev_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
-#| eval: false
+
 strat_dev_q122_k = Kest(strat_devQ122_ppp_com, correction = "Ripley") 
 strat_dev_q122_k.csr <- envelope(strat_devQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1433,7 +1445,7 @@ plot(strat_dev_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
-#| eval: false
+
 strat_dev_q123_k = Kest(strat_devQ123_ppp_com, correction = "Ripley") 
 strat_dev_q123_k.csr <- envelope(strat_devQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1456,7 +1468,7 @@ plot(strat_dev_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
-#| eval: false
+
 strat_dev_q124_k = Kest(strat_devQ124_ppp_com, correction = "Ripley") 
 strat_dev_q124_k.csr <- envelope(strat_devQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1476,7 +1488,7 @@ plot(strat_dev_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2021
 
 ```{r}
-#| eval: false
+
 civViolence_q121_k = Kest(civViolenceQ121_ppp_com, correction = "Ripley") 
 civViolence_q121_k.csr <- envelope(civViolenceQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1500,7 +1512,7 @@ plot(civViolence_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2022
 
 ```{r}
-#| eval: false
+
 civViolence_q122_k = Kest(civViolenceQ122_ppp_com, correction = "Ripley") 
 civViolence_q122_k.csr <- envelope(civViolenceQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1523,7 +1535,7 @@ plot(civViolence_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2023
 
 ```{r}
-#| eval: false
+
 civViolence_q123_k = Kest(civViolenceQ123_ppp_com, correction = "Ripley") 
 civViolence_q123_k.csr <- envelope(civViolenceQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1546,7 +1558,7 @@ plot(civViolence_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
 ## 2024
 
 ```{r}
-#| eval: false
+
 civViolence_q124_k = Kest(civViolenceQ124_ppp_com, correction = "Ripley") 
 civViolence_q124_k.csr <- envelope(civViolenceQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
 
@@ -1907,3 +1919,5 @@ for (i in tims2){
 ```
 :::
 :::
+
+## 1.6 Second-Order Spatio-Temporal KDE
