@@ -8,3 +8,47 @@ execute:
   echo: true
   freeze: true
 ---
+
+## 6.1 Overview
+
+In this Hands-on, I will be exploring how to compute Global Measures of Spatial Autocorrelation (GMSA) using the **spdep** package.
+
+In spatial policy, one of the main development objective of the local government and planners is to ensure equal distribution of development in the province. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are even distributed geographically. If the answer is **No**. Then, our next question will be “is there sign of spatial clustering?”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”
+
+In this case study, we are interested to examine the spatial pattern of a selected development indicator (i.e. GDP per capita) of [Hunan Provice](https://en.wikipedia.org/wiki/Hunan), People Republic of China.
+
+First and foremost, I will download the necessary packages, mainly sf, tidyverse, spdep and tmap.
+
+```{r}
+pacman:: p_load(sf, spdep, tidyverse, tmap )
+```
+
+## 6.2 Study Area and Data
+
+For this exercise, I will use 2 data sets:
+
+-   Hunan province administrative boundary layer at county level. This is a geospatial data set in ESRI shapefile format.
+
+-   Hunan_2012.csv: This csv file contains selected Hunan’s local development indicators in 2012.
+
+#### 6.2.1 Importing the data
+
+First, I will use the *st_read()* function of the sf package to import the shapefiles into our R environment.
+
+```{r}
+hunan3 <- st_read(dsn="data/geospatial",
+                  layer="Hunan")
+```
+
+I will also read the csv file into our environment using the *read_csv()* function.
+
+```{r}
+hunan2012_3<- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+Lastly, I will perform a relational join to join the attributes from the *hunan2012_3* dataframe to the *hunan3* dataframe. This is done by using the *left_join()* function of the **dplyr** package.
+
+```{r}
+hunan3 <- left_join(hunan3,hunan2012_3) %>%
+  select(1:4, 7, 15)
+```
