@@ -1267,6 +1267,23 @@ In this section, I will be computing the quarterly second order spatial point pr
 ## Battles
 
 ::: panel-tabset
+
+```{r}
+battles_ppp<- as.ppp(st_coordinates(battles_sf), st_bbox(battles_sf))
+battles_ppp_com<- battles_ppp[boundary_owin]
+battles_ppp_com<-rescale(battles_ppp_com, 1000, 'km')
+```
+
+```{r}
+
+battles_k = Kest(battles_ppp_com, correction = "Ripley") 
+battles_k.csr <- envelope(battles_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
+plot(battles_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
+
+
+```
+
+
 ## 2021
 
 
