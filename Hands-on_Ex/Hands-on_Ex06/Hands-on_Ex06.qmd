@@ -255,3 +255,12 @@ head(localMI)
 -   Z.Ii:the standard deviate of local moran statistic
 
 -   Pr(): the p-value of local moran statistic
+
+We can make use of the *printCoefmat()* to list the contents of the local Moran matrix.
+
+```{r}
+printCoefmat(data.frame(
+  localMI[fips,], 
+  row.names=hunan3$County[fips]),
+  check.names=FALSE)
+```
