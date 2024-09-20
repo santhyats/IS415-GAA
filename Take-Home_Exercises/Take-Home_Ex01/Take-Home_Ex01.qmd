@@ -88,7 +88,8 @@ Before we can start deriving our KDE layers, we will make sure our data is in a 
 
 ```{r}
 
-all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y") 
+all_sf<- all_sf %>% 
+  mutate(event_date = as.Date(event_date, format = "%d %B %Y"))
 all_sf$quarters <- paste(quarters(all_sf$event_date), year(all_sf$event_date), sep="_")
 all_sf$num_quarters<-quarter(all_sf$event_date)
 ```
@@ -133,7 +134,7 @@ quart_geo_exp<- exp_sf %>%
   select(3,8,10)
 
 quart_geo_strat<- strat_dev_sf %>% 
-  select(3,8,10)
+  select(3,8,10) 
 ```
 
 Finally, I will further split the conflict type datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder.
