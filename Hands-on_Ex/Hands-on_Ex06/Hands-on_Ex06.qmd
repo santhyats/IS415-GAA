@@ -49,6 +49,218 @@ hunan2012_3<- read_csv("data/aspatial/Hunan_2012.csv")
 Lastly, I will perform a relational join to join the attributes from the *hunan2012_3* dataframe to the *hunan3* dataframe. This is done by using the *left_join()* function of the **dplyr** package.
 
 ```{r}
-hunan3 <- left_join(hunan3,hunan2012_3) %>%
-  select(1:4, 7, 15)
+hunan3 <- left_join(hunan3,hunan2012_3) %>% 
+ select(1:4, 7, 15)
+```
+
+#### 6.2.2 Visualising Regional Development Indicators
+
+In this section, we will plot a chloropeth map that will show us the distribution of GDPPC 2012. This will be done using the qtm() function of the **tmap** package.
+
+```{r}
+equal <- tm_shape(hunan3) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal interval classification")
+
+quantile <- tm_shape(hunan3) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal quantile classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
+## 6.3 Global Measures of Spatial Autocorrelation
+
+#### 6.3.1 Computing Contiguity Spatial Weights
+
+Before we can compute the global spatial autocorrelation, we would first need to derive the spatial weights of the study area. Spatial weights are the neighbourhood relationships between the spatial units.
+
+We will derive the contiguity neighbours list using the *poly2nb()* function of the **spdep** package. By default, this function returns a matrice of neighbours of the spatial untis, derived by the Queen's method.
+
+```{r}
+wm_q3 <- poly2nb(hunan3, 
+                queen=TRUE)
+summary(wm_q3)
+```
+
+From the summary above, we see that there are a total of 88 spatial regions in hunan and the most connected region has 11 links. There are also 2 least connected regions with only one neighbour each.
+
+#### 6.3.2 Row-standardized Weights Matrix
+
+Next, we need to assign weights to each neighboring polygon. In our case, each neighboring polygon will be assigned equal weight (style=“W”). This is accomplished by assigning the fraction 1/(#ofneighbors) to each neighboring county then summing the weighted income values. While this is the most intuitive way to summaries the neighbors’ values it has one drawback in that polygons along the edges of the study area will base their lagged values on fewer polygons thus potentially over- or under-estimating the true nature of the spatial autocorrelation in the data. For this example, we’ll stick with the style=“W” option for simplicity’s sake but note that other more robust options are available, notably style=“B”.
+
+```{r}
+rswm_q3 <- nb2listw(wm_q3, 
+                   style="W", 
+                   zero.policy = TRUE)
+rswm_q3
+```
+
+## 6.4 Global Measures of Spatial Autocorrelation- Moran's Test
+
+#### 6.4.1 Moran's I Test
+
+In this section, we will be performing the Maron's I statistics test using the *moran.test()* function of the **spdep** package.
+
+```{r}
+moran.test(hunan3$GDPPC, 
+           listw=rswm_q3, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+
+From the statistics derived above, we see that the p-value is extremely small and that the alternate hypothesis is greater, enabling us to reject the null hypothesis (which states that there is no correlation between the weighted spatial units) and conclude that there is significant spatial autocorrelation between the weighted spatial units. This is further corroborated by the positive value of the Moran I Statistic.
+
+In context, this means that counties with similar GDPPC Values are more close to one another spatially as compared to counties that have varying levels.
+
+#### 6.4.2 Computing Monte Carlo Moran's I Statistic
+
+We will now perform the Monte Carlo Simulation for the Moran's I Statistic using the *moran.mc()* function, also from the **spdep** package.
+
+```{r}
+set.seed(1234)
+bperm= moran.mc(hunan3$GDPPC, 
+                listw=rswm_q3, 
+                nsim=999, 
+                zero.policy = TRUE, 
+                na.action=na.omit)
+bperm
+```
+
+From the statistics above, we once again see that the p-value is lower than 0.05, and we can reject the null hypothesis and accept the claim that the weighted spatial units are positively autocorrelated.
+
+#### 6.4.3 Visualising Monte Carlo Moran's I
+
+It is always a good practice for us the examine the simulated Moran’s I test statistics in greater detail. This can be achieved by plotting the distribution of the statistical values as a histogram by using the code chunk below.
+
+In the code chunk below [`hist()`](https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/hist) and [`abline()`](https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/abline) of R Graphics are used.
+
+```{r}
+hist(bperm$res, 
+     freq=TRUE, 
+     breaks=20, 
+     xlab="Simulated Moran's I",)
+abline(v=0, 
+       col="purple") 
+```
+
+## 6.5 Global Measures of Spatial Autocorrelation- Geary's C 
+
+#### 6.5.1 Geary's C Test
+
+In this section, I will be performing the Geary's C test using the *geary.test()* function, also from the **spdep** package.
+
+```{r}
+geary.test(hunan3$GDPPC, listw=rswm_q3)
+```
+
+From the statistics above, I see that the Geary C statistic has a postivie value and the p-value is very small. This indicates that the null hypothesis (which states that the weighted spatial units are randomly distributed) is rejected and the weighted spatial units are concluded to be spatially correlated.
+
+#### 6.5.2 Computing Monte Carlo Geary's C 
+
+We will perform the permutations of the Monte Carlo simulation using the *geary.mc()* function of the **spdep** package.
+
+```{r}
+set.seed(1234)
+bperm=geary.mc(hunan3$GDPPC, 
+               listw=rswm_q3, 
+               nsim=999)
+bperm
+```
+
+#### 6.5.3 Visualising the Monte Carlo Geary's C
+
+We will once again plot a histogram to reveal the distribution of the values in the Monte Carlo simulation.
+
+```{r}
+hist(bperm$res, freq=TRUE, breaks=20, xlab="Simulated Geary c")
+abline(v=1, col="red") 
+```
+
+## 6.6 Spatial Correlogram
+
+Spatial Correlograms are plots that show how correlated pairs of spatial observations are when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. In this section, we will be plotting the coreelograms for the two tests that we have explored so far.
+
+#### 6.6.1 Compute Moran I's Correlogram
+
+To achieve this, we will be using the *sp.correlogram()* function of the **spdep** package.
+
+```{r}
+MI_corr <- sp.correlogram(wm_q3, 
+                          hunan3$GDPPC, 
+                          order=6, 
+                          method="I", 
+                          style="W")
+plot(MI_corr)
+```
+
+From the plot above, we see that as the distance increases, the distribution of the values of the Moran I's test becomes more negative, indicating that with larger distances, the spatial autocorrelation of the weighted spatial units decrease.
+
+By plotting the output might not allow us to provide complete interpretation. This is because not all autocorrelation values are statistically significant. Hence, it is important for us to examine the full analysis report by printing out the analysis results as in the code chunk below.
+
+```{r}
+print(MI_corr)
+```
+
+#### 6.6.2 Computing Geary C's Correlogram
+
+In the code chunk below, `sp.correlogram()` of **spdep** package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary’s C. The **plot()** of base Graph is then used to plot the output.
+
+```{r}
+GC_corr <- sp.correlogram(wm_q3, 
+                          hunan3$GDPPC, 
+                          order=6, 
+                          method="C", 
+                          style="W")
+plot(GC_corr)
+```
+
+Similarly, we will derive the analysis report
+
+```{r}
+print(GC_corr)
+```
+
+## 6.7 Local Measures of Spatial Autocorrelation
+
+#### 6.7.1 Computing Local Moran's I 
+
+To compute local Moran’s I, the [*localmoran()*](https://r-spatial.github.io/spdep/reference/localmoran.html) function of **spdep** will be used. It computes *Ii* values, given a set of *zi* values and a listw object providing neighbour weighting information for the polygon associated with the zi values.
+
+The code chunks below are used to compute local Moran’s I of *GDPPC2012* at the county level.
+
+```{r}
+fips <- order(hunan3$County)
+localMI <- localmoran(hunan3$GDPPC, rswm_q3)
+head(localMI)
+```
+
+*localmoran()* function returns a matrix of values whose columns are:
+
+-   Ii: the local Moran’s I statistics
+
+-   E.Ii: the expectation of local moran statistic under the randomisation hypothesis
+
+-   Var.Ii: the variance of local moran statistic under the randomisation hypothesis
+
+-   Z.Ii:the standard deviate of local moran statistic
+
+-   Pr(): the p-value of local moran statistic
+
+We can make use of the *printCoefmat()* to list the contents of the local Moran matrix.
+
+```{r}
+printCoefmat(data.frame(
+  localMI[fips,], 
+  row.names=hunan3$County[fips]),
+  check.names=FALSE)
 ```

@@ -45,7 +45,7 @@ In this section, I will be retrieving the required data and performing the neces
 
 #### 1.2.1 Importing the Data
 
-Firstly, I will be importing the base map of Myanmar in shapefile format. I will also transform the crs to that of Myanmar.
+Firstly, I will be importing the base map of Myanmar in shapefile format using *st_read()* function of the **sf** package. I will also transform the crs to that of Myanmar using the *st_transform()* function.
 
 ```{r}
 boundary <- st_read(dsn="data/raw",
@@ -54,11 +54,13 @@ boundary <- st_read(dsn="data/raw",
 
 ```
 
+We will make use of *st_crs()* function to make sure that the Coordinate Reference System has been correctly transformed to that of Myanmar.
+
 ```{r}
 st_crs(boundary)
 ```
 
-Next, I will also be Importing the regional boundaries of Myanmar.
+Next, I will also be Importing the regional boundaries of Myanmar and transforming the crs to that of Myanmar's again.
 
 ```{r}
 regions_sf <- st_read(dsn="data/raw",
@@ -66,7 +68,7 @@ regions_sf <- st_read(dsn="data/raw",
   st_transform(crs = 32646)
 ```
 
-Lastly, I will be importing and reading the csv file containing the data about the conflicts into a dataframe. I will once again ensure that the crs of the data is transformed to that of Myanmar's.
+Lastly, I will be importing and reading the csv file containing the data about the conflicts into a dataframe called `all_sf`. This is done using the *read_csv()* function of the **readr** package. I will once again ensure that the crs of the data is transformed to that of Myanmar's.
 
 ```{r}
 all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv') %>% 
@@ -82,25 +84,28 @@ st_crs(all_sf)
 
 #### 1.2.2 Preparing the Data
 
-Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to a format that can be handled during computations. I will also add in a new column to keep track of our quarters.
+Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to the date format so that can be handled during computations. This is done through the *as.Date()* functon. I will also add in new columns called "quarters" and "num_quarters" to keep track of our quarters and its numbers. The numeric quarters column will come in handy when we are computing our Spatio Temporal KDE layers later.
 
 ```{r}
 
-all_sf$event_date <- as.Date(all_sf$event_date, format = "%d %B %Y") 
+all_sf<- all_sf %>% 
+  mutate(event_date = as.Date(event_date, format = "%d %B %Y"))
 all_sf$quarters <- paste(quarters(all_sf$event_date), year(all_sf$event_date), sep="_")
 all_sf$num_quarters<-quarter(all_sf$event_date)
 ```
 
-Before we can filter out the data that we need, I will be visualising the data according to the event types to observe for any patterns or similarity.
+Before we can filter out the data that we need, I will be visualising the data according to the event types to observe for any patterns or similarity. To do this, I will first use *tm_shape()* and *tm_polygons()* of the **tmap** package to plot the base map of Myanmar, indicating all the regions. Next, I will use *tm_shape()* and *tm_dots()* together to plot out all the spatial points. Lastly, I will use *tm_facets()* to separate the plots according to the type of conlfict.
 
 ```{r}
 
 tm_shape(boundary) + tm_polygons() + tm_shape(regions_sf) + tm_polygons() + tm_shape(all_sf) + tm_dots() + tm_facets(by='event_type', free.coords = FALSE, drop.units= TRUE)
 ```
 
-From the patterns observed above, we see that Battles, Strategic Developments, Explosions and Violence against civilians all have similar distribution of conflicts across the space and that Riots and Protests do not have that many spatial points even over the aggregated 4 year dataset. As such, I will be focusing my analysis on these four main categories of conflicts: **Battles, Strategic Developments, Violence against Civilians and Explosions.**
+From the patterns observed above, I see that Battles, Strategic Developments, Explosions and Violence against civilians all have similar distribution of conflicts across the space. I also noted that Riots and Protests have very sparsespatial points even over the aggregated 4 year dataset. This indicates the possibility that there will be few to no spatial points available to analyse for certain quarters.
 
-I will filter out the data according to these event types and save them in separate sf objects.
+As such, I will be focusing my analysis on these four main categories of conflicts: **Battles, Strategic Developments, Violence against Civilians** and **Explosions.**
+
+I will filter out the data according to these event types using the *filter()* function and save them in separate sf objects.
 
 ```{r}
 
@@ -116,23 +121,23 @@ strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments')
 
 ```
 
-I will also be creating a separate sf containing the timeframe and the geometry, to be used in our Spatio Temporal KDE layers later.
+I will also be creating a separate sf containing the only the timeframe and the geometry of the spatial points, to be used in our Spatio Temporal KDE layers later. This is done by using the select() functions to select only the "quarters", "num_quarters" an d"geometry" columns from the dataframes of the respective conflict types.
 
 ```{r}
 quart_geo_bat<- battles_sf %>% 
   select(3,8,10)
 
 quart_geo_civ <- civViolence_sf %>% 
-  select(3,8:10)
+  select(3,8,10)
 
 quart_geo_exp<- exp_sf %>% 
   select(3,8,10)
 
 quart_geo_strat<- strat_dev_sf %>% 
-  select(3,8,10)
+  select(3,8,10) 
 ```
 
-Finally, I will further split the datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder so I won't mix them up with the unprocessed data.
+Finally, I will further split the conflict type datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder.
 
 ::: panel-tabset
 ## Battles
@@ -549,7 +554,7 @@ q2_24_civViolence_sf<-read_rds("data/rds/Violence/2024/q2.rds")
 
 ##### 2.2.1 Converting the sf objects to ppp objects
 
-To derive our KDE layers, we would need the sf objects to be converted to ppp objects. We will do this using the *as.ppp()* function.
+To derive our KDE layers, we would firstly need the sf objects to be converted to ppp objects. This is because the function that we will be using, *density()* of the **spatstat** package, only takes in objects in the ppp form. We will do this using the *as.ppp()* function.
 
 ::: panel-tabset
 ## Battles
@@ -659,11 +664,13 @@ civViolenceQ224_ppp <- as.ppp(st_coordinates(q2_24_civViolence_sf), st_bbox(q2_2
 
 #### 2.2.2 Converting the boundary to an owin object
 
+I will convert the `regions_sf` object to an owin object using the the *as.owin()* function.
+
 ```{r}
-boundary_owin <- as.owin(boundary)
+boundary_owin <- as.owin(regions_sf)
 ```
 
-Once we have our ppp object and owin object, we can start combining them to one object that can be passed through the *density()* function.
+Once we have our ppp objects and owin object, we can start combining them to one object which can then be passed through the *density()* function.
 
 ::: panel-tabset
 ## Battles
@@ -887,7 +894,7 @@ civViolenceQ224_ppp_com<- rescale(civViolenceQ224_ppp_com, 1000, "km")
 
 ## 1.3 Computing the quarterly KDE Layers
 
-I will now use the combined ppp object to derive the quarterly KDE layers, sorted by the different conflict types.
+I will now use the combined ppp object to derive the quarterly KDE layers, sorted by the different conflict types. I will use the bw.CvL method to derive the sigma value as I have found that that function results in the most perceivable KDE map for my dataset.
 
 ::: panel-tabset
 ## Battles
@@ -1191,389 +1198,25 @@ In this section, I will be computing the quarterly second order spatial point pr
 
 ::: panel-tabset
 ```{r}
+#| eval: false
 battles_ppp<- as.ppp(st_coordinates(battles_sf), st_bbox(battles_sf))
 battles_ppp_com<- battles_ppp[boundary_owin]
 battles_ppp_com<-rescale(battles_ppp_com, 1000, 'km')
 ```
 
 ```{r}
+#| eval: false
 
-battles_k = Kest(battles_ppp_com, correction = "Ripley") 
-battles_k.csr <- envelope(battles_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-plot(battles_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-
-```
-
-## 2021
-
-```{r}
-
-battles_q121_k = Kest(battlesQ121_ppp_com, correction = "Ripley") 
-battles_q121_k.csr <- envelope(battlesQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-battles_q221_k <- Kest(battlesQ221_ppp_com, correction = "Ripley") 
-battles_q221_k.csr <- envelope(battlesQ221_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-battles_q321_k <- Kest(battlesQ321_ppp_com, correction = "Ripley") 
-battles_q321_k.csr <- envelope(battlesQ321_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q421_k <- Kest(battlesQ421_ppp_com, correction = "Ripley") 
-battles_q421_k.csr <- envelope(battlesQ421_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(battles_q121_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q221_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q321_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-
-```
-
-## 2022
-
-```{r}
-
-battles_q122_k <- Kest(battlesQ122_ppp_com, correction = "Ripley") 
-battles_q122_k.csr <- envelope(battlesQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q222_k <- Kest(battlesQ222_ppp_com, correction = "Ripley") 
-battles_q222_k.csr <- envelope(battlesQ222_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-battles_q322_k <- Kest(battlesQ322_ppp_com, correction = "Ripley") 
-battles_q322_k.csr <- envelope(battlesQ322_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q422_k <- Kest(battlesQ422_ppp_com, correction = "Ripley") 
-battles_q422_k.csr <- envelope(battlesQ422_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(battles_q122_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q222_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q322_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-
-## 2023
-
-```{r}
-battles_q123_k <- Kest(battlesQ123_ppp_com, correction = "Ripley") 
-battles_q123_k.csr <- envelope(battlesQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q223_k <- Kest(battlesQ223_ppp_com, correction = "Ripley") 
-battles_q223_k.csr <- envelope(battlesQ223_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-battles_q323_k <- Kest(battlesQ323_ppp_com, correction = "Ripley") 
-battles_q323_k.csr <- envelope(battlesQ323_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q423_k <- Kest(battlesQ423_ppp_com, correction = "Ripley") 
-battles_q423_k.csr <- envelope(battlesQ423_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(battles_q123_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q223_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q323_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2024
-
-```{r}
-
-battles_q124_k <- Kest(battlesQ124_ppp_com, correction = "Ripley") 
-battles_q124_k.csr <- envelope(battlesQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-battles_q224_k <- Kest(battlesQ224_ppp_com, correction = "Ripley") 
-battles_q224_k.csr <- envelope(battlesQ224_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(1,2))
-plot(battles_q124_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(battles_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
+battles_f = Fest(battles_ppp_com) 
+battles_f.csr <- envelope(battles_ppp_com, Kest, nsim = 39)
+plot(battles_f.csr)
 ```
 :::
 
 ## Explosions
-
-::: panel-tabset
-## 2021
-
-```{r}
-
-exp_q121_k = Kest(expQ121_ppp_com, correction = "Ripley") 
-exp_q121_k.csr <- envelope(expQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-exp_q221_k <- Kest(expQ221_ppp_com, correction = "Ripley") 
-exp_q221_k.csr <- envelope(expQ221_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-exp_q321_k <- Kest(expQ321_ppp_com, correction = "Ripley") 
-exp_q321_k.csr <- envelope(expQ321_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-exp_q421_k <- Kest(expQ421_ppp_com, correction = "Ripley") 
-exp_q421_k.csr <- envelope(expQ421_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(exp_q121_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q221_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q321_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-
-## 2022
-
-```{r}
-
-exp_q122_k <- Kest(expQ122_ppp_com, correction = "Ripley") 
-exp_q122_k.csr <- envelope(expQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-exp_q222_k <- Kest(expQ222_ppp_com, correction = "Ripley") 
-exp_q222_k.csr <- envelope(expQ222_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-exp_q322_k <- Kest(expQ322_ppp_com, correction = "Ripley") 
-exp_q322_k.csr <- envelope(expQ322_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-exp_q422_k <- Kest(expQ422_ppp_com, correction = "Ripley") 
-exp_q422_k.csr <- envelope(expQ422_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(exp_q122_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q222_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q322_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-
-## 2023
-
-```{r}
-
-exp_q123_k <- Kest(expQ123_ppp_com, correction = "Ripley") 
-exp_q123_k.csr <- envelope(expQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-exp_q223_k <- Kest(expQ223_ppp_com, correction = "Ripley") 
-exp_q223_k.csr <- envelope(expQ223_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-exp_q323_k <- Kest(expQ323_ppp_com, correction = "Ripley") 
-exp_q323_k.csr <- envelope(expQ323_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-exp_q423_k <- Kest(expQ423_ppp_com, correction = "Ripley") 
-exp_q423_k.csr <- envelope(expQ423_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(exp_q123_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q223_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q323_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2024
-
-```{r}
-exp_q124_k <- Kest(expQ124_ppp_com, correction = "Ripley") 
-exp_q124_k.csr <- envelope(expQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-
-exp_q224_k <- Kest(expQ224_ppp_com, correction = "Ripley") 
-exp_q224_k.csr <- envelope(expQ224_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(1,2))
-plot(exp_q124_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(exp_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
 :::
 
-## Strategic Developments
-
-::: panel-tabset
-## 2021
-
-```{r}
-
-strat_dev_q121_k = Kest(strat_devQ121_ppp_com, correction = "Ripley") 
-strat_dev_q121_k.csr <- envelope(strat_devQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q221_k <- Kest(strat_devQ221_ppp_com, correction = "Ripley") 
-strat_dev_q221_k.csr <- envelope(strat_devQ221_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q321_k <- Kest(strat_devQ321_ppp_com, correction = "Ripley") 
-strat_dev_q321_k.csr <- envelope(strat_devQ321_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q421_k <- Kest(strat_devQ421_ppp_com, correction = "Ripley") 
-strat_dev_q421_k.csr <- envelope(strat_devQ421_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(strat_dev_q121_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q221_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q321_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2022
-
-```{r}
-
-strat_dev_q122_k = Kest(strat_devQ122_ppp_com, correction = "Ripley") 
-strat_dev_q122_k.csr <- envelope(strat_devQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q222_k <- Kest(strat_devQ222_ppp_com, correction = "Ripley") 
-strat_dev_q222_k.csr <- envelope(strat_devQ222_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q322_k <- Kest(strat_devQ322_ppp_com, correction = "Ripley") 
-strat_dev_q322_k.csr <- envelope(strat_devQ322_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q422_k <- Kest(strat_devQ422_ppp_com, correction = "Ripley") 
-strat_dev_q422_k.csr <- envelope(strat_devQ422_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(strat_dev_q122_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q222_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q322_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2023
-
-```{r}
-
-strat_dev_q123_k = Kest(strat_devQ123_ppp_com, correction = "Ripley") 
-strat_dev_q123_k.csr <- envelope(strat_devQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q223_k <- Kest(strat_devQ223_ppp_com, correction = "Ripley") 
-strat_dev_q223_k.csr <- envelope(strat_devQ223_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q323_k <- Kest(strat_devQ323_ppp_com, correction = "Ripley") 
-strat_dev_q323_k.csr <- envelope(strat_devQ323_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q423_k <- Kest(strat_devQ423_ppp_com, correction = "Ripley") 
-strat_dev_q423_k.csr <- envelope(strat_devQ423_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(strat_dev_q123_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q223_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q323_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2024
-
-```{r}
-
-strat_dev_q124_k = Kest(strat_devQ124_ppp_com, correction = "Ripley") 
-strat_dev_q124_k.csr <- envelope(strat_devQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-strat_dev_q224_k <- Kest(strat_devQ224_ppp_com, correction = "Ripley") 
-strat_dev_q224_k.csr <- envelope(strat_devQ224_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(1,2))
-plot(strat_dev_q124_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(strat_dev_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-:::
-
-## Violence Against Civilians
-
-::: panel-tabset
-## 2021
-
-```{r}
-
-civViolence_q121_k = Kest(civViolenceQ121_ppp_com, correction = "Ripley") 
-civViolence_q121_k.csr <- envelope(civViolenceQ121_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q221_k <- Kest(civViolenceQ221_ppp_com, correction = "Ripley") 
-civViolence_q221_k.csr <- envelope(civViolenceQ221_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q321_k <- Kest(civViolenceQ321_ppp_com, correction = "Ripley") 
-civViolence_q321_k.csr <- envelope(civViolenceQ321_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q421_k <- Kest(civViolenceQ421_ppp_com, correction = "Ripley") 
-civViolence_q421_k.csr <- envelope(civViolenceQ421_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(civViolence_q121_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q221_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q321_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q421_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-
-## 2022
-
-```{r}
-
-civViolence_q122_k = Kest(civViolenceQ122_ppp_com, correction = "Ripley") 
-civViolence_q122_k.csr <- envelope(civViolenceQ122_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q222_k <- Kest(civViolenceQ222_ppp_com, correction = "Ripley") 
-civViolence_q222_k.csr <- envelope(civViolenceQ222_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q322_k <- Kest(civViolenceQ322_ppp_com, correction = "Ripley") 
-civViolence_q322_k.csr <- envelope(civViolenceQ322_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q422_k <- Kest(civViolenceQ422_ppp_com, correction = "Ripley") 
-civViolence_q422_k.csr <- envelope(civViolenceQ422_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(civViolence_q122_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q222_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q322_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q422_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2023
-
-```{r}
-
-civViolence_q123_k = Kest(civViolenceQ123_ppp_com, correction = "Ripley") 
-civViolence_q123_k.csr <- envelope(civViolenceQ123_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q223_k <- Kest(civViolenceQ223_ppp_com, correction = "Ripley") 
-civViolence_q223_k.csr <- envelope(civViolenceQ223_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q323_k <- Kest(civViolenceQ323_ppp_com, correction = "Ripley") 
-civViolence_q323_k.csr <- envelope(civViolenceQ323_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q423_k <- Kest(civViolenceQ423_ppp_com, correction = "Ripley") 
-civViolence_q423_k.csr <- envelope(civViolenceQ423_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(2,2))
-plot(civViolence_q123_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q223_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q323_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q423_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-```
-
-## 2024
-
-```{r}
-
-civViolence_q124_k = Kest(civViolenceQ124_ppp_com, correction = "Ripley") 
-civViolence_q124_k.csr <- envelope(civViolenceQ124_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-civViolence_q224_k <- Kest(civViolenceQ224_ppp_com, correction = "Ripley") 
-civViolence_q224_k.csr <- envelope(civViolenceQ224_ppp_com, Kest, nsim = 39, rank = 1, glocal=TRUE)
-
-par(mfrow=c(1,2))
-plot(civViolence_q124_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-plot(civViolence_q224_k.csr, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)")
-
-```
-:::
-:::
-
-## 1.5 Computing the Quarterly Spatio-Temporal KDE Layers
+## 1.5 Computing Spatio-Temporal KDE Layers
 
 ::: panel-tabset
 ## Battles
@@ -1749,7 +1392,7 @@ for (i in tims2){
 ## 2021
 
 ```{r}
-strat_dev_st_21<- quart_geo_strat_dev %>% 
+strat_dev_st_21<- quart_geo_strat %>% 
   filter(year=="2021") %>% 
   select(2,3)
 
@@ -1770,7 +1413,7 @@ for (i in tims2){
 ## 2022
 
 ```{r}
-strat_dev_st_22<- quart_geo_strat_dev %>% 
+strat_dev_st_22<- quart_geo_strat %>% 
   filter(year=="2022") %>% 
   select(2,3)
 
@@ -1791,7 +1434,7 @@ for (i in tims2){
 ## 2023
 
 ```{r}
-strat_dev_st_23<- quart_geo_strat_dev %>% 
+strat_dev_st_23<- quart_geo_strat %>% 
   filter(year=="2023") %>% 
   select(2,3)
 
@@ -1812,7 +1455,7 @@ for (i in tims2){
 ## 2024
 
 ```{r}
-strat_dev_st_24<- quart_geo_exp %>% 
+strat_dev_st_24<- quart_geo_strat %>% 
   filter(year=="2024") %>% 
   select(2,3)
 
