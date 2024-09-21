@@ -1207,13 +1207,54 @@ battles_ppp_com<-rescale(battles_ppp_com, 1000, 'km')
 ```{r}
 #| eval: false
 
-battles_f = Fest(battles_ppp_com) 
-battles_f.csr <- envelope(battles_ppp_com, Kest, nsim = 39)
-plot(battles_f.csr)
+battles_g = Gest(battles_ppp_com) 
+battles_g.csr <- envelope(battles_ppp_com, Gest, nsim = 39)
+plot(battles_g.csr)
 ```
 :::
 
 ## Explosions
+
+```{r}
+exp_ppp<- as.ppp(st_coordinates(exp_sf), st_bbox(exp_sf))
+exp_ppp_com<- exp_ppp[boundary_owin]
+exp_ppp_com<-rescale(exp_ppp_com, 1000, 'km')
+```
+
+```{r}
+
+exp_g = Gest(exp_ppp_com) 
+exp_g.csr <- envelope(exp_ppp_com, Gest, nsim = 39)
+plot(exp_g.csr)
+```
+
+#### **Strat Development**
+
+```{r}
+strat_dev_ppp<- as.ppp(st_coordinates(strat_dev_sf), st_bbox(strat_dev_sf))
+strat_dev_ppp_com<- strat_dev_ppp[boundary_owin]
+strat_dev_ppp_com<-rescale(strat_dev_ppp_com, 1000, 'km')
+```
+
+```{r}
+
+strat_dev_g = Gest(strat_dev_ppp_com) 
+strat_dev_g.csr <- envelope(strat_dev_ppp_com, Gest, nsim = 99)
+plot(strat_dev_g.csr)
+```
+
+#### Civilian Violence
+
+```{r}
+civViolence_ppp<- as.ppp(st_coordinates(civViolence_sf), st_bbox(civViolence_sf))
+civViolence_ppp_com<- civViolence_ppp[boundary_owin]
+civViolence_ppp_com<-rescale(civViolence_ppp_com, 1000, 'km')
+```
+
+```{r}
+strat_dev_g.csr <- envelope(strat_dev_ppp_com, Gest, nsim = 99)
+plot(strat_dev_g.csr)
+```
 :::
 
 ## 1.5 Computing Spatio-Temporal KDE Layers
