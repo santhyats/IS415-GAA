@@ -13,7 +13,7 @@ execute:
 
 Myanmar has been going through civil wars and internal conflicts for decades now. These conflicts have mainly been due to ethnic tensions and general unhappiness in the governing party. Conflicts range from battles, riots, violence against civilians, strategic developments and more. In this exercise, I will be analysing the distribution of conflicts in Myanmar.
 
-To do this, I will mainly be performing quarterly KDE analysis on 4 main types of conflicts: Battles, Explosions, Violence against Civillians and Strategic Developments through the years of 2021-2024. I will also be performing the second order spatial point pattern process as well as the spatio temporal point process analysis for these segments. Let's get started.
+To do this, I will mainly be performing quarterly KDE analysis on 4 main types of conflicts: Battles, Explosions, Violence against Civilians and Strategic Developments through the years of 2021-2024. I will also be performing the second order spatial point pattern process as well as the spatio temporal point process analysis for these segments. Let's get started.
 
 #### 1.0.1 Loading R packages
 
@@ -48,10 +48,17 @@ In this section, I will be retrieving the required data and performing the neces
 Firstly, I will be importing the base map of Myanmar in shapefile format using *st_read()* function of the **sf** package. I will also transform the crs to that of Myanmar using the *st_transform()* function.
 
 ```{r}
+#| eval: false
 boundary <- st_read(dsn="data/raw",
                     layer = "MBoundary") %>% 
-  st_transform(crs=32646)
+  st_transform(crs=32646) %>% 
+  write_rds("data/rds/boundary.rds")
 
+```
+
+```{r}
+#| echo: true
+boundary<-read_rds("data/rds/boundary.rds")
 ```
 
 We will make use of *st_crs()* function to make sure that the Coordinate Reference System has been correctly transformed to that of Myanmar.
@@ -63,14 +70,22 @@ st_crs(boundary)
 Next, I will also be Importing the regional boundaries of Myanmar and transforming the crs to that of Myanmar's again.
 
 ```{r}
+#| eval: false
 regions_sf <- st_read(dsn="data/raw",
                       layer="regions") %>% 
-  st_transform(crs = 32646)
+  st_transform(crs = 32646) %>% 
+  write_rds("data/rds/regions.rds")
+```
+
+```{r}
+#| echo: true
+regions_sf<-read_rds("data/rds/regions.rds")
 ```
 
 Lastly, I will be importing and reading the csv file containing the data about the conflicts into a dataframe called `all_sf`. This is done using the *read_csv()* function of the **readr** package. I will once again ensure that the crs of the data is transformed to that of Myanmar's.
 
 ```{r}
+#| eval: false
 all_sf <- read_csv('data/raw/Myanmar_All_2021-24.csv') %>% 
   st_as_sf(coords = c('longitude', 'latitude'),
            crs=4326) %>% 
@@ -87,11 +102,18 @@ st_crs(all_sf)
 Before we can start deriving our KDE layers, we will make sure our data is in a suitable form and is processed in a way that we need it in. I will start off by converting the date column in the aspatial data to the date format so that can be handled during computations. This is done through the *as.Date()* functon. I will also add in new columns called "quarters" and "num_quarters" to keep track of our quarters and its numbers. The numeric quarters column will come in handy when we are computing our Spatio Temporal KDE layers later.
 
 ```{r}
+#| eval: false
 
 all_sf<- all_sf %>% 
   mutate(event_date = as.Date(event_date, format = "%d %B %Y"))
 all_sf$quarters <- paste(quarters(all_sf$event_date), year(all_sf$event_date), sep="_")
 all_sf$num_quarters<-quarter(all_sf$event_date)
+write_rds(all_sf,"data/rds/all.rds")
+```
+
+```{r}
+#| echo: true
+all_sf<-read_rds("data/rds/all.rds")
 ```
 
 Before we can filter out the data that we need, I will be visualising the data according to the event types to observe for any patterns or similarity. To do this, I will first use *tm_shape()* and *tm_polygons()* of the **tmap** package to plot the base map of Myanmar, indicating all the regions. Next, I will use *tm_shape()* and *tm_dots()* together to plot out all the spatial points. Lastly, I will use *tm_facets()* to separate the plots according to the type of conlfict.
@@ -108,15 +130,19 @@ As such, I will be focusing my analysis on these four main categories of conflic
 I will filter out the data according to these event types using the *filter()* function and save them in separate sf objects.
 
 ```{r}
+#| eval: false
 
-battles_sf <- all_sf %>%  filter(event_type == 'Battles')
-battles_sf
+battles_sf <- all_sf %>%  filter(event_type == 'Battles') %>% 
+  write_rds("data/rds/Battles/battles_sf.rds")
 
-exp_sf <- all_sf %>%  filter(event_type == "Explosions/Remote violence")
+exp_sf <- all_sf %>%  filter(event_type == "Explosions/Remote violence") %>% 
+  write_rds("data/rds/Explosions/exp_sf.rds")
 
-civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians")
+civViolence_sf <- all_sf %>%  filter(event_type == "Violence against civilians") %>% 
+  write_rds("data/rds/Violence/civViolence_sf.rds")
 
-strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments')
+strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments') %>% 
+  write_rds("data/rds/Strat_Dev/strat_dev.rds")
 
 
 ```
@@ -124,17 +150,22 @@ strat_dev_sf <- all_sf %>%  filter(event_type == 'Strategic developments')
 I will also be creating a separate sf containing the only the timeframe and the geometry of the spatial points, to be used in our Spatio Temporal KDE layers later. This is done by using the select() functions to select only the "quarters", "num_quarters" an d"geometry" columns from the dataframes of the respective conflict types.
 
 ```{r}
+#| eval: false
 quart_geo_bat<- battles_sf %>% 
-  select(3,8,10)
+  select(3,8,10) %>% 
+  write_rds("data/rds/Battles/quart_geo_bat.rds")
 
 quart_geo_civ <- civViolence_sf %>% 
-  select(3,8,10)
+  select(3,8,10) %>% 
+  write_rds("data/rds/Violence/quart_geo_civ.rds")
 
 quart_geo_exp<- exp_sf %>% 
-  select(3,8,10)
+  select(3,8,10) %>% 
+  write_rds("data/rds/Explosions/quart_geo_exp.rds")
 
 quart_geo_strat<- strat_dev_sf %>% 
-  select(3,8,10) 
+  select(3,8,10) %>% 
+  write_rds("data/rds/Strat_Dev/quart_geo_strat.rds")
 ```
 
 Finally, I will further split the conflict type datasets into quarterly periods. For ease of use, I will write these sf objects into rds files and save them in a compiled folder.
@@ -487,6 +518,8 @@ q4_23_battles_sf<-read_rds("data/rds/Battles/2023/q4.rds")
 
 q1_24_battles_sf<-read_rds("data/rds/Battles/2024/q1.rds")
 q2_24_battles_sf<-read_rds("data/rds/Battles/2024/q2.rds")
+battles_sf<-read_rds("data/rds/Battles/battles_sf.rds")
+quart_geo_bat<- read_rds("data/rds/Battles/quart_geo_bat.rds")
 
 #Explosions
 
@@ -507,6 +540,8 @@ q4_23_exp_sf<-read_rds("data/rds/Explosions/2023/q4.rds")
 
 q1_24_exp_sf<-read_rds("data/rds/Explosions/2024/q1.rds")
 q2_24_exp_sf<-read_rds("data/rds/Explosions/2024/q2.rds")
+exp_sf<-read_rds("data/rds/Explosions/exp_sf.rds")
+quart_geo_exp<- read_rds("data/rds/Explosions/quart_geo_exp.rds")
 
 
 #Strat Dev
@@ -529,6 +564,11 @@ q4_23_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2023/q4.rds")
 q1_24_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2024/q1.rds")
 q2_24_strat_dev_sf<-read_rds("data/rds/Strat_Dev/2024/q2.rds")
 
+strat_dev_sf<- read_rds("data/rds/Strat_Dev/strat_dev.rds")
+quart_geo_strat<-read_rds("data/rds/Strat_Dev/quart_geo_strat.rds")
+
+
+
 #Violence
 
 q1_21_civViolence_sf<-read_rds("data/rds/Violence/2021/q1.rds")
@@ -548,6 +588,8 @@ q4_23_civViolence_sf<-read_rds("data/rds/Violence/2023/q4.rds")
 
 q1_24_civViolence_sf<-read_rds("data/rds/Violence/2024/q1.rds")
 q2_24_civViolence_sf<-read_rds("data/rds/Violence/2024/q2.rds")
+civViolence_sf<- read_rds("data/rds/Violence/civViolence_sf.rds")
+quart_geo_civ<- read_rds("data/rds/Violence/quart_geo_civ.rds")
 ```
 
 #### 2.2 Data Wrangling
@@ -894,7 +936,39 @@ civViolenceQ224_ppp_com<- rescale(civViolenceQ224_ppp_com, 1000, "km")
 
 ## 1.3 Computing the quarterly KDE Layers
 
-I will now use the combined ppp object to derive the quarterly KDE layers, sorted by the different conflict types. I will use the bw.CvL method to derive the sigma value as I have found that that function results in the most perceivable KDE map for my dataset.
+I will now use the combined ppp object to derive the quarterly KDE layers, sorted by the different conflict types. To find the optimal method for calculation of sigma, I did a couple of test plots. I first plotted the KDE layer with the *bw.diggle()* method of computing the sigma value:
+
+```{r}
+bat_q121_kde<- density(battlesQ121_ppp_com, sigma=bw.diggle(battlesQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+plot(bat_q121_kde, main="Battles in 1st Quarter of 2021")
+```
+
+However, as seen above, the map barely showed any patterns or colouring. This was probably due to the fact that the bw.diggle() was more aptly suited for datasets that leaned towards more uniform distributions. From our base plots earlier, the points had significant clustering in some areas, which was probably why this map did not reflect anything. Next, I tried the *bw.ppl()* method. This method is preferred for datasets where the distribution of spatial points are less homogenous, as is the case with ours.
+
+```{r}
+bat_q121_kde<- density(battlesQ121_ppp_com, sigma=bw.ppl(battlesQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+plot(bat_q121_kde, main="Battles in 1st Quarter of 2021")
+```
+
+The result was good and enabled me to identify where a cluster of points can be seen. I decided that the *bw.ppl()* method was better than the *bw.diggle()* method to calculate sigma for our particular dataset. However, when I began plotting the quarterly layers, I quickly realised that some of the plots were once again, appearing blank. I figured this could be due to the bandwidth set by the function being too small for the quarterly data.
+
+```{r}
+bat_q121_kde<- density(battlesQ121_ppp_com, sigma=bw.ppl(battlesQ121_ppp_com), edge=TRUE, kernel="gaussian") 
+
+bat_q221_kde<-density(battlesQ221_ppp_com, sigma=bw.ppl(battlesQ221_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q321_kde<-density(battlesQ321_ppp_com, sigma=bw.ppl(battlesQ321_ppp_com), edge=TRUE, kernel="gaussian")
+
+bat_q421_kde<-density(battlesQ421_ppp_com, sigma=bw.ppl(battlesQ421_ppp_com), edge=TRUE, kernel="gaussian")
+
+par(mfrow=c(2,2))
+plot(bat_q121_kde, main="Battles in 1st Quarter of 2021")
+plot(bat_q221_kde, main="Battles in 2nd Quarter of 2021")
+plot(bat_q321_kde, main="Battles in 3rd Quarter of 2021")
+plot(bat_q421_kde, main="Battles in 4th Quarter of 2021")
+```
+
+Hence, I decided to try the *bw.CvL()* method, as it is similar to the *bw.ppl()* method, just with a minimised prediction error. When I plotted the maps, I was satisified with the result, and chose this as the method to go with.
 
 ::: panel-tabset
 ## Battles
@@ -969,6 +1043,8 @@ plot(bat_q224_kde, main="Battles in 2nd Quarter of 2024")
 ```
 :::
 
+For Battles, we see that the conflicts have slowly travelled to the center (Mandalay, Magwe Divisions) from the North-East (Kachin and Shan states) throughout the years 2021-2023. It also spread southward (Mon and Tenesserium States). This is due to the onset of a Military coup in Myanmar, resulting in violence in various parts of the land, including the central regions of Mandalay and Yangon (Maizland, 2022). Intensity of Battles saw a sharp decline from the last quarter of 2023 to the first two quarters of 2024.
+
 ## Explosions
 
 ::: panel-tabset
@@ -1040,6 +1116,8 @@ plot(exp_q224_kde, main="Explosions in 2nd Quarter of 2024")
 
 ```
 :::
+
+As for Explosions, we see that it peaked in intensity in 2022-2023, and was also concentrated in the central regions of Myanmar.
 
 ## Strategic Developments
 
@@ -1113,6 +1191,8 @@ plot(strat_dev_q224_kde, main="Strategic Developments in 2nd Quarter of 2024")
 ```
 :::
 
+Strategic Developments seem to still be ongoing even as late as the 2nd quarter of this year, after having increased in 2022. It is also to be noted that as for Strategic Developments, it is only concentrated in the central regions of Myanmar and not so much on the outskirts.
+
 ## Violence against Civilians
 
 ::: panel-tabset
@@ -1185,13 +1265,13 @@ plot(civViolence_q224_kde, main="Violence Against Civilians in 2nd Quarter of 20
 
 ```
 :::
-:::
 
-...
+Violence Against the civilians can be observed in the central and southern regions of Myanmar througout all the quarters, with the concentration once again, being at the central region. There appears to be a brief reduction in the intensity of the attacks in the 3rd quarter of 2022.
+:::
 
 ## 1.4 Computing Second Order Spatial point Process analysis
 
-In this section, I will be computing the quarterly second order spatial point process analysis for each of the conflict types. I will be using the K- function to compute the analysis.This is because as seen from our KDE layers, density of points are on different scales for the different quarters and the K-function will allow us to analyse the spatial point with different scales.
+In this section, I will be computing the quarterly second order spatial point process analysis for each of the conflict types. I will be using the K- function to compute the analysis. This is because as seen from our KDE layers, density of points are on different scales for the different quarters and the K-function will allow us to analyse the spatial point with different scales.
 
 ::: panel-tabset
 ## Battles
@@ -1208,7 +1288,7 @@ battles_ppp_com<-rescale(battles_ppp_com, 1000, 'km')
 #| eval: false
 
 battles_g = Gest(battles_ppp_com) 
-battles_g.csr <- envelope(battles_ppp_com, Gest, nsim = 39)
+battles_g.csr <- envelope(battles_ppp_com, Gest, nsim = 99)
 plot(battles_g.csr)
 ```
 :::
@@ -1224,11 +1304,11 @@ exp_ppp_com<-rescale(exp_ppp_com, 1000, 'km')
 ```{r}
 
 exp_g = Gest(exp_ppp_com) 
-exp_g.csr <- envelope(exp_ppp_com, Gest, nsim = 39)
+exp_g.csr <- envelope(exp_ppp_com, Gest, nsim = 99)
 plot(exp_g.csr)
 ```
 
-#### **Strat Development**
+#### **Strategic Developments**
 
 ```{r}
 strat_dev_ppp<- as.ppp(st_coordinates(strat_dev_sf), st_bbox(strat_dev_sf))
@@ -1252,10 +1332,12 @@ civViolence_ppp_com<-rescale(civViolence_ppp_com, 1000, 'km')
 ```
 
 ```{r}
-strat_dev_g.csr <- envelope(strat_dev_ppp_com, Gest, nsim = 99)
-plot(strat_dev_g.csr)
+civViolence_g.csr <- envelope(civViolence_ppp_com, Gest, nsim = 99)
+plot(civViolence_g.csr)
 ```
 :::
+
+From the plots above, we can further confirm that there is significant clustering of the spatial points for all four conflict types. This is because the black line (the observed G-function of our data) is well above the red dashed line (which indicates G function under Complete Spatial Randomness). This means that the pattern observed in the dataset differs significantly from the pattern of randomly spaced points, indicating the presence of clusters.
 
 ## 1.5 Computing Spatio-Temporal KDE Layers
 
@@ -1635,7 +1717,7 @@ plot(exp_sost.csr)
 ## Strategic Developments
 
 ```{r}
-strat_dev_sost<- quart_geo_strat_dev %>% 
+strat_dev_sost<- quart_geo_strat %>% 
   select(2,3)
 strat_dev_sost_ppp<- as.ppp(strat_dev_sost, coordinates= strat_dev_sost)
 strat_dev_sost_owin<- strat_dev_sost_ppp[boundary_owin]
@@ -1646,7 +1728,7 @@ plot(strat_dev_sost.csr)
 ## Violence Against Civilians
 
 ```{r}
-civViolence_sost<- quart_geo_civViolence %>% 
+civViolence_sost<- quart_geo_civ %>% 
   select(2,3)
 civViolence_sost_ppp<- as.ppp(civViolence_sost, coordinates= civViolence_sost)
 civViolence_sost_owin<- civViolence_sost_ppp[boundary_owin]
@@ -1654,3 +1736,29 @@ civViolence_sost.csr <- envelope(civViolence_sost_owin, Gest, nsim = 99)
 plot(civViolence_sost.csr)
 ```
 :::
+
+The plots above further proves that the spatial points across the quarters reflect a clustered pattern.
+
+## 1.7 Overall Learnings
+
+This exercise has allowed me to revisit and revise the various different concepts and functions that we had learnt in class and in the past Hands-on Exercises. Being completely on my own, it has forced me to move out of my comfort zone and learn concepts in my own way. To summarise, I would say my main takeaways are:
+
+-   Acquiring real-world data and being able to observe it in order to identify what needs to be handled and processed for our analytical needs (formatting of date columns, dropping of columns etc.)
+
+-   Importing datasets of different types (shapefiles, csv files) into r for analysis
+
+-   Handling real-world data and being able to convert it to desirable formats
+
+-   Identifying the suitable formats that the input data needs to be in, in order to perform the different analysis methods (ppp and owin objects etc.)
+
+-   Figuring out the most suitable methods to derive KDE layers on a real-word dataset according to the characteristics of the dataset
+
+-   Being able to understand and somewhat explain the first order and second-order analysis plots
+
+And some further non-technical learnings:
+
+-   Neat and efficient ways to present the data and the plots.
+
+## 1.8 References
+
+1.  Maizland, L. (2022, January 31). Myanmar’s troubled history: coups, military rule, and ethnic conflict. *Council on Foreign Relations*. https://www.cfr.org/backgrounder/myanmar-history-coup-military-rule-ethnic-conflict-rohingya
