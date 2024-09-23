@@ -1,5 +1,5 @@
 ---
-title: "Take- Home Exercise 2"
+title: "Application of Geospatial Analysis Methods to Discover Thailand Drug Abuse at the Province Level"
 author: "Santhya Selvan"
 date: "23 September 2024"
 date-modified: "last-modified"
@@ -8,3 +8,11 @@ execute:
   echo: true
   freeze: true
 ---
+
+## 2.0 Overview 
+
+-   where do the drugs come from?
+
+-   how are they distributed in Thailand
+
+-   
