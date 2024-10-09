@@ -440,7 +440,7 @@ tmap_arrange(gdppc, LISAmap,
              asp=1, ncol=2)
 ```
 
-##  7.0 Hot Spot and Cold Spot Area Analysis
+## 7.0 Hot Spot and Cold Spot Area Analysis
 
 Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas.
 

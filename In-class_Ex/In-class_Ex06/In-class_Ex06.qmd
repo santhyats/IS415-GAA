@@ -17,9 +17,9 @@ In this exercise, we will be exploring a new package, **sfdep**.
 pacman::p_load(sf, tidyverse, tmap, sfdep)
 ```
 
-## 2.1 importing the data 
+## 2.1 importing the data
 
-#### 2.1.1 Importing the Hunan shapefiles 
+#### 2.1.1 Importing the Hunan shapefiles
 
 ```{r}
 hunan4<-st_read(dsn="data/geospatial", 
@@ -27,7 +27,7 @@ hunan4<-st_read(dsn="data/geospatial",
 
 ```
 
-#### 2.1.2 importing the csv file 
+#### 2.1.2 importing the csv file
 
 ```{r}
 hunan4_2012<- read_csv("data/aspatial/Hunan_2012.csv")
@@ -42,7 +42,7 @@ hunan4_GDPPC<- left_join(hunan4, hunan4_2012) %>%
 
 ## 2.2 Global measures of spatial association
 
-#### 2.2.1 Deriving queen contiguity weights sfdep methods 
+#### 2.2.1 Deriving queen contiguity weights sfdep methods
 
 ```{r}
 wm_q4<- hunan4_GDPPC %>% 
@@ -74,7 +74,7 @@ global_moran_test(wm_q4$GDPPC,
 
 The p-value is incredibly small, indictaing that we reject the null hypothesis and conclude that the relationship between the neighbours differ significantly from the values as observed under a randomly spatially distributed neighbours. Next, looking at the Moran I statistic value of 0.3007, we can see that there is clustering present among the spatial units.
 
-#### 2.2.4 Performing Global Moran I's permutation Test 
+#### 2.2.4 Performing Global Moran I's permutation Test
 
 ```{r}
 set.seed(1234)
@@ -131,7 +131,7 @@ tm_shape(lisa) +
   tm_borders(alpha = 0.4)
 ```
 
-## 2.4 Computing Local G-statistics 
+## 2.4 Computing Local G-statistics
 
 G-statistics allow us to observe for hot and cold spots
 
@@ -151,7 +151,7 @@ HCSA<- wm_idw %>%
 
 ```
 
-#### 2.4.1 Visualising the Gi\* statistics 
+#### 2.4.1 Visualising the Gi\* statistics
 
 ```{r}
 HCSA_sig <- HCSA %>% 
