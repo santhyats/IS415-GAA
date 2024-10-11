@@ -11,7 +11,7 @@ execute:
 
 ## 2.0 Overview
 
-....
+Drug use in Thailand is a prevalent problem and has been on the rise in recent years. Being in the drug trafficking routes from the Golden Triangle, the major source of methamphetamin in Southeast Asia, it has naturally faced the crisis as well.
 
 ## 2.1 Getting Started
 
@@ -336,32 +336,32 @@ In this section, I will be computing the Local Moran's I statistics for the drug
 
 ```{r}
 
-Thai_doff_17 <- Thai_doff_17 %>% 
+local_moran17 <- Thai_doff_17 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
 
-Thai_doff_18 <- Thai_doff_18 %>% 
+local_moran18 <- Thai_doff_18 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
 
-Thai_doff_19 <- Thai_doff_19 %>% 
+local_moran19 <- Thai_doff_19 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
 
-Thai_doff_20 <- Thai_doff_20 %>% 
+local_moran20 <- Thai_doff_20 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
 
-Thai_doff_21 <- Thai_doff_21 %>% 
+local_moran21 <- Thai_doff_21 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
 
-Thai_doff_22 <- Thai_doff_22 %>% 
+local_moran22 <- Thai_doff_22 %>% 
  mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
          .before=1) %>% 
   unnest(local_moran, names_sep = "_")
@@ -377,7 +377,7 @@ We will now plot these statistics on maps.
 
 ```{r}
 tmap_mode("plot") +
-tm_shape(Thai_doff_17) + 
+tm_shape(local_moran17) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -390,7 +390,7 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 ```{r}
 tmap_mode("plot")  +
-tm_shape(Thai_doff_18) + 
+tm_shape(local_moran18) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -402,7 +402,7 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 ```{r}
 tmap_mode("plot") +
-tm_shape(Thai_doff_19) + 
+tm_shape(local_moran19) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -414,7 +414,7 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 ```{r}
 tmap_mode("plot") +
-tm_shape(Thai_doff_20) + 
+tm_shape(local_moran20) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -426,7 +426,7 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 ```{r}
 tmap_mode("plot") +
-tm_shape(Thai_doff_21) + 
+tm_shape(local_moran21) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -438,7 +438,7 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 ```{r}
 tmap_mode("plot") +
-tm_shape(Thai_doff_22) + 
+tm_shape(local_moran22) + 
   tm_fill("local_moran_ii") +
   tm_borders(alpha = 0.5) + 
 tm_view(set.zoom.limits = c(6,8)) +
@@ -449,12 +449,14 @@ tm_view(set.zoom.limits = c(6,8)) +
 
 #### 2.4.2 Visualising the LISA maps by Year
 
+I will now plot the LISA maps by year. To do this, I will first filter out the values that are significantly smaller than the significance level of 0.05. I will then plot it with the Local Moran I's statistic.
+
 ::: panel-tabset
 ## 2017
 
 ```{r}
 
-lisa_sig17<- Thai_doff_17 %>% 
+lisa_sig17<- local_moran17 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
@@ -472,12 +474,12 @@ tm_shape(Thai_doff_17) +
 
 ```{r}
 
-lisa_sig18<- Thai_doff_18 %>% 
+lisa_sig18<- local_moran18 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
 
-tm_shape(Thai_doff_18) + 
+tm_shape(local_moran18) + 
   tm_polygons() +
   tm_borders(alpha = 0.5) +
   
@@ -489,12 +491,12 @@ tm_shape(Thai_doff_18) +
 ## 2019
 
 ```{r}
-lisa_sig19<- Thai_doff_19 %>% 
+lisa_sig19<- local_moran19 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
 
-tm_shape(Thai_doff_19) + 
+tm_shape(local_moran19) + 
   tm_polygons() +
   tm_borders(alpha = 0.5) +
   
@@ -506,12 +508,12 @@ tm_shape(Thai_doff_19) +
 ## 2020
 
 ```{r}
-lisa_sig20<- Thai_doff_20 %>% 
+lisa_sig20<- local_moran20 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
 
-tm_shape(Thai_doff_20) + 
+tm_shape(local_moran20) + 
   tm_polygons() +
   tm_borders(alpha = 0.5) +
   
@@ -523,12 +525,12 @@ tm_shape(Thai_doff_20) +
 ## 2021
 
 ```{r}
-lisa_sig21<- Thai_doff_21 %>% 
+lisa_sig21<- local_moran21 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
 
-tm_shape(Thai_doff_21) + 
+tm_shape(local_moran21) + 
   tm_polygons() +
   tm_borders(alpha = 0.5) +
   
@@ -540,12 +542,12 @@ tm_shape(Thai_doff_21) +
 ## 2022
 
 ```{r}
-lisa_sig22<- Thai_doff_22 %>% 
+lisa_sig22<- local_moran22 %>% 
   filter(local_moran_p_ii < 0.05)
 
 tmap_mode("plot")
 
-tm_shape(Thai_doff_22) + 
+tm_shape(local_moran22) + 
   tm_polygons() +
   tm_borders(alpha = 0.5) +
   
@@ -557,4 +559,171 @@ tm_shape(Thai_doff_22) +
 
 ## 2.5 Hot/Cold Spot Analysis
 
-#### 2.5.1 Computing the Gi Stastics
+We will first come up with a new weights matrix using the inverse distance method. To do this, we will follow our previous method, but instead of using st_weights() to come up with the weights, we will be using st_inverse_distance().
+
+```{r}
+Thai_doff_wm_idw<- Thai_doff_17 %>% 
+  mutate(nb = st_contiguity(geometry),
+         wts = st_inverse_distance(nb, geometry, scale=1, alpha=1),
+         .before=1)
+```
+
+Once we have our new dataframe containing the inverse distance weights matrix of the spatial units, we can go on to calculate the Gi\* statistic for the drug abuse cases for each of the years. Following that, we will map them on different plots.
+
+#### 2.5.1 Computing the Gi\* Statistics
+
+::: panel-tabset
+## 2017
+
+```{r}
+
+
+hcsa17<- Thai_doff_17%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+```
+
+## 2018
+
+```{r}
+hcsa18<- Thai_doff_18%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+
+```
+
+## 2019
+
+```{r}
+hcsa19<- Thai_doff_19%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+```
+
+## 2020
+
+```{r}
+hcsa20<- Thai_doff_20%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+```
+
+## 2021
+
+```{r}
+hcsa21<- Thai_doff_21%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+```
+
+## 2022
+
+```{r}
+hcsa22<- Thai_doff_22%>% 
+  mutate(local_GI = local_gstar_perm(
+    total_count, Thai_doff_wm_idw$nb, Thai_doff_wm_idw$wt, nsim = 99), 
+    .before = 1) %>% 
+  unnest(local_GI)
+```
+:::
+
+#### 2.5.2 Visualising the Gi\* Statistic
+
+I will now be plotting the Gi\* Statistic on maps so we can better visualise the hot spot and cold spot areas of drug abuse cases in Thailand over the 6 years.
+
+::: panel-tabset
+## 2017
+
+```{r}
+
+HCSA_sig17 <- hcsa17 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa17)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig17) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+
+## 2018
+
+```{r}
+HCSA_sig18 <- hcsa18 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa18)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig18) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+
+## 2019
+
+```{r}
+HCSA_sig19 <- hcsa19 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa19)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig19) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+
+## 2020
+
+```{r}
+HCSA_sig20 <- hcsa20 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa20)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig20) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+
+## 2021
+
+```{r}
+HCSA_sig21 <- hcsa21 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa21)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig21) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+
+## 2022
+
+```{r}
+HCSA_sig22 <- hcsa22 %>% 
+  filter(p_sim <0.05)
+tmap_mode('plot')
+tm_shape(hcsa22)+
+  tm_polygons() +
+  tm_borders(alpha=0.5) +
+  tm_shape(HCSA_sig22) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.4)
+```
+:::
