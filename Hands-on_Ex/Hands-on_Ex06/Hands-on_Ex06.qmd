@@ -188,7 +188,7 @@ abline(v=1, col="red")
 
 ## 6.6 Spatial Correlogram
 
-Spatial Correlograms are plots that show how correlated pairs of spatial observations are when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. In this section, we will be plotting the coreelograms for the two tests that we have explored so far.
+Spatial Correlograms are plots that show how correlated pairs of spatial observations are when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance. In this section, we will be plotting the correlograms for the two tests that we have explored so far.
 
 #### 6.6.1 Compute Moran I's Correlogram
 

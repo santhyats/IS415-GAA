@@ -100,7 +100,7 @@ lisa<- wm_q4 %>%
 
 unnest() expands a column-list of dataframes to rows and columns.
 
-2.3.1 Visualising Local Moran's I
+#### **2.3.1 Visualising Local Moran's I**
 
 ```{r}
 tmap_mode("plot")

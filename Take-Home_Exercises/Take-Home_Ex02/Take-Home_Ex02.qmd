@@ -205,7 +205,7 @@ global_moran_perm(Thai_doff_17$total_count,
                   nsim=99)
 ```
 
-From the
+From the results above, we see that the Global Moran I's statistic is 0.128
 :::
 
 ## 2018
@@ -329,3 +329,232 @@ global_moran_perm(Thai_doff_20$total_count,
 #### 2.2.4 Computing Geary C's statistics by Year
 
 ## 2.4 Local Measures of Spatial Autocorrelation
+
+#### 2.4.1 Local Moran's I
+
+In this section, I will be computing the Local Moran's I statistics for the drug related offences and visualising them on maps. To achieve this, I will be using the *local_moran()* function of the **sfdep** package.
+
+```{r}
+
+Thai_doff_17 <- Thai_doff_17 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+Thai_doff_18 <- Thai_doff_18 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+Thai_doff_19 <- Thai_doff_19 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+Thai_doff_20 <- Thai_doff_20 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+Thai_doff_21 <- Thai_doff_21 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+Thai_doff_22 <- Thai_doff_22 %>% 
+ mutate(local_moran = local_moran(total_count, Thai_doff_wm$nb, Thai_doff_wm$wt, nsim=99),
+         .before=1) %>% 
+  unnest(local_moran, names_sep = "_")
+
+
+
+```
+
+We will now plot these statistics on maps.
+
+::: panel-tabset
+## 2017
+
+```{r}
+tmap_mode("plot") +
+tm_shape(Thai_doff_17) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2017",
+            main.title.size= 1)
+
+```
+
+## 2018
+
+```{r}
+tmap_mode("plot")  +
+tm_shape(Thai_doff_18) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2018",
+            main.title.size= 1)
+```
+
+## 2019
+
+```{r}
+tmap_mode("plot") +
+tm_shape(Thai_doff_19) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2019",
+            main.title.size= 1)
+```
+
+## 2020
+
+```{r}
+tmap_mode("plot") +
+tm_shape(Thai_doff_20) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2020",
+            main.title.size= 1)
+```
+
+## 2021
+
+```{r}
+tmap_mode("plot") +
+tm_shape(Thai_doff_21) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2021",
+            main.title.size= 1)
+```
+
+## 2022
+
+```{r}
+tmap_mode("plot") +
+tm_shape(Thai_doff_22) + 
+  tm_fill("local_moran_ii") +
+  tm_borders(alpha = 0.5) + 
+tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "2022",
+            main.title.size= 1)
+```
+:::
+
+#### 2.4.2 Visualising the LISA maps by Year
+
+::: panel-tabset
+## 2017
+
+```{r}
+
+lisa_sig17<- Thai_doff_17 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_17) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig17) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+
+## 2018
+
+```{r}
+
+lisa_sig18<- Thai_doff_18 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_18) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig18) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+
+## 2019
+
+```{r}
+lisa_sig19<- Thai_doff_19 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_19) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig19) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+
+## 2020
+
+```{r}
+lisa_sig20<- Thai_doff_20 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_20) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig20) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+
+## 2021
+
+```{r}
+lisa_sig21<- Thai_doff_21 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_21) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig21) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+
+## 2022
+
+```{r}
+lisa_sig22<- Thai_doff_22 %>% 
+  filter(local_moran_p_ii < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(Thai_doff_22) + 
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  
+  tm_shape(lisa_sig22) +
+  tm_fill("local_moran_mean") +
+  tm_borders(alpha = 0.4)
+```
+:::
+
+## 2.5 Hot/Cold Spot Analysis
+
+#### 2.5.1 Computing the Gi Stastics
