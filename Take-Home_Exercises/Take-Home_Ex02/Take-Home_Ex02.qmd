@@ -11,7 +11,7 @@ execute:
 
 ## 2.0 Overview
 
-Drug use in Thailand is a prevalent problem and has been on the rise in recent years. Being in the drug trafficking routes from the Golden Triangle, the major source of methamphetamin in Southeast Asia, it has naturally faced the crisis as well.
+Drug use in Thailand is a prevalent problem and has been on the rise in recent years. Being in the drug trafficking routes from the Golden Triangle, the major source of methamphetamine in Southeast Asia, it has naturally faced an increased frequency of this crisis. In this exercise, I will be analysing the distribution of drug-related offences in Thailand at the provincial level and observing for any spatial patterns in them. I will also be performing deploying appropriate analysis methods to observe for presence of hot and cold spots.
 
 ## 2.1 Getting Started
 
@@ -198,14 +198,14 @@ global_moran_test(Thai_doff_17$total_count,
 ## Moran I's Permutation Test
 
 ```{r}
-set.seed(1234)
+set.seed(982)
 global_moran_perm(Thai_doff_17$total_count,
                   Thai_doff_wm$nb,
                   Thai_doff_wm$wt,
                   nsim=99)
 ```
 
-From the results above, we see that the Global Moran I's statistic is 0.128
+From the results above, we see that the Global Moran I's statistic is 0.128. This indicates that the spatial units with drug abuse cases were mildly positively correlated to one another in 2017. In simple terms, the spatial areas displayed clusters that had mild similarities to one another.
 :::
 
 ## 2018
@@ -229,6 +229,8 @@ global_moran_perm(Thai_doff_18$total_count,
                   Thai_doff_wm$wt,
                   nsim=99)
 ```
+
+From the results, a p-value of 0.02203 is observed. With a p-value that is lower than the level of significance of 0.05, we can reject the null hypothesis and conclude that the spatial units are positively autocorrelated and hence display clustering. Moran I's statistic of 0.112 indicates a mild positive relationship between the units.
 :::
 
 ## 2019
@@ -252,6 +254,8 @@ global_moran_perm(Thai_doff_19$total_count,
                   Thai_doff_wm$wt,
                   nsim=99)
 ```
+
+The small p-value indicates that the results differ significantly than what would be observed under randomisation. The results for the Moran I's statistics once again reflect the presence of mild clustering among the spatial units with the positive value of 0.151.
 :::
 
 ## 2020
@@ -275,6 +279,8 @@ global_moran_perm(Thai_doff_20$total_count,
                   nsim=99)
 
 ```
+
+The results observed in 2020 is similar to the previous years.
 :::
 
 ## 2021
@@ -326,8 +332,6 @@ global_moran_perm(Thai_doff_20$total_count,
 :::
 :::
 
-#### 2.2.4 Computing Geary C's statistics by Year
-
 ## 2.4 Local Measures of Spatial Autocorrelation
 
 #### 2.4.1 Local Moran's I
@@ -370,7 +374,7 @@ local_moran22 <- Thai_doff_22 %>%
 
 ```
 
-We will now plot these statistics on maps.
+We will now plot these statistics on maps using functions of the **tmap** package.
 
 ::: panel-tabset
 ## 2017
@@ -383,6 +387,7 @@ tm_shape(local_moran17) +
 tm_view(set.zoom.limits = c(6,8)) +
   tm_layout(main.title = "2017",
             main.title.size= 1)
+
 
 ```
 
@@ -446,6 +451,8 @@ tm_view(set.zoom.limits = c(6,8)) +
             main.title.size= 1)
 ```
 :::
+
+I see that throughout the years, more regions become positively autocorrelated, reflected by the darker orange areas in 2018 becoming green over the years. This indicates that areas with drastically different drug abuse cases in the earlier years, became more positively correlated with their neighbours as the years progressed. This may indicate that the drug abuse practices might have influenced neighbouring areas.
 
 #### 2.4.2 Visualising the LISA maps by Year
 
@@ -559,7 +566,7 @@ tm_shape(local_moran22) +
 
 ## 2.5 Hot/Cold Spot Analysis
 
-We will first come up with a new weights matrix using the inverse distance method. To do this, we will follow our previous method, but instead of using st_weights() to come up with the weights, we will be using st_inverse_distance().
+We will first come up with a new weights matrix using the inverse distance method. To do this, we will follow our previous method, but instead of using *st_weights()* to come up with the weights, we will be using *st_inverse_distance()*.
 
 ```{r}
 Thai_doff_wm_idw<- Thai_doff_17 %>% 

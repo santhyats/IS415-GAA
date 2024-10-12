@@ -1,0 +1,62 @@
+---
+title: "7 Geographical Segmentation with Spatially Constrained Clustering Techniques"
+author: "Santhya Selvan"
+date: "October 11, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+## 7.0 Overview
+
+In this hands-on exercise, I will be exploring two different analysis methods:
+
+-   hierarchical cluster analysis; and
+
+-   spatially constrained cluster analysis.
+
+These methods are mainly used to help achieve Geographical Segmentaion. Geographical segmentation is the process of splitting a region into geographical units based on certain factors or variables. Thus, in this exercise, I will be using geographically referenced multivariate data to split a region into different homogeneous segments.
+
+#### 7.0.1 Getting Started
+
+In this exercise, the region of interest will be Shan State in Myanmar. I will be splitting this region into homogeneous segments on the basis of different means of Communication Technology: Radio, Television, Land Line Phone, Mobile Phone, Computer and Internet at home.
+
+#### 7.0.2 The data
+
+Two data sets will be used in this study. They are:
+
+-   Myanmar Township Boundary Data (i.e. *myanmar_township_boundaries*) : This is a GIS data in ESRI shapefile format. It consists of township boundary information of Myanmar. The spatial data are captured in polygon features.
+
+-   *Shan-ICT.csv*: This is an extract of [**The 2014 Myanmar Population and Housing Census Myanmar**](https://myanmar.unfpa.org/en/publications/2014-population-and-housing-census-myanmar-data-sheet) at the township level.
+
+#### 7.0.3 Installing packages
+
+Firstly, we will install the necessary packages needed for this exercise. The R packages needed for this exercise are as follows:
+
+-   Spatial data handling
+
+    -   **sf**, **rgdal** and **spdep**
+
+-   Attribute data handling
+
+    -   **tidyverse**, especially **readr**, **ggplot2** and **dplyr**
+
+-   Choropleth mapping
+
+    -   **tmap**
+
+-   Multivariate data visualisation and analysis
+
+    -   **coorplot**, **ggpubr**, and **heatmaply**
+
+-   Cluster analysis
+
+    -   **cluster**
+
+    -   **ClustGeo**
+
+```{r}
+pacman::p_load(sf, rgdal, sfdep, tidyverse, tmap, coorplot, ggpubr, heatmaply, cluster, ClustGeo)
+```
