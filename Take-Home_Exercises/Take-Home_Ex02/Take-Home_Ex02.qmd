@@ -564,6 +564,8 @@ tm_shape(local_moran22) +
 ```
 :::
 
+From the LISA maps, I observe a dip in the number of clusters of drug abuse cases from 2017 to 2018, and there seems to be minimal change in the years 2018 and 2019. However, from 2019-2020, I see more clusters of spatial units with similar number of drug abuse cases forming. In 2021, there appears to be a cold spot for drug-related offences in the western provinces. In the following year, while the cluster of cold spots have decreased, a new cluster of hotspots is observed in the North Eastern provinces.
+
 ## 2.5 Hot/Cold Spot Analysis
 
 We will first come up with a new weights matrix using the inverse distance method. To do this, we will follow our previous method, but instead of using *st_weights()* to come up with the weights, we will be using *st_inverse_distance()*.
@@ -660,7 +662,8 @@ tm_shape(hcsa17)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig17) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 
@@ -674,7 +677,8 @@ tm_shape(hcsa18)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig18) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 
@@ -688,7 +692,8 @@ tm_shape(hcsa19)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig19) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 
@@ -702,7 +707,8 @@ tm_shape(hcsa20)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig20) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 
@@ -716,7 +722,8 @@ tm_shape(hcsa21)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig21) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 
@@ -730,7 +737,30 @@ tm_shape(hcsa22)+
   tm_polygons() +
   tm_borders(alpha=0.5) +
   tm_shape(HCSA_sig22) +
-  tm_fill("gi_star") + 
+  tm_fill("gi_star",
+          palette = "-RdYlGn") + 
   tm_borders(alpha = 0.4)
 ```
 :::
+
+The Gi\* statistics plot once again confirm the cold and hotspots observed by the LISA plots earlier. However, it further reveals a cold spot in the Northern Central provinces in 2017. These cold spots drop drastically in the years 2018-2019, further corroborating the pattern revealed by the Local Moran I plots regarding the increase in the drug abuse cases in the neighbouring spatial units.
+
+I also observe that the capital city of Bangkok had been a hotspot for drug abuse in the years 2017-2020, but not in 2021-2022.
+
+## 2.6 Learning Points
+
+From this Take-Home Exercise, I have learnt:
+
+-   Using appropriate methods to import files of different data types
+
+-   The importance of looking through the data once it's been downloaded to the R environment to see what needs to be processed
+
+-   The importance of checking if the the downloaded data has been saved in an appropriate datatype that can be used in our analysis
+
+-   The importance of knowing the geograpahical area and its features earlier. (Accounting for disconnected boundaries and islands)
+
+-   Knowing alternate methods of handling the case where spatial units have missing neighbours
+
+-   Interpreting Global and Local Moran I's values in specific contexts
+
+-   Interpreting Lisa Maps and understanding their link to GI\* statistic analysis

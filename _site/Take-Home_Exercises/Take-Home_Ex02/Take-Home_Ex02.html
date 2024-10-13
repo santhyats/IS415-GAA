@@ -149,6 +149,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">
  <span class="dropdown-text">Hands-on Exercise 6</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html">
+ <span class="dropdown-text">Hands-on Exercise 7</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -229,6 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#global-measures-of-spatial-autocorrelation" id="toc-global-measures-of-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-measures-of-spatial-autocorrelation">2.3 Global Measures of Spatial Autocorrelation</a></li>
   <li><a href="#local-measures-of-spatial-autocorrelation" id="toc-local-measures-of-spatial-autocorrelation" class="nav-link" data-scroll-target="#local-measures-of-spatial-autocorrelation">2.4 Local Measures of Spatial Autocorrelation</a></li>
   <li><a href="#hotcold-spot-analysis" id="toc-hotcold-spot-analysis" class="nav-link" data-scroll-target="#hotcold-spot-analysis">2.5 Hot/Cold Spot Analysis</a></li>
+  <li><a href="#learning-points" id="toc-learning-points" class="nav-link" data-scroll-target="#learning-points">2.6 Learning Points</a></li>
   </ul>
 </nav>
     </div>
@@ -261,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 12, 2024</p>
+      <p class="date-modified">October 13, 2024</p>
     </div>
   </div>
     
@@ -1125,6 +1130,7 @@ tm_shape prior to each of them).</code></pre>
 </div>
 </div>
 </div>
+<p>From the LISA maps, I observe a dip in the number of clusters of drug abuse cases from 2017 to 2018, and there seems to be minimal change in the years 2018 and 2019. However, from 2019-2020, I see more clusters of spatial units with similar number of drug abuse cases forming. In 2021, there appears to be a cold spot for drug-related offences in the western provinces. In the following year, while the cluster of cold spots have decreased, a new cluster of hotspots is observed in the North Eastern provinces.</p>
 </section>
 </section>
 <section id="hotcold-spot-analysis" class="level2">
@@ -1227,8 +1233,9 @@ Caused by warning in `st_point_on_surface.sfc()`:
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig17) <span class="sc">+</span></span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1258,8 +1265,9 @@ tm_shape prior to each of them).</code></pre>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig18) <span class="sc">+</span></span>
-<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1289,8 +1297,9 @@ tm_shape prior to each of them).</code></pre>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig19) <span class="sc">+</span></span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1320,8 +1329,9 @@ tm_shape prior to each of them).</code></pre>
 <span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig20) <span class="sc">+</span></span>
-<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1351,8 +1361,9 @@ tm_shape prior to each of them).</code></pre>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig21) <span class="sc">+</span></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1379,8 +1390,9 @@ tm_shape prior to each of them).</code></pre>
 <span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
 <span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(HCSA_sig22) <span class="sc">+</span></span>
-<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
-<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>,</span>
+<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"-RdYlGn"</span>) <span class="sc">+</span> </span>
+<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One tm layer group has duplicated layer types, which are omitted. To
 draw multiple layers of the same type, use multiple layer groups (i.e. specify
@@ -1400,9 +1412,24 @@ tm_shape prior to each of them).</code></pre>
 </div>
 </div>
 </div>
-
-
+<p>The Gi* statistics plot once again confirm the cold and hotspots observed by the LISA plots earlier. However, it further reveals a cold spot in the Northern Central provinces in 2017. These cold spots drop drastically in the years 2018-2019, further corroborating the pattern revealed by the Local Moran I plots regarding the increase in the drug abuse cases in the neighbouring spatial units.</p>
+<p>I also observe that the capital city of Bangkok had been a hotspot for drug abuse in the years 2017-2020, but not in 2021-2022.</p>
 </section>
+</section>
+<section id="learning-points" class="level2">
+<h2 class="anchored" data-anchor-id="learning-points">2.6 Learning Points</h2>
+<p>From this Take-Home Exercise, I have learnt:</p>
+<ul>
+<li><p>Using appropriate methods to import files of different data types</p></li>
+<li><p>The importance of looking through the data once it’s been downloaded to the R environment to see what needs to be processed</p></li>
+<li><p>The importance of checking if the the downloaded data has been saved in an appropriate datatype that can be used in our analysis</p></li>
+<li><p>The importance of knowing the geograpahical area and its features earlier. (Accounting for disconnected boundaries and islands)</p></li>
+<li><p>Knowing alternate methods of handling the case where spatial units have missing neighbours</p></li>
+<li><p>Interpreting Global and Local Moran I’s values in specific contexts</p></li>
+<li><p>Interpreting Lisa Maps and understanding their link to GI* statistic analysis</p></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
