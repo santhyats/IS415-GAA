@@ -78,19 +78,7 @@ I will now plot the layers on a chloropleth map to observe the distribution of t
 
 -   *tm_borders(), tm_layout()* to format the look of the maps.
 
-```{r}
-#| eval: false
-tm_shape(Thai_doff) +
-  tm_fill("no_cases",
-          n = 5,
-          style = "quantile") +
-  tm_borders(alpha = 0.5) +
-  tm_layout(main.title = "Equal quantile classification") + 
-  tm_facets(by = "fiscal_year")
-
-```
-
-Having encountered this error, I checked the type of object and found that it is a list! \<insert why it might be so\>.
+But when I tried to plot the maps, I encountered an error indicating that Thai_doff was not an sf object. I checked the type of object and found that it is a list!
 
 ```{r}
 typeof(Thai_doff)
@@ -100,6 +88,7 @@ As such, I will convert the object to a sf dataframe before continuing. To do th
 
 ```{r}
 Thai_doff <- Thai_doff %>% st_as_sf()
+
 ```
 
 ```{r}
