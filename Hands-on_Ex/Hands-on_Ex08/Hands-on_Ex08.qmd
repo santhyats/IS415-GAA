@@ -1,0 +1,247 @@
+---
+title: "8 Geographical Segmentation with Spatially Constrained Clustering Techniques - Using the SKATER Approach"
+author: "Santhya Selvan"
+date: "October 18, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+## 8.0 Overview
+
+In this hands-on exercise, I will be exploring another method to form spatially constrained clusters that we performed in the last hands-on exercise.
+
+It will be the SKATER approach. SKATER stands for 'Spatial K'luster Analysis by Tree Edge Removal'. This method allows us ti group spatial units based on both the similarity of a specific attribute and their spatial contiguity as well.
+
+In order to do this, we will be using the *skater()* function of the **spdep** package.
+
+#### 8.0.1 Getting Started
+
+We will be using the same datasets as we did in the last Handds-On Exercise. To recall,region of interest will be Shan State in Myanmar, and we aim to split this region into homogeneous segments on the basis of different means of Communication Technology: Radio, Television, Land Line Phone, Mobile Phone, Computer and Internet at home.
+
+#### 8.0.2 The data
+
+The two datasets used are:
+
+-   Myanmar Township Boundary Data (i.e. *myanmar_township_boundaries*) : This is a GIS data in ESRI shapefile format. It consists of township boundary information of Myanmar. The spatial data are captured in polygon features.
+
+-   *Shan-ICT.csv*: This is an extract of [**The 2014 Myanmar Population and Housing Census Myanmar**](https://myanmar.unfpa.org/en/publications/2014-population-and-housing-census-myanmar-data-sheet) at the township level.
+
+#### 8.0.3 Installing packages
+
+Firstly, we will install the necessary packages needed for this exercise. The R packages needed for this exercise are as follows:
+
+-   Spatial data handling
+
+    -   **sf**, **rgdal** and **spdep**
+
+-   Attribute data handling
+
+    -   **tidyverse**, especially **readr**, **ggplot2** and **dplyr**
+
+-   Choropleth mapping
+
+    -   **tmap**
+
+-   Multivariate data visualisation and analysis
+
+    -   **coorplot**, **ggpubr**, and **heatmaply**
+
+-   Cluster analysis
+
+    -   **cluster**
+
+    -   **ClustGeo**
+
+```{r}
+pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo)
+```
+
+#### 8.0.4 Data Import 
+
+I will now import the geospatial and aspatial datasets into the R environment.
+
+```{r}
+shan_sf <- st_read(dsn = "data/geospatial",
+                   layer = "myanmar_township_boundaries") %>% 
+  filter(ST %in% c("Shan (East)", "Shan (North)", "Shan (South)")) %>%
+  select(c(2:7))
+
+ict <- read_csv ("data/aspatial/Shan-ICT.csv")
+```
+
+## 8.1 SKATER Approach
+
+#### 8.1.1 Computing the Neighbours List
+
+First, we will convert the `shan_sf` into a sp object as functions of **spdep** only support sp objects. We will use the *as_Spatial()* function of the **sf** package to achieve this.
+
+```{r}
+shan_sp <- as_Spatial(shan_sf)
+```
+
+Next, we will use *poly2nb()* of the **spdep** package to compute the neighbours list for the sp object.
+
+```{r}
+shan.nb <- poly2nb(shan_sp)
+```
+
+Now that we have the boundaries of Shan state and the neighbours, we can compute the centroids for the neighbours to be used in our analysis.
+
+```{r}
+coords <- st_coordinates(
+  st_centroid(st_geometry(shan_sf)))
+
+plot(st_geometry(shan_sf), 
+     border=grey(.5))
+plot(shan.nb,
+     coords, 
+     col="purple", 
+     add=TRUE)
+```
+
+####  
+
+#### 8.1.2 Computing Minimum Spanning Tree
+
+##### 8.1.2.1 Calculating Edge Costs 
+
+The nbcosts() function of the spdep package will be used to compute the costs of the edges. It is the distance between the nodes.
+
+```{r}
+lcosts <- nbcosts(shan.nb, ict)
+```
+
+For each observation, this gives the pairwise dissimilarity between its values on the five variables and the values for the neighbouring observation (from the neighbour list). Basically, this is the notion of a generalised weight for a spatial weights matrix.
+
+Next, We will incorporate these costs into a weights object in the same way as we did in the calculation of inverse of distance weights. In other words, we convert the neighbour list to a list weights object by specifying the just computed ***lcosts*** as the weights.
+
+In order to achieve this, [*nb2listw()*](https://r-spatial.github.io/spdep/reference/nb2listw.html) of **spdep** package is used as shown in the code chunk below.
+
+Note that we specify the *style* as **B** to make sure the cost values are not row-standardised.
+
+```{r}
+shan.w <- nb2listw(shan.nb, 
+                   lcosts, 
+                   style="B")
+summary(shan.w)
+```
+
+Now, we can compute our minimum spanning tree. We will use the *mstree()* function of the **spdep** package to achieve this.
+
+```{r}
+shan.mst <- mstree(shan.w)
+```
+
+We can check the dimensions of the spanning tree by using the dim() function.
+
+```{r}
+dim(shan.mst)
+```
+
+Here, we see that the dimension is 54 instead of 55, and that is due to the fact that the mst takes note of the number of links/edges between the nodes and not the nodes themselves. We cna now plot the mst.
+
+```{r}
+plot(st_geometry(shan_sf), 
+                 border=gray(.5))
+plot.mst(shan.mst, 
+         coords, 
+         col="blue", 
+         cex.lab=0.7, 
+         cex.circles=0.005, 
+         add=TRUE)
+```
+
+The plot method of MST also shows the number fo observations for each node. We also see that compared to the neighbours plot before, in this plot, there is only one line passung through and connecting all of the nodes.
+
+#### 8.1.3 Computing Spatially constrained clusters using SKATER approach
+
+We will now use the skater() function to compute the spatially constrained clusters. The *skater()* takes three mandatory arguments: - the first two columns of the MST matrix (i.e. not the cost), - the data matrix (to update the costs as units are being grouped), and - the number of cuts. Note: It is set to **one less than the number of clusters**. So, the value specified is **not** the number of clusters, but the number of cuts in the graph, one less than the number of clusters.
+
+```{r}
+clust6 <- skater(edges = shan.mst[,1:2], 
+                 data = ict[6:11], 
+                 method = "euclidean", 
+                 ncuts = 5)
+
+str(clust6)
+```
+
+We can also check the cluster assignments and the number of observations in each cluster using the codelines below.
+
+```{r}
+ccs6 <- clust6$groups
+ccs6
+```
+
+```{r}
+table(ccs6)
+```
+
+Lastly, we can also plot the pruned tree that shows the five clusters on top of the townshop area.
+
+```{r}
+plot(st_geometry(shan_sf), 
+     border=gray(.5))
+plot(clust6, 
+     coords, 
+     cex.lab=.7,
+     groups.colors=c("navy","purple","red", "brown", "pink"),
+     cex.circles=0.005, 
+     add=TRUE)
+```
+
+#### 8.1.4 Visualising the clusters in choropleth maps
+
+We will now plot the newly derived clusters using the SKATER approach.
+
+```{r}
+
+shan_sf_cluster <- cbind(shan_sf, as.matrix(ccs6)) %>%
+  rename(`CLUSTER`=`as.matrix.ccs6.`)
+
+groups_mat <- as.matrix(clust6$groups)
+shan_sf_spatialcluster <- cbind(shan_sf_cluster, as.factor(groups_mat)) %>%
+  rename(`SP_CLUSTER`=`as.factor.groups_mat.`)
+qtm(shan_sf_spatialcluster, "SP_CLUSTER")
+```
+
+For easy comparison, it will be better to place both the hierarchical clustering and spatially constrained hierarchical clustering maps next to each other.
+
+```{r}
+hclust.map <- qtm(shan_sf_cluster,
+                  "CLUSTER") + 
+  tm_borders(alpha = 0.5) 
+
+shclust.map <- qtm(shan_sf_spatialcluster,
+                   "SP_CLUSTER") + 
+  tm_borders(alpha = 0.5) 
+
+tmap_arrange(hclust.map, shclust.map,
+             asp=NA, ncol=2)
+```
+
+## 8.2 Spatially Constrained Clustering: Using ClustGeo Method
+
+[**ClustGeo**](https://cran.r-project.org/web/packages/ClustGeo/) package is an R package specially designed to support the need of performing spatially constrained cluster analysis. More specifically, it provides a Ward-like hierarchical clustering algorithm called `hclustgeo()` including spatial/geographical constraints.
+
+In the nutshell, the algorithm uses two dissimilarity matrices D0 and D1 along with a mixing parameter alpha, whereby the value of alpha must be a real number between \[0, 1\]. D0 can be non-Euclidean and the weights of the observations can be non-uniform. It gives the dissimilarities in the **attribute/clustering variable space**. D1, on the other hand, gives the dissimilarities in the **constraint space**. The criterion minimised at each stage is a convex combination of the homogeneity criterion calculated with D0 and the homogeneity criterion calculated with D1.
+
+The idea is then to determine a value of alpha which increases the spatial contiguity without deteriorating too much the quality of the solution based on the variables of interest. This need is supported by a function called `choicealpha()`.
+
+#### 8.2.1 Ward-like Hierarchical Clustering 
+
+ClustGeo package provides function called `hclustgeo()` to perform a typical Ward-like hierarchical clustering just like `hclust()` you learned in previous section.
+
+To perform non-spatially constrained hierarchical clustering, we only need to provide the function a dissimilarity matrix as shown in the code chunk below.
+
+```{r}
+proxmat <- dist(ict)
+nongeo_cluster <- hclustgeo(proxmat)
+plot(nongeo_cluster, cex = 0.5)
+rect.hclust(nongeo_cluster, 
+            k = 6, 
+            border = 2:5)
+```

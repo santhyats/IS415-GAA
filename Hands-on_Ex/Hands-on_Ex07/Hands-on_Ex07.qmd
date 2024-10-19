@@ -58,7 +58,7 @@ Firstly, we will install the necessary packages needed for this exercise. The R 
     -   **ClustGeo**
 
 ```{r}
-pacman::p_load(sf, rgdal, sfdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo, psych,factoextra)
+pacman::p_load(sf, rgdal, sfdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo, psych, factoextra)
 ```
 
 #### 7.0.4 Data Import
@@ -238,7 +238,7 @@ tm_shape(shan_sf) +
 
 We can now observe that they are not completely positively correlated. Areas with larger number of households do not necessarily have larger penetration rates.
 
-## 7.2 Correlation Analysis 
+## 7.2 Correlation Analysis
 
 Before we perform cluster analysis, it is important for us to ensure that the cluster variables are not highly correlated.
 

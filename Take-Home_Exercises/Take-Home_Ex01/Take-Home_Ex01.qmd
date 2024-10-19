@@ -970,7 +970,7 @@ plot(bat_q421_kde, main="Battles in 4th Quarter of 2021")
 
 Hence, I decided to try the *bw.CvL()* method, as it is similar to the *bw.ppl()* method, just with a minimised prediction error. When I plotted the maps, I was satisified with the result, and chose this as the method to go with.
 
-::: panel-tabset
+::::::: panel-tabset
 ## Battles
 
 ::: panel-tabset
@@ -1267,7 +1267,7 @@ plot(civViolence_q224_kde, main="Violence Against Civilians in 2nd Quarter of 20
 :::
 
 Violence Against the civilians can be observed in the central and southern regions of Myanmar throughout all the quarters, with the concentration once again, being at the central region. There appears to be a brief reduction in the intensity of the attacks in the 3rd quarter of 2022.
-:::
+:::::::
 
 ## 1.4 Computing Second Order Spatial point Process analysis
 
@@ -1338,7 +1338,7 @@ From the plots above, we can further confirm that there is significant clusterin
 
 ## 1.5 Computing Spatio-Temporal KDE Layers
 
-::: panel-tabset
+::::::: panel-tabset
 ## Battles
 
 ::: panel-tabset
@@ -1681,7 +1681,7 @@ for (i in tims2){
 }
 ```
 :::
-:::
+:::::::
 
 ## 1.6 Second-Order Spatio-Temporal KDE
 
