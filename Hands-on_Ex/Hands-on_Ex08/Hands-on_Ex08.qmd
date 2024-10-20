@@ -56,7 +56,7 @@ Firstly, we will install the necessary packages needed for this exercise. The R 
     -   **ClustGeo**
 
 ```{r}
-pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo)
+pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo, GGally)
 ```
 
 #### 8.0.4 Data Import 
@@ -199,7 +199,7 @@ We will now plot the newly derived clusters using the SKATER approach.
 
 ```{r}
 
-shan_sf_cluster <- cbind(shan_sf, as.matrix(ccs6)) %>%
+shan_sf_cluster <- cbind(shan_sf, as.matrix(ccs6)) %>% 
   rename(`CLUSTER`=`as.matrix.ccs6.`)
 
 groups_mat <- as.matrix(clust6$groups)
@@ -238,10 +238,63 @@ ClustGeo package provides function called `hclustgeo()` to perform a typical War
 To perform non-spatially constrained hierarchical clustering, we only need to provide the function a dissimilarity matrix as shown in the code chunk below.
 
 ```{r}
-proxmat <- dist(ict)
+proxmat <- dist(ict, method='euclidean')
 nongeo_cluster <- hclustgeo(proxmat)
 plot(nongeo_cluster, cex = 0.5)
 rect.hclust(nongeo_cluster, 
             k = 6, 
             border = 2:5)
 ```
+
+#### 8.2.2 Mapping the Clusters formed
+
+```{r}
+groups <- as.factor(cutree(nongeo_cluster, k=6))
+
+shan_sf_ngeo_cluster <- cbind(shan_sf, as.matrix(groups)) %>%
+  rename(`CLUSTER` = `as.matrix.groups.`)
+
+qtm(shan_sf_ngeo_cluster, "CLUSTER")
+```
+
+#### 8.2.3 Spatially Constrained Hierarchical Clustering 
+
+Before we can proceed to derive the spatially constrained hierarchical clustering, a spatial distance matrix will be computed using the *st_distance()* of the **sf** package.
+
+```{r}
+dist <- st_distance(shan_sf, shan_sf)
+distmat <- as.dist(dist)
+```
+
+Next, `choicealpha()` will be used to determine a suitable value for the mixing parameter alpha as shown in the code chunk below.
+
+```{r}
+cr <- choicealpha(proxmat, distmat, range.alpha = seq(0, 1, 0.1), K=6, graph = TRUE)
+```
+
+Based on the plots, an alpha value of 0.3 will be used.
+
+```{r}
+clustG <- hclustgeo(proxmat, distmat, alpha = 0.2)
+```
+
+Next, I will use cutree() to derive the cluster object.
+
+```{r}
+groups <- as.factor(cutree(clustG, k=6))
+```
+
+We will then join back the group list with *shan_sf* polygon feature data frame by using the code chunk below.
+
+```{r}
+shan_sf_Gcluster <- cbind(shan_sf, as.matrix(groups)) %>%
+  rename(`CLUSTER` = `as.matrix.groups.`)
+```
+
+Finally, we can plot the newly formed clusters.
+
+```{r}
+qtm(shan_sf_Gcluster, "CLUSTER")
+```
+
+## 
