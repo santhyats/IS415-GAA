@@ -47,7 +47,7 @@ Firstly, we will install the necessary packages needed for this exercise. The R 
 
 -   Multivariate data visualisation and analysis
 
-    -   **coorplot**, **ggpubr**, and **heatmaply**
+    -   **corrplot**, **ggpubr**, and **heatmaply**
 
 -   Cluster analysis
 
@@ -56,10 +56,10 @@ Firstly, we will install the necessary packages needed for this exercise. The R 
     -   **ClustGeo**
 
 ```{r}
-pacman::p_load(sf, rgdal, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo, GGally)
+pacman::p_load(sf, sp, spdep, tidyverse, tmap, corrplot, ggpubr, heatmaply, cluster, ClustGeo, GGally)
 ```
 
-#### 8.0.4 Data Import 
+#### 8.0.4 Data Import
 
 I will now import the geospatial and aspatial datasets into the R environment.
 
@@ -102,11 +102,11 @@ plot(shan.nb,
      add=TRUE)
 ```
 
-####  
+#### 
 
 #### 8.1.2 Computing Minimum Spanning Tree
 
-##### 8.1.2.1 Calculating Edge Costs 
+##### 8.1.2.1 Calculating Edge Costs
 
 The nbcosts() function of the spdep package will be used to compute the costs of the edges. It is the distance between the nodes.
 
@@ -231,7 +231,7 @@ In the nutshell, the algorithm uses two dissimilarity matrices D0 and D1 along w
 
 The idea is then to determine a value of alpha which increases the spatial contiguity without deteriorating too much the quality of the solution based on the variables of interest. This need is supported by a function called `choicealpha()`.
 
-#### 8.2.1 Ward-like Hierarchical Clustering 
+#### 8.2.1 Ward-like Hierarchical Clustering
 
 ClustGeo package provides function called `hclustgeo()` to perform a typical Ward-like hierarchical clustering just like `hclust()` you learned in previous section.
 
@@ -257,7 +257,7 @@ shan_sf_ngeo_cluster <- cbind(shan_sf, as.matrix(groups)) %>%
 qtm(shan_sf_ngeo_cluster, "CLUSTER")
 ```
 
-#### 8.2.3 Spatially Constrained Hierarchical Clustering 
+#### 8.2.3 Spatially Constrained Hierarchical Clustering
 
 Before we can proceed to derive the spatially constrained hierarchical clustering, a spatial distance matrix will be computed using the *st_distance()* of the **sf** package.
 

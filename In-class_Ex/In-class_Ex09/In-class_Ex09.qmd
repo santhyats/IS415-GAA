@@ -1,0 +1,189 @@
+---
+title: "In-class Exercise 9"
+author: "Santhya Selvan"
+date: "23 September 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+## 9.0 Getting started
+
+#### 9.0.1 Loading the packages
+
+Firstly, we will download the necessary packages into our R environment.
+
+```{r}
+pacman::p_load(spdep, sp, tmap, sf, ClustGeo, cluster, factoextra, NbClust, tidyverse, GGally)
+```
+
+#### 9.0.2 Downloading the data
+
+We will now load in the data to our R environment. Since they are in the form of rds files, we will use the *read_rds()* function of the **readr** package.
+
+```{r}
+shan_sf<- read_rds("data/rds/shan_sf.rds")
+shan_ict <- read_rds("data/rds/shan_ict.rds")
+shan_sf_clusters <- read_rds("data/rds/shan_sf_cluster.rds")
+```
+
+## 9.1 Hierarchical Clustering
+
+Explanation for the code chunks below:
+
+Line 1) The first step to compute hierarchical clusters is to create a proximity matrix. *dist()* function from base R is an example of a function that can be used to derive this proximity matrix. Proximity Matrix calculates the numerical distance between all the variables.
+
+Line 2) This line uses the *hclust()* function of base R functions, that helps us to derive the clusters from the proximity matrix.
+
+Line 3) *cutree()* is a function that directly consumes an object of the h-class (hierarchical cluster object). This line helps us to derive the groups we will be using for the dendrogram. This function then cuts the hierarchical clustering tree so as to get k specified number of clusters. The *as.factor()* function converts the segments of the cut tree into categorical values. value of k=6 is derived from the optimal number of clusters that we found using the gap statistic method.
+
+For project, it is advisable to let the value of k be an user input, rather than hardcoding the value. A slider can be used on the user interface to enable them to toggle between different number of clusters.
+
+```{r}
+proxmat<- dist(shan_ict, method = 'euclidean')
+hclust_ward<-hclust(proxmat, method='ward.D')
+groups<- as.factor(cutree(hclust_ward, k = 6))
+                   
+
+```
+
+#### 9.1.1 Visualising the Hierarchical Clusters
+
+*select(-c())* will enable us to drop the columns selected.
+
+```{r}
+shan_sf_clusters<- cbind(shan_sf, 
+                as.matrix(groups)) %>% 
+  rename(`CLUSTER` = `as.matrix.groups.`) %>% 
+  select(-c(3:4, 7:9)) %>% 
+  rename(TS = TS.x)
+```
+
+Now, we will plot the dendrogram to visualise our hierarchical clustering.
+
+```{r}
+plot(hclust_ward, cex=0.5)
+rect.hclust(hclust_ward, k=6, border = 2:5)
+```
+
+We will also plot out the clusters on our map and colour code them. We will use the *qtm()* function to achieve this.
+
+```{r}
+qtm(shan_sf_clusters, "CLUSTER")
+```
+
+However, this output only considers the similarity in their attributes and does not consider the spatial relationship between the spatial units, and this shown by the clusters being spatially divided over the space. Hence, it will be better if we can come up with clusters that considers both the attributes and the spatial relationships between the spatial units. This is where the SKATER approach comes in.
+
+## 9.2 Spatially Constrained Clustering using the SKATER Approach
+
+We will first compute the minimum spanning tree.
+
+#### 9.2.3 Computing minimum spanning tree
+
+```{r}
+shan.nb <- poly2nb(shan_sf)
+lcosts <- nbcosts(shan.nb, shan_ict)
+shan.w <- nb2listw(shan.nb, lcosts, style='B')
+summary(shan.w)
+```
+
+```{r}
+shan.mst <- mstree(shan.w)
+
+```
+
+We are now ready to visualise our minimum spanning tree.
+
+```{r}
+pts <- st_coordinates(st_centroid(shan_sf))
+
+plot(st_geometry(shan_sf),
+     border = gray(.5))
+
+plot.mst(shan.mst, pts, col="blue",
+         cex.lab = 0.7, 
+         cex.circles = 0.005,
+         add = TRUE)
+```
+
+Next, we will derive our clusters using the SKATER method by passing in our minimum spanning tree.
+
+```{r}
+skater.clust6 <- skater(edges = shan.mst[, 1:2],
+                        data = shan_ict,
+                        method = "euclidean",
+                        ncuts = 5)
+```
+
+We can now map out our clusters with their neighbourhood relationships on the map once again.
+
+```{r}
+plot(st_geometry(shan_sf),
+     border=gray(.5))
+
+plot(skater.clust6, 
+     pts, 
+     cex.lab=.7, 
+     groups.colors = c("red", "green", "brown", "blue", "pink"),
+     cex.circles = 0.005,
+     add = TRUE)
+```
+
+We will further visualise our clusters on a choropleth map.
+
+```{r}
+groups_mat = as.matrix(skater.clust6$groups)
+shan_sf_spatialcluster <- cbind(shan_sf_clusters, as.factor(groups_mat)) %>% 
+  rename(`skater_CLUSTER` = `as.factor.groups_mat.`)
+qtm(shan_sf_spatialcluster, "skater_CLUSTER")
+```
+
+SKATER approach to clustering is considered a hard clustering method as all classifications is based on the minimum spanning tree.
+
+ClustGeo, on the other hand, is considered a soft clustering method as it allows us to choose the proportion of the attribute and spatial constraints to be used.
+
+## 9.3 Spatially Constrained Clustering Method using ClustGeo
+
+9.3.1 Calculating the distance matrix
+
+```{r}
+dist <- st_distance(shan_sf, shan_sf)
+distmat <- as.dist(dist)
+```
+
+```{r}
+cr <- choicealpha(proxmat, distmat, 
+                  range.alpha = seq(0, 1, 0.1),
+                  K=6, graph = TRUE)
+```
+
+We will need save the ClustGeo output
+
+```{r}
+clust6 <- hclustgeo(proxmat, distmat, alpha=0.2)
+groups <- as.factor(cutree(clust6, k=6))
+shan_sf_ClustGeo <- cbind(shan_sf, 
+                          as.matrix(groups)) %>% 
+  rename(`clustGeo` = `as.matrix.groups.`)
+```
+
+Finally, we can map our clusters on the map
+
+```{r}
+qtm(shan_sf_ClustGeo, "clustGeo")
+```
+
+#### 9.3.1 Characterising the clusters
+
+```{r}
+ggparcoord(data = shan_sf_ClustGeo,
+           columns = c(17:20),
+           scale = "globalminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE,
+           title = "Multiple Parallel Coordinates Plots od ICT Variables by Cluster") +
+  facet_grid(~ clustGeo) + 
+  theme(axis.text.x = element_text(angle = 30))
+```
