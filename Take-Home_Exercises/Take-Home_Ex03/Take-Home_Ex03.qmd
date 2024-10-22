@@ -1,0 +1,99 @@
+---
+title: "Take Home 3"
+author: "Santhya Selvan"
+date: "23 October 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+Loading in the packages
+
+```{r}
+pacman::p_load(spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally)
+```
+
+Loading in the aspatial and spatial data
+
+```{r}
+
+crime_district <- read_csv("data/aspatial/crime_district.csv")
+population_district <- read_csv("data/aspatial/population_district.csv")
+msia_adm2_sf <- st_read(dsn = 'data/geosp', layer = 'mys_admbnda_adm2_unhcr_20210211')
+```
+
+formatting the crime data to only include the state names and their respective districts. Also filter out the rows where the data is aggregated. since population data is from 2016-2022, we will also remove the 2023 data rows.
+
+```{r}
+crime_district <- crime_district %>% 
+    filter(state != "Malaysia") %>% 
+    filter(category == "assault") %>% 
+    filter(district != "All") %>% 
+    filter(type != "all") %>% 
+    filter(date != "2023-01-01")
+```
+
+formatting the population data table to be simpler
+
+```{r}
+
+library(dplyr)
+library(lubridate)
+
+# population_state_filtered <- 
+pop_data <- population_district %>%
+    filter(year(ymd(date)) >= 2016 & year(ymd(date)) <= 2022) %>% 
+    filter(sex == 'both') %>% 
+    filter(age == 'overall') %>% 
+    filter(ethnicity == 'overall') %>% 
+    select(-c(3:5))
+```
+
+formatting the district boundary sf by dropping unnecessary columns
+
+```{r}
+adm2_sf <- msia_adm2_sf %>% select(-c(3:5, 8,9,11,12))
+```
+
+```{r}
+tm_shape(adm2_sf) + tm_polygons()
+```
+
+```{r}
+unique(pop_data$district)
+
+```
+
+```{r}
+
+
+unique(adm2_sf$ADM2_EN)
+
+```
+
+```{r}
+unique(crime_district$district)
+
+```
+
+```{r}
+write_rds(pop_data, "data/rds/pop_data.rds")
+write_rds(crime_district, "data/rds/crime_district.rds")
+write_rds(adm2_sf, "data/rds/adm2_sf.rds")
+```
+
+```{r}
+crime_district$district <- tolower(trimws(crime_district$district))
+adm2_sf$ADM2_EN <- tolower(trimws(adm2_sf$ADM2_EN))
+
+```
+
+```{r}
+new_sf<- left_join(crime_district, adm2_sf, by= c("district" = "ADM2_EN"))
+```
+
+```{r}
+new_sf_na<- new_sf[rowSums(is.na(new_sf)) > 0,]
+```

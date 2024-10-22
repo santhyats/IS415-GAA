@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Santhya Selvan">
-<meta name="dcterms.date" content="2024-09-23">
+<meta name="dcterms.date" content="2024-10-23">
 
-<title>In-class Exercise 9 – IS415-GAA</title>
+<title>Take Home 3 – IS415-GAA</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -226,24 +226,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">9.0 Getting started</a></li>
-  <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">9.1 Hierarchical Clustering</a></li>
-  <li><a href="#spatially-constrained-clustering-using-the-skater-approach" id="toc-spatially-constrained-clustering-using-the-skater-approach" class="nav-link" data-scroll-target="#spatially-constrained-clustering-using-the-skater-approach">9.2 Spatially Constrained Clustering using the SKATER Approach</a></li>
-  <li><a href="#spatially-constrained-clustering-method-using-clustgeo" id="toc-spatially-constrained-clustering-method-using-clustgeo" class="nav-link" data-scroll-target="#spatially-constrained-clustering-method-using-clustgeo">9.3 Spatially Constrained Clustering Method using ClustGeo</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">In-class Exercise 9</h1>
+<h1 class="title">Take Home 3</h1>
 </div>
 
 
@@ -260,14 +251,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 23, 2024</p>
+      <p class="date">October 23, 2024</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 22, 2024</p>
+      <p class="date-modified">October 23, 2024</p>
     </div>
   </div>
     
@@ -278,251 +269,272 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">9.0 Getting started</h2>
-<section id="loading-the-packages" class="level4">
-<h4 class="anchored" data-anchor-id="loading-the-packages">9.0.1 Loading the packages</h4>
-<p>Firstly, we will download the necessary packages into our R environment.</p>
+<p>Loading in the packages</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(spdep, sp, tmap, sf, ClustGeo, cluster, factoextra, NbClust, tidyverse, GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="downloading-the-data" class="level4">
-<h4 class="anchored" data-anchor-id="downloading-the-data">9.0.2 Downloading the data</h4>
-<p>We will now load in the data to our R environment. Since they are in the form of rds files, we will use the <em>read_rds()</em> function of the <strong>readr</strong> package.</p>
+<p>Loading in the aspatial and spatial data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>shan_sf<span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/shan_sf.rds"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>shan_ict <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/shan_ict.rds"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>shan_sf_clusters <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/rds/shan_sf_cluster.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/crime_district.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 19152 Columns: 6
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): state, district, category, type
+dbl  (1): crimes
+date (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-</section>
-</section>
-<section id="hierarchical-clustering" class="level2">
-<h2 class="anchored" data-anchor-id="hierarchical-clustering">9.1 Hierarchical Clustering</h2>
-<p>Explanation for the code chunks below:</p>
-<p>Line 1) The first step to compute hierarchical clusters is to create a proximity matrix. <em>dist()</em> function from base R is an example of a function that can be used to derive this proximity matrix. Proximity Matrix calculates the numerical distance between all the variables.</p>
-<p>Line 2) This line uses the <em>hclust()</em> function of base R functions, that helps us to derive the clusters from the proximity matrix.</p>
-<p>Line 3) <em>cutree()</em> is a function that directly consumes an object of the h-class (hierarchical cluster object). This line helps us to derive the groups we will be using for the dendrogram. This function then cuts the hierarchical clustering tree so as to get k specified number of clusters. The <em>as.factor()</em> function converts the segments of the cut tree into categorical values. value of k=6 is derived from the optimal number of clusters that we found using the gap statistic method.</p>
-<p>For project, it is advisable to let the value of k be an user input, rather than hardcoding the value. A slider can be used on the user interface to enable them to toggle between different number of clusters.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>proxmat<span class="ot">&lt;-</span> <span class="fu">dist</span>(shan_ict, <span class="at">method =</span> <span class="st">'euclidean'</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hclust_ward<span class="ot">&lt;-</span><span class="fu">hclust</span>(proxmat, <span class="at">method=</span><span class="st">'ward.D'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>groups<span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cutree</span>(hclust_ward, <span class="at">k =</span> <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>population_district <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/population_district.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 319200 Columns: 7
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): state, district, sex, age, ethnicity
+dbl  (1): population
+date (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<section id="visualising-the-hierarchical-clusters" class="level4">
-<h4 class="anchored" data-anchor-id="visualising-the-hierarchical-clusters">9.1.1 Visualising the Hierarchical Clusters</h4>
-<p><em>select(-c())</em> will enable us to drop the columns selected.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>shan_sf_clusters<span class="ot">&lt;-</span> <span class="fu">cbind</span>(shan_sf, </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">as.matrix</span>(groups)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">CLUSTER</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">as.matrix.groups.</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">7</span><span class="sc">:</span><span class="dv">9</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">TS =</span> TS.x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Now, we will plot the dendrogram to visualise our hierarchical clustering.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hclust_ward, <span class="at">cex=</span><span class="fl">0.5</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rect.hclust</span>(hclust_ward, <span class="at">k=</span><span class="dv">6</span>, <span class="at">border =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We will also plot out the clusters on our map and colour code them. We will use the <em>qtm()</em> function to achieve this.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(shan_sf_clusters, <span class="st">"CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>However, this output only considers the similarity in their attributes and does not consider the spatial relationship between the spatial units, and this shown by the clusters being spatially divided over the space. Hence, it will be better if we can come up with clusters that considers both the attributes and the spatial relationships between the spatial units. This is where the SKATER approach comes in.</p>
-</section>
-</section>
-<section id="spatially-constrained-clustering-using-the-skater-approach" class="level2">
-<h2 class="anchored" data-anchor-id="spatially-constrained-clustering-using-the-skater-approach">9.2 Spatially Constrained Clustering using the SKATER Approach</h2>
-<p>We will first compute the minimum spanning tree.</p>
-<section id="computing-minimum-spanning-tree" class="level4">
-<h4 class="anchored" data-anchor-id="computing-minimum-spanning-tree">9.2.3 Computing minimum spanning tree</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shan.nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(shan_sf)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lcosts <span class="ot">&lt;-</span> <span class="fu">nbcosts</span>(shan.nb, shan_ict)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>shan.w <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(shan.nb, lcosts, <span class="at">style=</span><span class="st">'B'</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(shan.w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>msia_adm2_sf <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">'data/geosp'</span>, <span class="at">layer =</span> <span class="st">'mys_admbnda_adm2_unhcr_20210211'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Characteristics of weights list object:
-Neighbour list object:
-Number of regions: 55 
-Number of nonzero links: 264 
-Percentage nonzero weights: 8.727273 
-Average number of links: 4.8 
-Link number distribution:
+<pre><code>Reading layer `mys_admbnda_adm2_unhcr_20210211' from data source 
+  `C:\santhyats\IS415-GAA\Take-Home_Exercises\Take-Home_Ex03\data\geosp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 144 features and 14 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 99.64072 ymin: 0.855001 xmax: 119.2697 ymax: 7.380556
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>formatting the crime data to only include the state names and their respective districts. Also filter out the rows where the data is aggregated. since population data is from 2016-2022, we will also remove the 2023 data rows.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>crime_district <span class="ot">&lt;-</span> crime_district <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(state <span class="sc">!=</span> <span class="st">"Malaysia"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(category <span class="sc">==</span> <span class="st">"assault"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(district <span class="sc">!=</span> <span class="st">"All"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(type <span class="sc">!=</span> <span class="st">"all"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(date <span class="sc">!=</span> <span class="st">"2023-01-01"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>formatting the population data table to be simpler</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># population_state_filtered &lt;- </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>pop_data <span class="ot">&lt;-</span> population_district <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&gt;=</span> <span class="dv">2016</span> <span class="sc">&amp;</span> <span class="fu">year</span>(<span class="fu">ymd</span>(date)) <span class="sc">&lt;=</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(sex <span class="sc">==</span> <span class="st">'both'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(age <span class="sc">==</span> <span class="st">'overall'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(ethnicity <span class="sc">==</span> <span class="st">'overall'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>formatting the district boundary sf by dropping unnecessary columns</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>adm2_sf <span class="ot">&lt;-</span> msia_adm2_sf <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(adm2_sf) <span class="sc">+</span> <span class="fu">tm_polygons</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-Home_Ex03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(pop_data<span class="sc">$</span>district)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "Batu Pahat"             "Johor Bahru"            "Kluang"                
+  [4] "Kota Tinggi"            "Kulai"                  "Mersing"               
+  [7] "Muar"                   "Pontian"                "Segamat"               
+ [10] "Tangkak"                "Baling"                 "Bandar Baharu"         
+ [13] "Kota Setar"             "Kuala Muda"             "Kubang Pasu"           
+ [16] "Kulim"                  "Langkawi"               "Padang Terap"          
+ [19] "Pendang"                "Pokok Sena"             "Sik"                   
+ [22] "Yan"                    "Bachok"                 "Gua Musang"            
+ [25] "Jeli"                   "Kecil Lojing"           "Kota Bharu"            
+ [28] "Kuala Krai"             "Machang"                "Pasir Mas"             
+ [31] "Pasir Puteh"            "Tanah Merah"            "Tumpat"                
+ [34] "Alor Gajah"             "Jasin"                  "Melaka Tengah"         
+ [37] "Jelebu"                 "Jempol"                 "Kuala Pilah"           
+ [40] "Port Dickson"           "Rembau"                 "Seremban"              
+ [43] "Tampin"                 "Bentong"                "Bera"                  
+ [46] "Cameron Highlands"      "Jerantut"               "Kuantan"               
+ [49] "Lipis"                  "Maran"                  "Pekan"                 
+ [52] "Raub"                   "Rompin"                 "Temerloh"              
+ [55] "Bagan Datuk"            "Batang Padang"          "Hilir Perak"           
+ [58] "Hulu Perak"             "Kampar"                 "Kerian"                
+ [61] "Kinta"                  "Kuala Kangsar"          "Larut Dan Matang"      
+ [64] "Manjung"                "Muallim"                "Perak Tengah"          
+ [67] "Selama"                 "Perlis"                 "Barat Daya"            
+ [70] "Seberang Perai Selatan" "Seberang Perai Tengah"  "Seberang Perai Utara"  
+ [73] "Timur Laut"             "Beaufort"               "Beluran"               
+ [76] "Kalabakan"              "Keningau"               "Kinabatangan"          
+ [79] "Kota Belud"             "Kota Kinabalu"          "Kota Marudu"           
+ [82] "Kuala Penyu"            "Kudat"                  "Kunak"                 
+ [85] "Lahad Datu"             "Nabawan"                "Papar"                 
+ [88] "Penampang"              "Pitas"                  "Putatan"               
+ [91] "Ranau"                  "Sandakan"               "Semporna"              
+ [94] "Sipitang"               "Tambunan"               "Tawau"                 
+ [97] "Telupid"                "Tenom"                  "Tongod"                
+[100] "Tuaran"                 "Asajaya"                "Bau"                   
+[103] "Belaga"                 "Beluru"                 "Betong"                
+[106] "Bintulu"                "Bukit Mabong"           "Dalat"                 
+[109] "Daro"                   "Julau"                  "Kabong"                
+[112] "Kanowit"                "Kapit"                  "Kuching"               
+[115] "Lawas"                  "Limbang"                "Lubok Antu"            
+[118] "Lundu"                  "Maradong"               "Marudi"                
+[121] "Matu"                   "Miri"                   "Mukah"                 
+[124] "Pakan"                  "Pusa"                   "Samarahan"             
+[127] "Saratok"                "Sarikei"                "Sebauh"                
+[130] "Selangau"               "Serian"                 "Sibu"                  
+[133] "Simunjan"               "Song"                   "Sri Aman"              
+[136] "Subis"                  "Tanjung Manis"          "Tatau"                 
+[139] "Tebedu"                 "Telang Usan"            "Gombak"                
+[142] "Klang"                  "Kuala Langat"           "Kuala Selangor"        
+[145] "Petaling"               "Sabak Bernam"           "Sepang"                
+[148] "Ulu Langat"             "Ulu Selangor"           "Besut"                 
+[151] "Dungun"                 "Hulu Terengganu"        "Kemaman"               
+[154] "Kuala Nerus"            "Kuala Terengganu"       "Marang"                
+[157] "Setiu"                  "W.P. Kuala Lumpur"      "W.P. Labuan"           
+[160] "W.P. Putrajaya"         "Cameron Highland"       "Sp Selatan"            
+[163] "Sp Tengah"              "Sp Utara"              </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(adm2_sf<span class="sc">$</span>ADM2_EN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "Batu Pahat"        "Johor Bahru"       "Kluang"           
+  [4] "Kota Tinggi"       "Kulaijaya"         "Ledang"           
+  [7] "Mersing"           "Muar"              "Pontian"          
+ [10] "Segamat"           "Baling"            "Bandar Baharu"    
+ [13] "Kota Setar"        "Kuala Muda"        "Kubang Pasu"      
+ [16] "Kulim"             "Langkawi"          "Padang Terap"     
+ [19] "Pendang"           "Pokok Sena"        "Sik"              
+ [22] "Yan"               "Bachok"            "Gua Musang"       
+ [25] "Jeli"              "Kota Bharu"        "Kuala Krai"       
+ [28] "Machang"           "Pasir Mas"         "Pasir Puteh"      
+ [31] "Tanah Merah"       "Tumpat"            "WP. Kuala Lumpur" 
+ [34] "W.P. Labuan"       "Alor Gajah"        "Jasin"            
+ [37] "Melaka Tengah"     "Jelebu"            "Jempol"           
+ [40] "Kuala Pilah"       "Port Dickson"      "Rembau"           
+ [43] "Seremban"          "Tampin"            "Bentong"          
+ [46] "Bera"              "Cameron Highlands" "Jerantut"         
+ [49] "Kuantan"           "Lipis"             "Maran"            
+ [52] "Pekan"             "Raub"              "Rompin"           
+ [55] "Temerloh"          "Batang Padang"     "Hilir Perak"      
+ [58] "Ulu Perak"         "Kampar"            "Kerian"           
+ [61] "Kinta"             "Kuala Kangsar"     "Larut Dan Matang" 
+ [64] "Manjung (Dinding)" "Perak Tengah"      "Perlis"           
+ [67] "Barat Daya"        "S.P.Selatan"       "S.P. Tengah"      
+ [70] "S.P. Utara"        "Timur Laut"        "Beaufort"         
+ [73] "Beluran"           "Keningau"          "Kinabatangan"     
+ [76] "Kota Belud"        "Kota Kinabalu"     "Kota Marudu"      
+ [79] "Kuala Penyu"       "Kudat"             "Kunak"            
+ [82] "Lahad Datu"        "Nabawan"           "Papar"            
+ [85] "Penampang"         "Pitas"             "Putatan"          
+ [88] "Ranau"             "Sandakan"          "Semporna"         
+ [91] "Sipitang"          "Tambunan"          "Tawau"            
+ [94] "Tenom"             "Tongod"            "Tuaran"           
+ [97] "Asajaya"           "Bau"               "Belaga"           
+[100] "Betong"            "Bintulu"           "Dalat"            
+[103] "Daro"              "Julau"             "Kanowit"          
+[106] "Kapit"             "Kuching"           "Lawas"            
+[109] "Limbang"           "Lubok Antu"        "Lundu"            
+[112] "Marudi"            "Matu"              "Meradong"         
+[115] "Miri"              "Mukah"             "Pakan"            
+[118] "Samarahan"         "Saratok"           "Sarikei"          
+[121] "Selangau"          "Serian"            "Sibu"             
+[124] "Simunjan"          "Song"              "Sri Aman"         
+[127] "Tatau"             "Besut"             "Dungun"           
+[130] "Hulu Terengganu"   "Kemaman"           "Kuala Terengganu" 
+[133] "Marang"            "Setiu"             "W.P. Putrajaya"   
+[136] "Gombak"            "Ulu Langat"        "Ulu Selangor"     
+[139] "Klang"             "Kuala Langat"      "Kuala Selangor"   
+[142] "Petaling"          "Sabak Bernam"      "Sepang"           </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(crime_district<span class="sc">$</span>district)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "Batu Pahat"             "Iskandar Puteri"        "Johor Bahru Selatan"   
+  [4] "Johor Bahru Utara"      "Kluang"                 "Kota Tinggi"           
+  [7] "Kulaijaya"              "Ledang"                 "Mersing"               
+ [10] "Muar"                   "Nusajaya"               "Pontian"               
+ [13] "Segamat"                "Seri Alam"              "Baling"                
+ [16] "Bandar Baharu"          "Bandar Bharu"           "Kota Setar"            
+ [19] "Kuala Muda"             "Kubang Pasu"            "Kulim"                 
+ [22] "Langkawi"               "Padang Terap"           "Pendang"               
+ [25] "Sik"                    "Yan"                    "Bachok"                
+ [28] "Gua Musang"             "Jeli"                   "Kota Bharu"            
+ [31] "Kuala Krai"             "Machang"                "Pasir Mas"             
+ [34] "Pasir Puteh"            "Tanah Merah"            "Tumpat"                
+ [37] "Alor Gajah"             "Jasin"                  "Melaka Tengah"         
+ [40] "Jelebu"                 "Jempol"                 "Kuala Pilah"           
+ [43] "Nilai"                  "Port Dickson"           "Rembau"                
+ [46] "Seremban"               "Tampin"                 "Bentong"               
+ [49] "Bera"                   "Cameron Highland"       "Cameron Highlands"     
+ [52] "Jerantut"               "Kuala Lipis"            "Kuantan"               
+ [55] "Maran"                  "Pekan"                  "Raub"                  
+ [58] "Rompin"                 "Temerloh"               "Batu Gajah"            
+ [61] "Gerik"                  "Hilir Perak"            "Ipoh"                  
+ [64] "Kampar"                 "Kerian"                 "Kuala Kangsar"         
+ [67] "Manjung"                "Pengkalan Hulu"         "Perak Tengah"          
+ [70] "Selama"                 "Sungai Siput"           "Taiping"               
+ [73] "Tanjong Malim"          "Tapah"                  "Arau"                  
+ [76] "Kangar"                 "Padang Besar"           "Barat Daya"            
+ [79] "Seberang Perai Selatan" "Seberang Perai Tengah"  "Seberang Perai Utara"  
+ [82] "Timur Laut"             "Beaufort"               "Beluran"               
+ [85] "Keningau"               "Kota Belud"             "Kota Kinabalu"         
+ [88] "Kota Kinabatangan"      "Kota Marudu"            "Kudat"                 
+ [91] "Kunak"                  "Lahad Datu"             "Papar"                 
+ [94] "Penampang"              "Ranau"                  "Sandakan"              
+ [97] "Semporna"               "Sipitang"               "Tawau"                 
+[100] "Tenom"                  "Tuaran"                 "W.P. Labuan"           
+[103] "Bau"                    "Belaga"                 "Betong"                
+[106] "Bintulu"                "Dalat"                  "Julau"                 
+[109] "Kanowit"                "Kapit"                  "Kota Samarahan"        
+[112] "Kuching"                "Lawas"                  "Limbang"               
+[115] "Lubok Antu"             "Lundu"                  "Marudi"                
+[118] "Matu Daro"              "Meradong"               "Miri"                  
+[121] "Mukah"                  "Padawan"                "Saratok"               
+[124] "Sarikei"                "Serian"                 "Sibu"                  
+[127] "Simunjan"               "Song"                   "Sri Aman"              
+[130] "Tatau"                  "Ampang Jaya"            "Gombak"                
+[133] "Hulu Selangor"          "Kajang"                 "Klang Selatan"         
+[136] "Klang Utara"            "Kuala Langat"           "Kuala Selangor"        
+[139] "Petaling Jaya"          "Sabak Bernam"           "Sepang"                
+[142] "Serdang"                "Sg. Buloh"              "Shah Alam"             
+[145] "Subang Jaya"            "Sungai Buloh"           "Besut"                 
+[148] "Dungun"                 "Hulu Terengganu"        "Kemaman"               
+[151] "Kuala Terengganu"       "Marang"                 "Setiu"                 
+[154] "Brickfields"            "Cheras"                 "Dang Wangi"            
+[157] "Sentul"                 "W.P. Putrajaya"         "Wangsa Maju"           </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(pop_data, <span class="st">"data/rds/pop_data.rds"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(crime_district, <span class="st">"data/rds/crime_district.rds"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(adm2_sf, <span class="st">"data/rds/adm2_sf.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>crime_district<span class="sc">$</span>district <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">trimws</span>(crime_district<span class="sc">$</span>district))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>adm2_sf<span class="sc">$</span>ADM2_EN <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">trimws</span>(adm2_sf<span class="sc">$</span>ADM2_EN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>new_sf<span class="ot">&lt;-</span> <span class="fu">left_join</span>(crime_district, adm2_sf, <span class="at">by=</span> <span class="fu">c</span>(<span class="st">"district"</span> <span class="ot">=</span> <span class="st">"ADM2_EN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>new_sf_na<span class="ot">&lt;-</span> new_sf[<span class="fu">rowSums</span>(<span class="fu">is.na</span>(new_sf)) <span class="sc">&gt;</span> <span class="dv">0</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
- 2  3  4  5  6  7  8  9 
- 5  9  7 21  4  3  5  1 
-5 least connected regions:
-3 5 7 9 47 with 2 links
-1 most connected region:
-8 with 9 links
 
-Weights style: B 
-Weights constants summary:
-   n   nn       S0       S1        S2
-B 55 3025 76267.65 58260785 522016004</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>shan.mst <span class="ot">&lt;-</span> <span class="fu">mstree</span>(shan.w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We are now ready to visualise our minimum spanning tree.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(<span class="fu">st_centroid</span>(shan_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: st_centroid assumes attributes are constant over geometries</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(shan_sf),</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="fu">gray</span>(.<span class="dv">5</span>))</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.mst</span>(shan.mst, pts, <span class="at">col=</span><span class="st">"blue"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">cex.lab =</span> <span class="fl">0.7</span>, </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">cex.circles =</span> <span class="fl">0.005</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Next, we will derive our clusters using the SKATER method by passing in our minimum spanning tree.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>skater.clust6 <span class="ot">&lt;-</span> <span class="fu">skater</span>(<span class="at">edges =</span> shan.mst[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>],</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> shan_ict,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">method =</span> <span class="st">"euclidean"</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ncuts =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We can now map out our clusters with their neighbourhood relationships on the map once again.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(shan_sf),</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">border=</span><span class="fu">gray</span>(.<span class="dv">5</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(skater.clust6, </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>     pts, </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>.<span class="dv">7</span>, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">groups.colors =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"brown"</span>, <span class="st">"blue"</span>, <span class="st">"pink"</span>),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.circles =</span> <span class="fl">0.005</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in segments(coords[id1, 1], coords[id1, 2], coords[id2, 1], coords[id2,
-: "add" is not a graphical parameter
-Warning in segments(coords[id1, 1], coords[id1, 2], coords[id2, 1], coords[id2,
-: "add" is not a graphical parameter
-Warning in segments(coords[id1, 1], coords[id1, 2], coords[id2, 1], coords[id2,
-: "add" is not a graphical parameter
-Warning in segments(coords[id1, 1], coords[id1, 2], coords[id2, 1], coords[id2,
-: "add" is not a graphical parameter</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We will further visualise our clusters on a choropleth map.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>groups_mat <span class="ot">=</span> <span class="fu">as.matrix</span>(skater.clust6<span class="sc">$</span>groups)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>shan_sf_spatialcluster <span class="ot">&lt;-</span> <span class="fu">cbind</span>(shan_sf_clusters, <span class="fu">as.factor</span>(groups_mat)) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">skater_CLUSTER</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">as.factor.groups_mat.</span><span class="st">`</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(shan_sf_spatialcluster, <span class="st">"skater_CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>SKATER approach to clustering is considered a hard clustering method as all classifications is based on the minimum spanning tree.</p>
-<p>ClustGeo, on the other hand, is considered a soft clustering method as it allows us to choose the proportion of the attribute and spatial constraints to be used.</p>
-</section>
-</section>
-<section id="spatially-constrained-clustering-method-using-clustgeo" class="level2">
-<h2 class="anchored" data-anchor-id="spatially-constrained-clustering-method-using-clustgeo">9.3 Spatially Constrained Clustering Method using ClustGeo</h2>
-<p>9.3.1 Calculating the distance matrix</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(shan_sf, shan_sf)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>distmat <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cr <span class="ot">&lt;-</span> <span class="fu">choicealpha</span>(proxmat, distmat, </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">range.alpha =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">K=</span><span class="dv">6</span>, <span class="at">graph =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We will need save the ClustGeo output</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>clust6 <span class="ot">&lt;-</span> <span class="fu">hclustgeo</span>(proxmat, distmat, <span class="at">alpha=</span><span class="fl">0.2</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cutree</span>(clust6, <span class="at">k=</span><span class="dv">6</span>))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>shan_sf_ClustGeo <span class="ot">&lt;-</span> <span class="fu">cbind</span>(shan_sf, </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">as.matrix</span>(groups)) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">clustGeo</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">as.matrix.groups.</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Finally, we can map our clusters on the map</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(shan_sf_ClustGeo, <span class="st">"clustGeo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="characterising-the-clusters" class="level4">
-<h4 class="anchored" data-anchor-id="characterising-the-clusters">9.3.1 Characterising the clusters</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggparcoord</span>(<span class="at">data =</span> shan_sf_ClustGeo,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">columns =</span> <span class="fu">c</span>(<span class="dv">17</span><span class="sc">:</span><span class="dv">20</span>),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">scale =</span> <span class="st">"globalminmax"</span>,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">alphaLines =</span> <span class="fl">0.2</span>,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">boxplot =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"Multiple Parallel Coordinates Plots od ICT Variables by Cluster"</span>) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> clustGeo) <span class="sc">+</span> </span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="In-class_Ex09_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-
-
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
