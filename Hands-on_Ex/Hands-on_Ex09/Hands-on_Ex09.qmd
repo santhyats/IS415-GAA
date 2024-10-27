@@ -52,7 +52,7 @@ The following are the R packages we will be using in this exercise.
     -   **tmap**
 
 ```{r}
-pacman::p_load(sf, tidyverse, tmap, corrplot, GWmodel, olsrr)
+pacman::p_load(sf, tidyverse, tmap, corrplot, GWmodel, olsrr, ggpubr, gtsummary, spdep)
 ```
 
 #### 9.3.2 Loading in the datasets to the R environment
@@ -185,11 +185,7 @@ ggarrange(AREA_SQM, AGE, PROX_CBD, PROX_CHILDCARE, PROX_ELDERLYCARE,
 
 #### 9.4.2 Statistical Point Map
 
-We will also look at the geospatial distribution of condominium resale prices in Singapore using functions of the **tmap** package. First, we will turn on the interactive mode of tmap.
-
-```{r}
-tmap_mode("view")
-```
+We will also look at the geospatial distribution of condominium resale prices in Singapore using functions of the **tmap** package.
 
 Next, we will create an interactive point symbol map.
 
@@ -201,13 +197,6 @@ tm_shape(condo_resale.sf) +
           alpha = 0.6,
           style="quantile") +
   tm_view(set.zoom.limits = c(11,14))
-```
-
-We will set the mode to plot before moving on.
-
-```{r}
-
-tmap_mode("plot")
 ```
 
 ## 9.5 Hedonic Pricing Modelling in R
@@ -302,7 +291,7 @@ summary(condo.mlr)
 In the code chunk below, the [`ols_vif_tol()`](https://olsrr.rsquaredacademy.com/reference/ols_coll_diag.html) of **olsrr** package is used to test if there are sign of multicollinearity.
 
 ```{r}
-ols_vif_tol(condo.mlr1)
+ols_vif_tol(condo.mlr)
 ```
 
 Since the VIF of the independent variables are less than 10. We can safely conclude that there are no sign of multicollinearity among the independent variables.
@@ -314,17 +303,17 @@ In multiple linear regression, it is important for us to test the assumption tha
 In the code chunk below, the [`ols_plot_resid_fit()`](https://olsrr.rsquaredacademy.com/reference/ols_plot_resid_fit.html) of **olsrr** package is used to perform linearity assumption test.
 
 ```{r}
-ols_plot_resid_fit(condo.mlr1)
+ols_plot_resid_fit(condo.mlr)
 ```
 
-The figure above reveals that most of the data poitns are scattered around the 0 line, hence we can safely conclude that the relationships between the dependent variable and independent variables are linear.
+The figure above reveals that most of the data points are scattered around the 0 line, hence we can safely conclude that the relationships between the dependent variable and independent variables are linear.
 
 ##### 9.5.2.3 Testing for Normality Assumption
 
 Lastly, the code chunk below uses [`ols_plot_resid_hist()`](https://olsrr.rsquaredacademy.com/reference/ols_plot_resid_hist.html) of *olsrr* package to perform normality assumption test.
 
 ```{r}
-ols_plot_resid_hist(condo.mlr1)
+ols_plot_resid_hist(condo.mlr)
 ```
 
 The figure reveals that the residual of the multiple linear regression model (i.e. condo.mlr1) is resemble normal distribution.
@@ -332,7 +321,7 @@ The figure reveals that the residual of the multiple linear regression model (i.
 If you prefer formal statistical test methods, the [`ols_test_normality()`](https://olsrr.rsquaredacademy.com/reference/ols_test_normality.html) of **olsrr** package can be used as shown in the code chunk below.
 
 ```{r}
-ols_test_normality(condo.mlr1)
+ols_test_normality(condo.mlr)
 ```
 
 The summary table above reveals that the p-values of the four tests are way smaller than the alpha value of 0.05. Hence we will reject the null hypothesis and infer that there is statistical evidence that the residual are not normally distributed.
@@ -346,15 +335,15 @@ In order to perform spatial autocorrelation test, we need to convert *condo_resa
 First, we will export the residual of the hedonic pricing model and save it as a data frame.
 
 ```{r}
-mlr.output <- as.data.frame(condo.mlr1$residuals)
+mlr.output <- as.data.frame(condo.mlr$residuals)
 ```
 
 Next, we will join the newly created data frame with *condo_resale.sf* object.
 
 ```{r}
 condo_resale.res.sf <- cbind(condo_resale.sf, 
-                        condo.mlr1$residuals) %>%
-rename(`MLR_RES` = `condo.mlr1.residuals`)
+                        condo.mlr$residuals) %>%
+rename(`MLR_RES` = `condo.mlr.residuals`)
 ```
 
 Next, we will convert *condo_resale.res.sf* from simple feature object into a SpatialPointsDataFrame because spdep package can only process sp conformed spatial data objects.
@@ -401,7 +390,7 @@ summary(nb_lw)
 Next, [`lm.morantest()`](https://r-spatial.github.io/spdep/reference/lm.morantest.html) of **spdep** package will be used to perform Moran’s I test for residual spatial autocorrelation
 
 ```{r}
-lm.morantest(condo.mlr1, nb_lw)
+lm.morantest(condo.mlr, nb_lw)
 ```
 
 The Global Moran’s I test for residual spatial autocorrelation shows that it’s p-value is less than 0.00000000000000022 which is less than the alpha value of 0.05. Hence, we will reject the null hypothesis that the residuals are randomly distributed.
@@ -432,4 +421,16 @@ In the code chunk below, [`tbl_regression()`](https://www.danieldsjoberg.com/gts
 
 ```{r}
 tbl_regression(condo.mlr1, intercept = TRUE)
+```
+
+With gtsummary package, model statistics can be included in the report by either appending them to the report table by using [`add_glance_table()`](https://www.danieldsjoberg.com/gtsummary/reference/add_glance.html) or adding as a table source note by using [`add_glance_source_note()`](https://www.danieldsjoberg.com/gtsummary/reference/add_glance.html) as shown in the code chunk below.\
+
+```{r}
+tbl_regression(condo.mlr1, 
+               intercept = TRUE) %>% 
+  add_glance_source_note(
+    label = list(sigma ~ "\U03C3"),
+    include = c(r.squared, adj.r.squared, 
+                AIC, statistic,
+                p.value, sigma))
 ```
