@@ -24,8 +24,7 @@ We will load in the necessary datasets:
 -   condo_resale_2015 in csv format (i.e. *condo_resale_2015.csv*) as `condo_resale`
 
 ```{r}
-condo_resale<- read_csv("data/aspatial/Condo_resale_20
-                        15.csv")
+condo_resale<- read_csv("data/aspatial/Condo_resale_2015.csv")
 mpsz <- st_read(dsn = 'data/geospatial', layer= 'MP14_SUBZONE_WEB_PL')
 
 ```
