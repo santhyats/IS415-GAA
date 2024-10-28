@@ -1,0 +1,10 @@
+---
+title: "In-class Exercise 10"
+author: "Santhya Selvan"
+date: "28 October 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
