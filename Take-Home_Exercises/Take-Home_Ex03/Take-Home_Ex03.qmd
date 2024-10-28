@@ -1,5 +1,5 @@
 ---
-title: "Take Home 3"
+title: "Prototyping Modules for Shiny App for the Geospatial Analytics Project"
 author: "Santhya Selvan"
 date: "23 October 2024"
 date-modified: "last-modified"
@@ -9,7 +9,29 @@ execute:
   freeze: true
 ---
 
-Loading in the packages
+## 10.0 Overview
+
+.....
+
+## 10.1 Getting Started
+
+#### 10.1.1 Loading in the packages
+
+For this exercise, I will be needing a variety of packages, namely:
+
+**sf**: Used in spatial data wrangling
+
+**tidyverse**: Used in data wrangling for non-spatial data
+
+**tmap**: For functions relating to mapping point patterns
+
+**sfdep:** Functions that support Exploratory Data Analysis and is compatible with the sf and tidyverse packages
+
+**corrplot:** package to help plot correlation matrices.
+
+**cluster, NbClust**: packges that will be helpful for our hierarchical clustering needs.
+
+**ggpubr, GGally:** packages extended on/ based on **ggplot2**. They provide functions for plots.
 
 ```{r}
 pacman::p_load(spdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally)
@@ -124,7 +146,8 @@ pop_data <- pop_data %>%
   mutate(district = ifelse(district == "sp tengah", "s.p. tengah", district)) %>% 
   mutate(district = ifelse(district == "sp utara", "s.p. utara", district)) %>% 
   mutate(district = ifelse(district == "sp selatan", "s.p.selatan", district)) %>%
-  mutate(district = ifelse(district == "cameron highland", "cameron highlands", district))
+  mutate(district = ifelse(state == "w.p. labuan", "sabah", state))
+   
   
 ```
 
@@ -143,33 +166,11 @@ pop_data <- pop_data %>%
 ```
 
 ```{r}
-write_rds(pop_data, "data/rds/pop_data.rds")
-write_rds(crime_district, "data/rds/crime_district.rds")
-write_rds(adm2_sf, "data/rds/adm2_sf.rds")
-```
-
-```{r}
 adm_crime <- left_join(adm2_sf, crime_district, by= c("ADM2_EN" = "district"))
 na_3 <- adm_crime[rowSums(is.na(adm_crime)) > 0,]
 drop_list <- na_3$ADM2_EN
 adm2_sf <- adm2_sf %>% 
   filter(!(ADM2_EN %in% drop_list))
-```
-
-```{r}
-# function to find closest matches using agrep
-find_closest_match <- function(district_name, comparison_list) {
-    # agrep returns the indices of approximate matches
-    match_index <- agrep(district_name, comparison_list, max.distance = 0.01, value = TRUE)
-    
-    # Return the first match if any, otherwise return NA
-    if (length(match_index) > 0) {
-        return(match_index[1])  # Take the first match if multiple are found
-    } else {return(NA)}
-}
-
-# execute
-sapply(unique(pop_data$district), find_closest_match, unique(crime_district$district)) %>% as.data.frame
 ```
 
 ```{r}
@@ -185,8 +186,38 @@ pop_data <- pop_data %>%
 ```
 
 ```{r}
+
+  
+rate_crime_district <- crime_district %>% 
+    left_join(pop_data, by = c("district", "state", "date")) %>% 
+    mutate(crime_rate = (crimes / population) * 1000)
+
+# assigning Penisular , East region
+rate_crime_district <- rate_crime_district %>% 
+    mutate(region = case_when(
+        state %in% c("Sabah", "Sarawak") ~ "East",
+        TRUE ~ "Peninsular"
+  ))
+```
+
+```{r}
+write_rds(pop_data, "data/rds/pop_data.rds")
+write_rds(crime_district, "data/rds/crime_district.rds")
+write_rds(adm2_sf, "data/rds/adm2_sf.rds")
+write_rds(rate_crime_district, "data/rds/rate_crime_district.rds")
+```
+
+```{r}
 pop_data<- read_rds("data/rds/pop_data.rds")
 crime_district <- read_rds("data/rds/crime_district.rds")
 adm2_sf <- read_rds("data/rds/adm2_sf.rds")
+rate_crime_district<-("data/rds/rate_crime_district.rds")
+
 
 ```
+
+-   if we doing hierarchical clusterin then we shouldnt be dividing by crime type
+
+-   if we splitting by districts, then we would need to repeat all three clustering methods for both east and west.
+
+-   

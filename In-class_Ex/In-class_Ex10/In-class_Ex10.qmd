@@ -8,3 +8,198 @@ execute:
   echo: true
   freeze: true
 ---
+
+## 10.0 Loading in Packages
+
+```{r}
+pacman::p_load(olsrr, ggstatsplot, sf, tmap, tidyverse, gtsummary, performance, see, sfdep)
+```
+
+## 10.2 Loading in the datasets
+
+We will load in the necessary datasets:
+
+-   URA Master Plan subzone boundary in shapefile format (i.e. *MP14_SUBZONE_WEB_PL*) as `mpsz`
+
+-   condo_resale_2015 in csv format (i.e. *condo_resale_2015.csv*) as `condo_resale`
+
+```{r}
+condo_resale<- read_csv("data/aspatial/Condo_resale_20
+                        15.csv")
+mpsz <- st_read(dsn = 'data/geospatial', layer= 'MP14_SUBZONE_WEB_PL')
+
+```
+
+## 10.3 Geographically Weighted Regression Model
+
+#### 10.3.1 Correlation Analysis
+
+```{r}
+ggcorrmat(condo_resale[, 5:23])
+```
+
+-   *ggcorrmat()* funcction takes in the datatable itself and does not need the datatable to be converted to a matrix, making it more flexible.
+
+-   unlike *corrplot()*, this plot also indicates the cases where the correlation is significant.
+
+#### 10.3.2 Calibrating Multiple Linear Regression
+
+```{r}
+condo.mlr <- lm(formula = SELLING_PRICE ~ AREA_SQM + AGE    + 
+                  PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
+                  PROX_URA_GROWTH_AREA + PROX_HAWKER_MARKET + PROX_KINDERGARTEN + 
+                  PROX_MRT  + PROX_PARK + PROX_PRIMARY_SCH + 
+                  PROX_TOP_PRIMARY_SCH + PROX_SHOPPING_MALL + PROX_SUPERMARKET + 
+                  PROX_BUS_STOP + NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD, 
+                data=condo_resale)
+summary(condo.mlr)
+
+```
+
+-   Create an lm object . Pass in the independent and dependent variables in the 'formula' attribute. Pass in the data in the 'data' attribute/.
+
+-   The first Variable is the dependent variable and everything after the curly brace are the independent variables
+
+-   The beta coefficients are the estimates
+
+-   Note that the data [needs]{.underline} to be a **dataframe.**
+
+-   Negative residual values indicate that the model is Overfitted/ Overestimated. The estimates y values based on the model is much higher than the observed y values.
+
+#### 10.3.3 Introducing the olsrr package
+
+olsrr helps us to beautify our regression model reports.
+
+```{r}
+ols_regress(condo.mlr)
+```
+
+-   We can either rewrite the entire formula in the function, or pass in the output from another regression object.
+
+-   First section provides the model summary, where we can see how the model performs. Next section provides the F statistics. Last section reflects the parameter estimates.
+
+#### 10.3.4 Variable Selection
+
+##### 10.3.4.1 Forward Stepwise
+
+```{r}
+condo_fw_mlr <- ols_step_forward_p(
+  condo.mlr,
+  p_val = 0.05,
+  details= FALSE)
+
+condo_fw_mlr
+```
+
+##### 10.3.4.2 Backward Step-wise
+
+```{r}
+condo_bw_mlr <- ols_step_backward_p(
+  condo.mlr,
+  p_val = 0.05,
+  details= FALSE)
+
+condo_bw_mlr
+```
+
+-   For backward step-wise, the algorithm starts with a full model and then eliminates one variable with each iteration.
+
+##### 10.3.4.3 Bi-directional Step-wise
+
+```{r}
+condo_bd_mlr <- ols_step_both_p(
+  condo.mlr,
+  p_val = 0.05,
+  details= FALSE)
+
+condo_bd_mlr
+```
+
+#### 10.3.5 Model Selection
+
+```{r}
+metric <- compare_performance(condo.mlr, 
+                              condo_fw_mlr$model,
+                              condo_bw_mlr$model,
+                              condo_bd_mlr$model)
+```
+
+-   This wrapper creates a datatable that compares the metrics of the input models.
+
+```{r}
+metric$Name <- gsub(".*\\\\([a-zA-Z0-9_]+)\\\\, \\\\model\\\\.*", "\\1", metric$Name)
+```
+
+-   The model name in the generated datatable is not ideal. Hence, we need to performs some text cleaning to tidy up the model names.
+
+We can now plot the metric to visualise the model performances better. Using *plot()* function of the **see** package will help us plot an appropriate plot based on the input.
+
+```{r}
+plot(metric)
+```
+
+-   The peaks indicate which measure the model performs better in
+
+##### 10.3.5.1 Visualising Model Parameters
+
+```{r}
+ggcoefstats(condo_bd_mlr$model, sort = 'ascending')
+
+```
+
+##### 10.3.5.2 Checking for Multicollinearity
+
+```{r}
+check_collinearity(condo_bd_mlr$model)
+```
+
+-   The *check_collinearity()* function helps to print out a report.
+
+```{r}
+multi_col_plot = check_collinearity(condo_bd_mlr$model)
+plot(multi_col_plot) + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) # to tidy xaxis
+```
+
+-   We can also pass in the report as an input to the plot() function to generate a visualisation of the collinearity between the variables.
+
+##### 10.3.5.3 Linearity assumption test
+
+```{r}
+out <- plot(check_model(condo_bd_mlr$model,
+                        panel = FALSE))
+
+out[[2]]
+```
+
+-   If the data points are seen to be aggregated towards the start like this, we can deduce that it conforms to the linearity assumption test.
+
+##### 10.3.5.4 Normality Assumption Test
+
+```{r}
+norm_check <- check_normality(condo_bd_mlr$model)
+plot(norm_check)
+```
+
+-   This function generates a QQ plot.
+
+-   If the data hovers around the 0 line, we will know that the data conforms to the normality assumption
+
+##### 10.3.5.5 Checking for outliers
+
+```{r}
+outliers<- check_outliers(condo_bd_mlr$model, method = 'cook')
+outliers
+```
+
+-   The *check_outliers()* function returns a statement to indicate the presence of outliers.
+
+We can also plot this output using the *plot()* function of the **see** package to visualise the outliers more effectlively.
+
+```{r}
+plot(outliers)
+```
+
+##### 10.3.5.6 Spatial Non- Stationary Assumption
+
+-   This is to check for spatial autocorrelation.
