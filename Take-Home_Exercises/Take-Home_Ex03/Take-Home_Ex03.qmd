@@ -572,7 +572,7 @@ rate_crime_data<- rate_crime_data %>%
   select(-c(2))
 
 rate_crime_data.std <- normalize(rate_crime_data)
-summary(rate_crime_data.std)
+
 ```
 
 Using *dist()* function of the **stats** package, I derived the proximity matrix.
@@ -582,7 +582,7 @@ Using *dist()* function of the **stats** package, I derived the proximity matrix
 rate_crime_data_numeric <- rate_crime_data %>% select(where(is.numeric))
 rate_crime_data_numeric <- rate_crime_data_numeric %>% drop_na() 
 proxmat <- dist(rate_crime_data_numeric, method = 'euclidean')
-proxmat
+
 ```
 
 Next, I used *hclust()*, also from the **stats** package to derive the dendrogram. *rect.hclust()* was also used to highlight the clusters.
