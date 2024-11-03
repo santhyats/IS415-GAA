@@ -1,97 +1,133 @@
-pacman::p_load(shiny, sf, tmap, bslib, tidyverse,
-               sfdep, shinydashboard, shinythemes)
-
-hunan <- st_read(dsn = "data/geospatial", 
-                layer = "Hunan")
-data <- read_csv("data/aspatial/Hunan_2012.csv")
-hunan_profile <- left_join(hunan, data,
-                        by = c("County" = "County"))
+pacman::p_load(spdep, sfdep, tmap, sf, ClustGeo, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, GGally, shiny, shinythemes, gt)
+pop_data<- read_rds("data/rds/pop_data.rds")
+crime_district <- read_rds("data/rds/crime_district.rds")
+adm2_sf <- read_rds("data/rds/adm2_sf.rds")
+rate_crime_district<-read_rds("data/rds/rate_crime_district.rds")
+crime_boundary<-read_rds("data/rds/crime_boundary.rds")
+crime_boundary_west<- crime_boundary %>% 
+  ungroup() %>% 
+  filter(region == "Peninsular")
+crime_boundary_west <- st_as_sf(crime_boundary_west)
+rate_crime_district_bound <- read_rds("data/rds/rate_crime_district_bounds.rds")
 
 #========================#
 ###### Shiny UI ######
-#========================#  
+#========================#
 
-
-ui <- navbarPage( ##provides a navigation bar at the top of the page##
-  title = "GLSA Application",
+ui <- navbarPage(
+  title =  "CrimeRojak",
   fluid = TRUE,
-  theme=shinytheme("flatly"), ## you can change the theme/appearance of your webpage##
+  theme = shinytheme("united"),
   id = "navbarID",
-  tabPanel("GeoVisualisation",
+  tabPanel("Home"),
+  tabPanel("Exploratory Data Analysis",
+           
+           
            sidebarLayout(
+             
+             
              sidebarPanel(
-               selectInput(inputId = "variable",
-                           label = "Mapping variable",
-                           choices = list("Gross Domestic Product, GDP" = "GDP",
-                                          "Gross Domestic Product Per Capita" = "GDPPC",
-                                          "Gross Industry Output" = "GIO",
-                                          "Output Value of Agriculture" = "OVA",
-                                          "Output Value of Service" = "OVS"),
-                           selected = "GDPPC"),
+               
+               
+               selectInput(inputId = "type",
+                           label = "Crime-type",
+                           choices = list("Causing Injury" = "causing_injury",
+                                          "Murder" = "murder",
+                                          "Rape" = "rape",
+                                          "Armed Gang Robber" = "robbery_gang_armed",
+                                          "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                          "Armed Solo Robbery" = "robbery_solo_armed",
+                                          "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                           selected = "causing_injury"),
+               
+               
                selectInput(inputId = "classification",
-                           label = "Classification method:",
+                           label = "Classification Method",
                            choices = list("sd" = "sd", 
-                                          "equal" = "equal", 
-                                          "pretty" = "pretty", 
-                                          "quantile" = "quantile", 
-                                          "kmeans" = "kmeans", 
-                                          "hclust" = "hclust", 
-                                          "bclust" = "bclust", 
-                                          "fisher" = "fisher", 
-                                          "jenks" = "jenks"),
+                                          "Equal" = "equal", 
+                                          "Pretty" = "pretty", 
+                                          "Quantile" = "quantile", 
+                                          "K-means" = "kmeans", 
+                                          "Hclust" = "hclust", 
+                                          "Bclust" = "bclust", 
+                                          "Fisher" = "fisher", 
+                                          "Jenks" = "jenks"),
                            selected = "pretty"),
+               
+               
                sliderInput(inputId = "classes",
                            label = "Number of classes",
                            min = 5,
                            max = 10,
                            value = c(6)),
+               
+               
                selectInput(inputId = "colour",
                            label = "Colour scheme:",
-                           choices = list("blues" = "Blues", 
-                                          "reds" = "Reds", 
-                                          "greens" = "Greens",
+                           choices = list("Blues" = "Blues", 
+                                          "Reds" = "Reds", 
+                                          "Greens" = "Greens",
                                           "Yellow-Orange-Red" = "YlOrRd",
                                           "Yellow-Orange-Brown" = "YlOrBr",
                                           "Yellow-Green" = "YlGn",
-                                          "Orange-Red" = "OrRd"),
-                           selected = "YlOrRd"),
+                                          "Orange-Red" = "OrRd",
+                                          "Purples" = "Purples"),
+                           selected = "Purples"),
+               
+               
                sliderInput(inputId = "opacity",
                            label = "Level of transparency",
                            min = 0,
                            max = 1,
-                           value = c(0.5))
-               ),
+                           value = c(0.5))),
+             
+             
              mainPanel(
-               tmapOutput("mapPlot",
-                          width = "100%", 
-                          height = 580)
-               )
-             )
-           ),
-  navbarMenu("Global Measures",
-             tabPanel("Moran's I"), #use this to create the drop-down list within each navbar menu item
-             tabPanel("Geary's c"),
-             tabPanel("Getis-Ord Global G")
-             ),
-  navbarMenu("Local Measures",
-             tabPanel("Local Moran",
+               tmapOutput("edaPlot",
+                          width = "100%",
+                          height = 580))
+             
+             )),
+  
+  
+  navbarMenu("Exploratory Spatial Data Analysis",
+             tabPanel("Global Measures",
+                      
                       sidebarLayout(
+                        
+                        
                         sidebarPanel(
-                          selectInput(inputId = "variable",
-                                      label = "Mapping variable",
-                                      choices = list("Gross Domestic Product, GDP" = "GDP",
-                                                     "Gross Domestic Product Per Capita" = "GDPPC",
-                                                     "Gross Industry Output" = "GIO",
-                                                     "Output Value of Agriculture" = "OVA",
-                                                     "Output Value of Service" = "OVS"),
-                                      selected = "GDPPC"),
+                          
+                          
+                          selectInput(inputId = "year1",
+                                      label = "Year",
+                                      choices = list("2020" = "2020",
+                                                     "2021" = "2021",
+                                                     "2022" = "2022",
+                                                     "2023" = "2023"),
+                                      selected = "2020"),
+                          
+                          
+                          selectInput(inputId = "type2",
+                                      label = "Crime-type",
+                                      choices = list("Causing Injury" = "causing_injury",
+                                                     "Murder" = "murder",
+                                                     "Rape" = "rape",
+                                                     "Armed Gang Robber" = "robbery_gang_armed",
+                                                     "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                                     "Armed Solo Robbery" = "robbery_solo_armed",
+                                                     "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                                      selected = "causing_injury"),
+                          
                           radioButtons(inputId = "Contiguity1",
                                        label = "Contiguity Method",
                                        choices = c("Queen" = TRUE, 
                                                    "Rook" = FALSE),
                                        selected = "TRUE",
                                        inline = TRUE),
-                          selectInput("MoranWeights", "Spatial Weights Style",
+                          
+                          
+                          selectInput("MoranWeights","Spatial Weights Style",
                                       choices = c("W: Row standardised" = "W",
                                                   "B: Binary" = "B",
                                                   "C: Globally standardised" = "C",
@@ -99,61 +135,277 @@ ui <- navbarPage( ##provides a navigation bar at the top of the page##
                                                   "minmax" = "minmax",
                                                   "S: Variance" = "S"),
                                       selected = "W"),
+                          
+                        
+                          
+                          
+                          actionButton("GMoranTable", "Generate Statistics"),
+                          hr()
+                          
+                        ),
+                        
+                        
+                        mainPanel(
+                          gt_output("GMoranResult")
+                        )
+                      )),
+             
+             
+             tabPanel("Local Measures",
+                      sidebarLayout(
+                        sidebarPanel(
+                          
+                          selectInput(inputId = "year2",
+                                      label = "Year",
+                                      choices = list("2020" = "2020",
+                                                     "2021" = "2021",
+                                                     "2022" = "2022",
+                                                     "2023" = "2023"),
+                                      selected = "2020"),
+                          
+                          
+                          selectInput(inputId = "type3",
+                                      label = "Crime Type",
+                                      choices = list("Causing Injury" = "causing_injury",
+                                                     "Murder" = "murder",
+                                                     "Rape" = "rape",
+                                                     "Armed Gang Robber" = "robbery_gang_armed",
+                                                     "Unarmed Gang Robbery" = "robbery_gang_unarmed",
+                                                     "Armed Solo Robbery" = "robbery_solo_armed",
+                                                     "Unarmed Solo Robbery" = "robbery_solo_unarmed"),
+                                      selected = "Causing Injury"),
+                          
+                          
+                          radioButtons(inputId = "Contiguity2",
+                                       label = "Contiguity Method",
+                                       choices = c("Queen" = TRUE, 
+                                                   "Rook" = FALSE),
+                                       selected = "TRUE",
+                                       inline = TRUE),
+                          
+                          
+                          selectInput("MoranWeights1", "Spatial Weights Style",
+                                      choices = c("W: Row standardised" = "W",
+                                                  "B: Binary" = "B",
+                                                  "C: Globally standardised" = "C",
+                                                  "U: C / no of neighbours" = "U",
+                                                  "minmax" = "minmax",
+                                                  "S: Variance" = "S"),
+                                      selected = "W"),
+                          
+                          
                           sliderInput(inputId = "MoranSims", 
                                       label = "Number of Simulations:", 
                                       min = 99, max = 499,
                                       value = 99, step = 100),
+                          
+                          
                           actionButton("MoranUpdate", "Update Plot"),
                           hr(),
-                          radioButtons(inputId = "MoranConf",
+                          
+                          
+                          radioButtons(inputId = "MoranConf1",
                                        label = "Select Confidence level",
                                        choices = c("0.95" = 0.05, #use the alpha level in the back-end since that's what we use during calculations
                                                    "0.99" = 0.01),
                                        selected = 0.05,
                                        inline = TRUE),
+                          
+                          
                           selectInput("LisaClass", "Select Lisa Classification",
                                       choices = c("mean" = "mean",
                                                   "median" = "median",
                                                   "pysal" = "pysal"),
                                       selected = "mean"),
+                          
+                          
                           selectInput("localmoranstats", "Select Local Moran's Stat:",
-                                      choices = c("local moran(ii)" = "local moran(ii)",
-                                                  "expectation(eii)" = "expectation(eii)",
-                                                  "variance(var_ii)" = "variance(var_ii)",
-                                                  "std deviation(z_ii)" = "std deviation(z_ii)",
+                                      choices = c("local moran" = "local moran(ii)",
+                                                  "expectation" = "expectation (eii)",
+                                                  "variance" = "variance(var_ii)",
+                                                  "std deviation" = "std deviation(z_ii)",
                                                   "P-value" = "p_value"),
-                                      selected = "local moran(ii)")
+                                      selected = "local moran")
                         ),
-                        mainPanel( #need to have a mainpanel each time you have a sidebar layout, which you need under every tabpanel. 
+                        
+                        
+                        mainPanel(
                           fluidRow(
                             column(6, tmapOutput("LocalMoranMap")),
                             column(6, tmapOutput("LISA"))
                           )
                         )
+                        
+                        
                       )
-                      ),
-             tabPanel("Local Gi")
-             ),
-  navbarMenu("Emerging Hot Spot Analysis")
-)
+             )),
+  
+  
+  navbarMenu("Clustering Analysis",
+             
+             tabPanel("Hierarchical Clustering",
+                      
+                      sidebarLayout(
+                        
+                        
+                        sidebarPanel(
+                          
+                          
+                          selectInput(inputId = "year3",
+                                      label = "Year",
+                                      choices = list("2020" = "2020",
+                                                     "2021" = "2021",
+                                                     "2022" = "2022",
+                                                     "2023" = "2023"),
+                                      selected = "2020"),
+                          
+                        
+                          
+                          selectInput(inputId = "proxMethod",
+                                      label = "Proximity Method",
+                                      choices = list("Euclidean" = "euclidean",
+                                                     "Maximum" = "maximum",
+                                                     "Manhattan" = "manhattan",
+                                                     "Canberra" = "canberra",
+                                                     "Binary" = "binary",
+                                                     "Minkowski" = "minkowski"),
+                                      selected = "euclidean"),
+                          
+                          selectInput(inputId = "hclustMethod",
+                                      label = "Hclust Method",
+                                      choices = list(
+                                        "Ward's Minimum Variance (ward.D)" = "ward.D",
+                                        "Ward's Minimum Variance (ward.D2)" = "ward.D2",
+                                        "Single Linkage (single)" = "single",
+                                        "Complete Linkage (complete)" = "complete",
+                                        "Average Linkage (average)" = "average",
+                                        "McQuitty's Method (mcquitty)" = "mcquitty",
+                                        "Median Linkage (median)" = "median",
+                                        "Centroid Linkage (centroid)" = "centroid"
+                                      ),
+                                      selected = "ward.D"),
+                          
+                          sliderInput(inputId = "optimalClust", 
+                                      label = "Number of Clusters", 
+                                      min = 3, max = 15,
+                                      value = 6, step = 1),
+                        
+                          
+                          actionButton("Hclust", "Generate Dendrogram"),
+                          hr(),
+                          
+                          actionButton("HeatMap", "Generate Heatmap"),
+                          hr()
+                          
+                        ),
+                        
+                        
+                        mainPanel(
+                          
+                          fluidRow(
+                            column(12, plotOutput("HclustPlot")),
+                            column(12, plotlyOutput("Heatmaply")))
+                        )
+    
+                        
+                      )),
+  
+             tabPanel("ClustGeo"),
+             tabPanel("SKATER")))
+
+
+
 
 #========================#
 ###### Shiny Server ######
 #========================# 
 
 server <- function(input, output){
-    output$mapPlot <- renderTmap({
-      tmap_options(check.and.fix = TRUE) +
-        tm_shape(hunan_profile)+
-        tm_fill(input$variable,
-                n = input$classes,
-                style = input$classification,
-                palette = input$colour,
-                alpha = input$opacity) +
-        tm_borders(lwd = 0.1,  alpha = 1) +
-        tm_view(set.zoom.limits = c(6.5, 8)
-                )
+  
+  output$edaPlot <-renderTmap({
+    tmap_options(check.and.fix = TRUE) 
+    crime_data<- crime_boundary_west %>%  filter(type == input$type)
+      tm_shape(crime_data)+
+      tm_polygons("crimes",
+              n = input$classes,
+              style = input$classification,
+              palette = input$colour,
+              alpha = input$opacity) +
+      tm_borders(lwd = 0.1,  alpha = 1) +
+      tm_view(set.zoom.limits = c(6.5, 8)
+      )})
+  
+  
+  
+  #========================#
+  ###### Global Moran I ######
+  #========================# 
+    
+    moran_results <- eventReactive(input$GMoranTable, {
+      
+      print("Button clicked, generating Moran's I results...")
+      
+      crime_data <- crime_boundary_west %>%
+        filter((year(ymd(date.x))) == input$year1 & type == input$type2) 
+      
+      nb <- crime_data %>% 
+        st_contiguity(crime_data$geometry,queen =input$Contiguity1)
+      
+      nb[17]<- as.integer(19) #handle case for langkawi, which is not connected to the others by admin boundary
+      
+      crime_data_wm <- crime_data %>% 
+        mutate(nb = nb, .before = 1) %>% 
+        mutate(wt = st_weights(nb, style = input$MoranWeights), 
+               .before = 1)
+      
+      global_moran <- global_moran_test(crime_data_wm$crimes, 
+                                        crime_data_wm$nb,
+                                        crime_data_wm$wt)
+      
+      data.frame(
+        Statistic = "Global Moran's I",
+        Moran_I = global_moran$estimate[1],        
+        Expectation = global_moran$estimate[2],    
+        Variance = global_moran$estimate[3],       
+        P_value = global_moran$p.value                   
+      )
+      
     })
+
+    output$GMoranResult <- render_gt({
+      
+      req(moran_results())
+      
+      moran_results() %>%
+        gt() %>%
+        
+        
+        tab_header(
+          title = "Global Moran's I Test Results",
+          subtitle = "Spatial Autocorrelation Analysis"
+        ) %>%
+        
+        fmt_number(
+          columns = c(Moran_I, Expectation, Variance, P_value),
+          decimals = 4
+        ) %>%
+        
+        
+        cols_label(
+          Statistic = "Statistic",
+          Moran_I = "Moran's I",
+          Expectation = "Expected Value",
+          Variance = "Variance",
+          P_value = "P-value"
+        ) %>%
+        
+        
+        tab_source_note(
+          source_note = "Results generated using global_moran_test() function"
+        )
+      
+        })
+    
     
     #==========================================================
     # Local Measures of Spatial AutoCorrelation
@@ -161,54 +413,52 @@ server <- function(input, output){
     
     localMIResults <- eventReactive(input$MoranUpdate,{
       
-      if(nrow(hunan_profile) == 0) return(NULL)  # Exit if no data
+      crime_data <- crime_boundary_west %>% 
+        filter((year(ymd(date.x))) == input$year2 & type == input$type3) 
       
-      # Computing Contiguity Spatial Weights
-      wm_q <- hunan_profile %>%
-        mutate(nb = st_contiguity(geometry, 
-                                  queen = !!input$Contiguity1),#!! for when the input needs to be in vector /matrices
-               wt = st_weights(nb,
-                               style = input$MoranWeights))
-
+      nb<- crime_data %>% 
+        st_contiguity(crime_data$geometry, queen = input$Contiguity2)
+      
+      nb[17]<- as.integer(19) #handle case for langkawi, which is not connected to the others by admin boundary
+      
+      crime_data_wm <- crime_data %>% 
+        mutate(nb = nb, .before = 1) %>% 
+        mutate(wt = st_weights(nb, style = input$MoranWeights1), 
+               .before = 1) %>% 
+        select(1,2)
+    
+      
       # Computing Local Moran's I
-
-      lisa <- wm_q %>%
-        mutate(local_moran = local_moran(
-          hunan_profile$GDPPC, nb, wt, 
-          nsim = as.numeric(input$MoranSims)),
-          .before = 5) %>%
+      lisa <- crime_data %>%
+        mutate(local_moran = local_moran(crime_data$crimes, crime_data_wm$nb, crime_data_wm$wt, nsim = input$MoranSims), .before = 1) %>%
         unnest(local_moran)
-
+      
       lisa <- lisa %>%
-        rename("local moran(ii)" = "ii", "expectation(eii)" = "eii",
+        rename("local moran(ii)" = "ii", "expectation (eii)" = "eii",
                "variance(var_ii)" = "var_ii", "std deviation(z_ii)" = "z_ii",
                "p_value" = "p_ii")
       
-      return(lisa)       
+      return(lisa) 
+      
     })
     
-    #==========================================================
-    # Render output maps
-    #==========================================================
-    
-    #Render local Moran I statistics
     output$LocalMoranMap <- renderTmap({
       df <- localMIResults()
       
       if(is.null(df) || nrow(df) == 0) return()  # Exit if no data
       
       # Map creation using tmap
-      localMI_map <- tm_shape(df) +
-        tm_fill(col = input$localmoranstats, 
-                style = "pretty", 
-                palette = "RdBu", 
-                title = input$localmoranstats) +
-        tm_borders() +
-        tm_view(set.zoom.limits = c(6, 7))
+      localMI_map <- tmap_mode("plot") +
+        tm_shape(df) + 
+        tm_fill(input$localmoranstats) +
+        tm_borders(alpha = 0.5) + 
+        tm_view(set.zoom.limits = c(6,8)) +
+        tm_layout(main.title = input$year2,
+                  main.title.size= 1)
       
-      localMI_map 
     })
-
+    
+    
     #Render LISA map 
     output$LISA <- renderTmap({
       df <- localMIResults()
@@ -216,22 +466,198 @@ server <- function(input, output){
       
       
       lisa_sig <- df  %>%
-        filter(p_value < as.numeric(input$MoranConf))  
+        filter(p_value < as.numeric(input$MoranConf1))  
       
-      lisamap <- tm_shape(df) +
+      lisamap <- tmap_mode("plot")
+      
+      tm_shape(df) + 
         tm_polygons() +
-        tm_borders() +
+        tm_borders(alpha = 0.5) +
         
         tm_shape(lisa_sig) +
-        tm_fill(col = input$LisaClass,  
-                palette = "-RdBu",  
-                title = (paste("Significance:", input$LisaClass))) +
-        tm_borders(alpha = 0.4) +
-        tm_view(set.zoom.limits = c(6, 7))
-
-      lisamap 
+        tm_fill(col = input$LisaClass,
+                palette = "-RdBu") +
+        tm_borders(alpha = 0.4)
+      
     })
-}
+    
+    
 
-shinyApp (ui=ui, server=server)
 
+#========================#
+##### Render Hclust ######
+#========================#
+
+dendogram <- eventReactive(input$Hclust,{
+  
+  ci <- rate_crime_district_bound %>% 
+    filter(type == "causing_injury") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`causing_injury`= `crime_rate`)
+  
+  mr <- rate_crime_district_bound %>% 
+    filter(type == "murder") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`murder`= `crime_rate`)
+  
+  rp <- rate_crime_district_bound %>% 
+    filter(type == "rape") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`rape`= `crime_rate`)
+  
+  rga <- rate_crime_district_bound %>% 
+    filter(type == "robbery_gang_armed") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`robbery_gang_armed`= `crime_rate`)
+  
+  rgu <- rate_crime_district_bound %>% 
+    filter(type == "robbery_gang_unarmed") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`robbery_gang_unarmed`= `crime_rate`)
+  
+  rsa <- rate_crime_district_bound %>% 
+    filter(type == "robbery_solo_armed") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`robbery_solo_armed`= `crime_rate`)
+  
+  rsu <- rate_crime_district_bound %>% 
+    filter(type == "robbery_solo_unarmed") %>% 
+    select(-c(3, 5:7, 11)) %>% 
+    rename(`robbery_solo_unarmed`= `crime_rate`)
+  
+  
+  rate_crime_prep <- ci%>% 
+    mutate(murder = mr$murder, .before = 5) %>% 
+    mutate(rape = rp$rape, .before = 6) %>% 
+    mutate(robbery_gang_armed = rga$robbery_gang_armed, .before = 7) %>% 
+    mutate(robbery_gang_unarmed = rgu$robbery_gang_unarmed, .before = 8) %>% 
+    mutate(robbery_solo_armed = rsa$robbery_solo_armed, .before = 9) %>% 
+    mutate(robbery_solo_unarmed = rsu$robbery_solo_unarmed, .before = 10)
+  
+  
+  rate_crime_data <- rate_crime_prep %>% 
+    filter(year(ymd(date.x)) == input$year3)
+  
+  rate_crime_data <- as.data.frame(rate_crime_data)
+  row.names(rate_crime_data) <- rate_crime_data$district 
+  
+  rate_crime_data<- rate_crime_data %>% 
+    select(-c(2))
+  
+  rate_crime_data.std <- normalize(rate_crime_data)
+  rate_crime_data.std <- rate_crime_data.std %>%  drop_na()
+  
+  rate_crime_data_numeric <- rate_crime_data %>% select(where(is.numeric))
+  rate_crime_data_numeric <- rate_crime_data_numeric %>% drop_na() 
+  proxmat <- dist(rate_crime_data_numeric, method = input$proxMethod)
+  
+  return(proxmat)
+  
+})
+    
+    
+  output$HclustPlot <- renderPlot({
+    
+    prox <- dendogram()
+    
+    hclust_ward <- hclust(prox, method = input$hclustMethod)
+    plot(hclust_ward, cex = 0.7)
+    rect.hclust(hclust_ward, 
+                k = input$optimalClust, 
+                border = 2:5)
+    
+  })
+  
+  
+  heatmap<-eventReactive(input$HeatMap,{
+    
+    ci <- rate_crime_district_bound %>% 
+      filter(type == "causing_injury") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`causing_injury`= `crime_rate`)
+    
+    mr <- rate_crime_district_bound %>% 
+      filter(type == "murder") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`murder`= `crime_rate`)
+    
+    rp <- rate_crime_district_bound %>% 
+      filter(type == "rape") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`rape`= `crime_rate`)
+    
+    rga <- rate_crime_district_bound %>% 
+      filter(type == "robbery_gang_armed") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`robbery_gang_armed`= `crime_rate`)
+    
+    rgu <- rate_crime_district_bound %>% 
+      filter(type == "robbery_gang_unarmed") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`robbery_gang_unarmed`= `crime_rate`)
+    
+    rsa <- rate_crime_district_bound %>% 
+      filter(type == "robbery_solo_armed") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`robbery_solo_armed`= `crime_rate`)
+    
+    rsu <- rate_crime_district_bound %>% 
+      filter(type == "robbery_solo_unarmed") %>% 
+      select(-c(3, 5:7, 11)) %>% 
+      rename(`robbery_solo_unarmed`= `crime_rate`)
+    
+    
+    rate_crime_prep <- ci%>% 
+      mutate(murder = mr$murder, .before = 5) %>% 
+      mutate(rape = rp$rape, .before = 6) %>% 
+      mutate(robbery_gang_armed = rga$robbery_gang_armed, .before = 7) %>% 
+      mutate(robbery_gang_unarmed = rgu$robbery_gang_unarmed, .before = 8) %>% 
+      mutate(robbery_solo_armed = rsa$robbery_solo_armed, .before = 9) %>% 
+      mutate(robbery_solo_unarmed = rsu$robbery_solo_unarmed, .before = 10)
+    
+    
+    rate_crime_data <- rate_crime_prep %>% 
+      filter(year(ymd(date.x)) == input$year3)
+    
+    rate_crime_data <- as.data.frame(rate_crime_data)
+    row.names(rate_crime_data) <- rate_crime_data$district 
+    
+    rate_crime_data<- rate_crime_data %>% 
+      select(-c(2))
+    
+    rate_crime_data.std <- normalize(rate_crime_data)
+    rate_crime_data.std <- rate_crime_data.std %>%  drop_na()
+   
+    
+    return(rate_crime_data.std)
+    
+  })
+  
+  output$Heatmaply<- renderPlotly({
+    
+    data <- heatmap()
+    heatmaply(data,
+              Colv=NA,
+              dist_method = input$proxMethod,
+              hclust_method = input$hclustMethod,
+              seriate = "OLO",
+              colors = Purples,
+              k_row = input$optimalClust,
+              margins = c(NA,200,60,NA),
+              fontsize_row = 4,
+              fontsize_col = 5,
+              main="Geographic Segmentation of Malaysia by Crime Type",
+              xlab = "Crime Type",
+              ylab = "Districts"
+              
+    )
+  })
+  
+                           
+                           
+    }
+#========================#
+##### Render output ######
+#========================#
+
+shinyApp(ui= ui, server = server)
