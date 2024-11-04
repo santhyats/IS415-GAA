@@ -9,9 +9,13 @@ execute:
   freeze: true
 ---
 
+## 11.0 Getting Started
+
 ```{r}
 pacman::p_load(tidyverse, sf, tmap, httr, performance)
 ```
+
+## 11.1 Data Wrangling
 
 ```{r}
 folder_path <- "data/aspatial"
@@ -28,4 +32,82 @@ condo_resale <- realis_data %>%
   mutate(`Sale Date` = dmy(`Sale Date`)) %>% 
   filter(`Type of Sale` == "Resale" &
            `Property Type` == "Condominium")
+```
+
+```{r}
+url <- "https://onemap.gov.sg/api/common/elastic/search"
+found <- data.frame()
+not_found <- data.frame()
+postcode <- unique(condo_resale$'Postal Code')
+
+for(postcode in postcode){
+  query <- list('searchVal' = postcode,
+                'returnGeom' = 'Y',
+                'getAddrDetails' = 'Y', 
+                'pageNum' = '1')
+  
+  res <- GET(url, query = query)
+  if((content(res)$found)!= 0){
+    found<- rbind(found, data.frame(content(res))[4:13])
+  } else{not_found <- data.frame(postcode)}
+}
+```
+
+```{r}
+found <- found %>% 
+  select(c(6:8)) %>% 
+  rename(POSTAL = `results.POSTAL`,
+         XCOORD = `results.X`,
+         YCOORD = `results.Y`)
+```
+
+```{r}
+condo_resale_geocoded <- left_join(
+  
+  condo_resale, found, by = c('Postal Code' = 'POSTAL')
+)
+
+```
+
+```{r}
+#always need to start from the X-coord first and then the y-coord
+
+condo_resale_sf <- st_as_sf(condo_resale_geocoded, 
+                             coords = c("XCOORD", "YCOORD"),
+                             crs = 3414)
+```
+
+```{r}
+overlapping_points <- condo_resale_sf %>% 
+  mutate(overlap = lengths(st_equals(., .)) > 1)
+```
+
+```{r}
+condo_resale_sf <- condo_resale_sf %>% 
+  st_jitter(amount = 2)
+```
+
+## Take - Home 2:
+
+-   Convert the multipolygons to single polygons
+
+-   Choose the polygon with the largest area to represent the province
+
+```{r}
+#| eval: false
+sf_polygon <- province_sf %>% 
+  st_cast("POLYGON") %>% 
+  mutate(area = st_area(.))
+
+```
+
+```{r}
+#| eval: false
+#| 
+provinced_cleaned <- sf_polygon %>% 
+    group_by(ADM1_EN) %>% 
+    filter(area == max(area)) %>% 
+    ungroup() %>% 
+    select(-area) %>% 
+    select(ADM1_EN)
 ```
