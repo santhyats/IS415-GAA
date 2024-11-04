@@ -1,0 +1,14 @@
+---
+title: "In-class Exercise 11"
+author: "Santhya Selvan"
+date: "4 November 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  freeze: true
+---
+
+```{r}
+pacman::p_load(tidyverse, sf, tmap, httr, performance)
+```
