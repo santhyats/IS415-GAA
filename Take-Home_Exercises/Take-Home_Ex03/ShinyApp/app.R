@@ -136,6 +136,7 @@ ui <- navbarPage(
                                                   "S: Variance" = "S"),
                                       selected = "W"),
                           
+<<<<<<< HEAD
                           radioButtons(inputId = "GMoranConfi",
                                        label = "Select Confidence level",
                                        choices = c("0.95" = 0.05, #use the alpha level in the back-end since that's what we use during calculations
@@ -144,6 +145,8 @@ ui <- navbarPage(
                                        selected = 0.05,
                                        inline = TRUE),
                           
+=======
+>>>>>>> 28367036551d87f0dea82b4763df3bca029032f4
                         
                           
                           
@@ -385,7 +388,6 @@ server <- function(input, output){
       
       req(moran_results())
       
-      
       source_note <- "<center>Results generated using global_moran_test() function</center>"
       
      
@@ -429,7 +431,7 @@ server <- function(input, output){
       # Render the gt table
       moran_results() %>%
         gt() %>%
-        
+  
         tab_header(
           title = "Global Moran's I Test Results",
           subtitle = "Spatial Autocorrelation Analysis"
@@ -439,7 +441,7 @@ server <- function(input, output){
           columns = c(Moran_I, Expectation, Variance, P_value),
           decimals = 4
         ) %>%
-        
+  
         cols_label(
           Statistic = "Statistic",
           Moran_I = "Moran's I",
@@ -448,13 +450,16 @@ server <- function(input, output){
           P_value = "P-value"
         ) %>%
         
+        
         # Pass the centered and spaced source note
         tab_source_note(
           md(source_note) # `md()` treats text as Markdown to render HTML
         )
-    })
-    
- 
+        
+       
+      
+        })
+
     
     
     #==========================================================

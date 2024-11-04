@@ -12,3 +12,20 @@ execute:
 ```{r}
 pacman::p_load(tidyverse, sf, tmap, httr, performance)
 ```
+
+```{r}
+folder_path <- "data/aspatial"
+file_list <- list.files(path = folder_path,
+                        pattern = "^realis.*\\.csv$",
+                        full.names = TRUE)
+
+realis_data <- file_list %>% 
+  map_dfr(read_csv)
+```
+
+```{r}
+condo_resale <- realis_data %>% 
+  mutate(`Sale Date` = dmy(`Sale Date`)) %>% 
+  filter(`Type of Sale` == "Resale" &
+           `Property Type` == "Condominium")
+```
