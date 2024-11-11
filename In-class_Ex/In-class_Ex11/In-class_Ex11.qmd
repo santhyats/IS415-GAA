@@ -95,6 +95,11 @@ condo_resale_sf <- condo_resale_sf %>%
 
 ```{r}
 #| eval: false
+
+
+
+
+
 sf_polygon <- province_sf %>% 
   st_cast("POLYGON") %>% 
   mutate(area = st_area(.))

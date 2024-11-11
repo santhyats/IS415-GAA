@@ -64,7 +64,7 @@ I will be loading them into the R environment using *read_csv()* function of the
 ```{r}
 #| eval: false 
 crime_district <- read_csv("data/aspatial/crime_district.csv")
-population_district <- read_csv("data/aspatial/population_district.csv")
+#population_district <- read_csv("data/aspatial/population_district.csv")
 msia_adm2_sf <- st_read(dsn = 'data/geosp', layer = 'mys_admbnda_adm2_unhcr_20210211')
 ```
 
@@ -87,7 +87,6 @@ crime_district <- crime_district %>%
 Next, I will format the population data. I will filter the dates to exclude 2024 since we do not have crime data for that year, and once again remove all the rows where data is aggregated over a certain characteristic.
 
 ```{r}
-
 
 library(dplyr)
 library(lubridate)
