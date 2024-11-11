@@ -139,7 +139,7 @@ First, I will convert all the district names to lowercase letters to eliminate a
 
 crime_district$district <- tolower(trimws(crime_district$district))
 adm2_sf$ADM2_EN <- tolower(trimws(adm2_sf$ADM2_EN))
-pop_data$district <- tolower(trimws(pop_data$district))
+#pop_data$district <- tolower(trimws(pop_data$district))
 
 ```
 
@@ -153,17 +153,17 @@ str_detect() function of the stringr package was used to identify rows that cont
 
 library(stringr)
 crime_johor<- crime_district %>%
-  filter(str_detect(district,"johor bahru")) %>%
-  mutate(district = 'johor bahru') %>%
+  filter(str_detect(district,"johor bahru")) %>% 
+   mutate(district = 'johor bahru') %>%
   group_by(state, district,type, date) %>%
   summarise(crimes = sum(crimes))
+
 
 crime_klang<- crime_district %>%
   filter(str_detect(district,"klang")) %>%
-  mutate(district = 'klang') %>%
   group_by(state, district,type, date) %>%
-  summarise(crimes = sum(crimes))
-
+  summarise(crimes = sum(crimes)) %>% 
+  mutate(district = 'klang')
 
 other_rows <- crime_district %>% 
   filter(!str_detect(district, "johor bahru"))
@@ -178,29 +178,23 @@ Upon further examination, there were more discrepancies that I found so I sought
 ```{r}
 
 crime_district<- crime_district%>% 
-  mutate(district = ifelse(district == "cameron highland", "cameron highlands", district)) %>% 
+  #mutate(district = ifelse(district == "cameron highland", "cameron highlands", district)) %>% 
   mutate(district = ifelse(district == "kuala lipis", "lipis", district)) %>% 
   mutate(district = ifelse(district == "kota kinabatangan", "kinabatangan", district)) %>% 
   mutate(district = ifelse(district == "seberang perai tengah", "s.p. tengah", district)) %>% 
   mutate(district = ifelse(district == "seberang perai utara", "s.p. utara", district)) %>% 
   mutate(district = ifelse(district == "seberang perai selatan", "s.p.selatan", district)) %>% 
   mutate(district = ifelse(district == "petaling jaya", "petaling", district)) %>% 
+  mutate(district = ifelse(district == "kota samarahan", "samarahan", district)) %>% 
+  mutate(district = ifelse(district == "hulu selangor", "ulu selangor", district)) %>% 
    mutate(district = ifelse(district == "matu daro", "matu", district)) %>% 
   mutate(state = ifelse(district == "w.p. labuan", "Sabah", state))
    
-  
-  
-
-pop_data <- pop_data %>% 
-  mutate(district = ifelse(district == "kulai", "kulaijaya", district)) %>% 
-  mutate(district = ifelse(district == "sp tengah", "s.p. tengah", district)) %>% 
-  mutate(district = ifelse(district == "sp utara", "s.p. utara", district)) %>% 
-  mutate(district = ifelse(district == "sp selatan", "s.p.selatan", district)) %>% 
-  mutate(district = ifelse(district == "cameron highland", "cameron highlands", district))
 
 
 adm2_sf <- adm2_sf %>% 
-  mutate(ADM1_EN = ifelse(ADM2_EN == "w.p. labuan", "Sabah", ADM1_EN))
+  mutate(ADM1_EN = ifelse(ADM2_EN == "w.p. labuan", "Sabah", ADM1_EN)) %>% 
+  mutate(ADM2_EN = ifelse(ADM2_EN == "manjung (dinding)", "manjung", ADM2_EN))
    
   
 ```
